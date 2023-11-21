@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+:root {
+  --text-dark: #403f3d;
+  --text-light: #e1d4c9;
+  --text-accent: #b0907a;
+  --background-body: #e1d4c9;
+  --background-container: #665f55;
+  --background-backdrop: rgba(64, 63, 61, 0.8);
+  --border-light: #c1b6ad;
+  --border-dark: #665f55;
+}
+.heading-1 {
+  font-size: 72px;
+  font-weight: 600;
+  line-height: 105%;
+}
+.italic {
+  font-style: italic;
+}
+.heading-2 {
+  font-size: 60px;
+  font-weight: 600;
+  line-height: 125%;
+}
+.heading-3 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 125%;
+}
+.medium {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 150%;
+}
+.caption {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 140%;
+}
+.link-button {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 150%;
+}
+.burger-link {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 125%;
+}

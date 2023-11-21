@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/img/favico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/img/favico/favicon-16x16.png">
+  <link rel="manifest" href="./assets/img/favico/site.webmanifest">
+  <link rel="stylesheet" href="./assets/style/style.css">
+  <link rel="stylesheet" href="./assets/style/normalize.css">
+  <link rel="stylesheet" href="./assets/style/home.css">
+  <title>Coffee-house</title>
+</head>
+
+<body>
+  <header class="header container link-button">
+    <a class="header__logo" href=""><img src="./assets/img/logo.svg" alt="logo"></a>
+    <nav class="header__nav">
+      <ul class="header__list">
+        <li class="header__item"><a class="header__link" href="">Favorite coffee</a></li>
+        <li class="header__item"><a class="header__link" href="">About</a></li>
+        <li class="header__item"><a class="header__link" href="">Mobile app</a></li>
+        <li class="header__item"><a class="header__link" href="">Contact us</a></li>
+      </ul>
+    </nav>
+    <a class="header__link header__link_menu" href="">Menu<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+        viewBox="0 0 20 20" fill="none">
+        <path
+          d="M14.166 9.76667V11.6667C14.166 14.8883 11.5543 17.5 8.33268 17.5C5.11102 17.5 2.49935 14.8883 2.49935 11.6667V9.76667C2.49935 9.4353 2.76798 9.16667 3.09935 9.16667H13.566C13.8974 9.16667 14.166 9.4353 14.166 9.76667Z"
+          stroke="#403F3D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path
+          d="M9.99935 7.49996C9.99935 6.66663 10.5946 5.83329 11.7851 5.83329V5.83329C13.1 5.83329 14.166 4.7673 14.166 3.45234V2.91663"
+          stroke="#403F3D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path
+          d="M6.66732 7.5V7.08333C6.66732 5.70262 7.78661 4.58333 9.16732 4.58333V4.58333C10.0878 4.58333 10.834 3.83714 10.834 2.91667V2.5"
+          stroke="#403F3D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path
+          d="M13.334 9.16663H15.4173C16.5679 9.16663 17.5007 10.0994 17.5007 11.25C17.5007 12.4006 16.5679 13.3333 15.4173 13.3333H14.1673"
+          stroke="#403F3D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg></a>
+  </header>
+  <main class="main container">
+    <section class="enjoy">
+      <div class="enjoy__container">
+        <h1 class="enjoy__title heading-1"><span class="enjoy__title_font italic">Enjoy</span> premium coffee at our
+          charming cafe</h1>
+        <p class="enjoy__description medium">
+          With its inviting atmosphere and delicious coffee options, the Coffee House Resource is a popular destination
+          for coffee lovers and those seeking a warm and inviting space to enjoy their favorite beverage.
+        </p>
+        <button class="enjoy__button link-button">Menu</button>
+      </div>
+    </section>
+    <section class="favorite-coffee">
+      <h2 class="favorite-coffee__title heading-2">Choose your <span
+          class="favorite-coffee__title_font italic">favorite</span> coffee
+      </h2>
+      <div class="favorite-coffee__slider slider">
+        <div class="favorite-coffee__slider-wrapper">
+          <button class="slider__btn slider__btn_left"></button>
+          <div class="slider__wrapper">
+            <div class="slider__slide slide">
+              <img src="./assets/img/favourite-slider/coffee-slider-1.png" alt="frappuccino" class="slide__img">
+              <ul class="slide__list">
+                <li class="slide__title heading-3">S’mores Frappuccino</li>
+                <li class="slide__description medium">This new drink takes an espresso and mixes it with brown sugar and
+                  cinnamon
+                  before being topped with oat
+                  milk.</li>
+                <li class="slide__price heading-3">$5.50</li>
+              </ul>
+            </div>
+          </div>
+          <button class="slider__btn slider__btn_right"></button>
+        </div>
+        <div class="slider__controls">
+          <button class="slider__control slider__control_active"></button>
+          <button class="slider__control"></button>
+          <button class="slider__control"></button>
+        </div>
+      </div>
+    </section>
+    <section class="about">
+      <h2 class="about__title heading-2">
+        Resource is <span class="about__title_font italic">the perfect and cozy place</span> where you can enjoy a variety of hot beverages, relax, catch up with
+        friends, or get some work done.
+      </h2>
+      <div class="about__container">
+        <div class="about__item about__item_grid-first">
+          <img class="about__img" src="./assets/img/about/about-1.png" alt="lady with coffee cup">
+        </div>
+        <div class="about__item about__item_grid-second">
+          <img class="about__img" src="./assets/img/about/about-2.png" alt="man with coffee cup">
+        </div>
+        <div class="about__item about__item_grid-third">
+          <img class="about__img" src="./assets/img/about/about-3.png" alt="tea pot and coffee cup">
+        </div>
+        <div class="about__item about__item_grid-fourth">
+          <img class="about__img" src="./assets/img/about/about-4.png" alt="man and woman with coffee cups">
+        </div>
+      </div>
+    </section>
+    <section class="mobile-app"></section>
+  </main>
+  <footer class="footer container">
+
+  </footer>
+</body>
+
+</html>
