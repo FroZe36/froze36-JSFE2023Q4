@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,19 +13,20 @@
   <link rel="stylesheet" href="./assets/style/menu.css">
   <title>Coffee-Menu</title>
 </head>
+
 <body>
   <header class="header container link-button">
     <a class="header__logo" href="./index.html"><img src="./assets/img/logo.svg" alt="logo"></a>
     <nav class="header__nav">
       <ul class="header__list">
-        <li class="header__item"><a class="header__link" href="#favorite-coffee">Favorite coffee</a></li>
-        <li class="header__item"><a class="header__link" href="#about">About</a></li>
-        <li class="header__item"><a class="header__link" href="#mobile-app">Mobile app</a></li>
+        <li class="header__item"><a class="header__link" href="./index.html#favorite-coffee">Favorite coffee</a></li>
+        <li class="header__item"><a class="header__link" href="./index.html#about">About</a></li>
+        <li class="header__item"><a class="header__link" href="./index.html#mobile-app">Mobile app</a></li>
         <li class="header__item"><a class="header__link" href="#footer">Contact us</a></li>
       </ul>
     </nav>
-    <a class="header__link header__link_menu" href="./menu.html">Menu<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-        viewBox="0 0 20 20" fill="none">
+    <a class="header__link header__link_menu" href="./menu.html">Menu<svg xmlns="http://www.w3.org/2000/svg" width="20"
+        height="20" viewBox="0 0 20 20" fill="none">
         <path
           d="M14.166 9.76667V11.6667C14.166 14.8883 11.5543 17.5 8.33268 17.5C5.11102 17.5 2.49935 14.8883 2.49935 11.6667V9.76667C2.49935 9.4353 2.76798 9.16667 3.09935 9.16667H13.566C13.8974 9.16667 14.166 9.4353 14.166 9.76667Z"
           stroke="#403F3D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -39,5 +41,102 @@
           stroke="#403F3D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
       </svg></a>
   </header>
+  <main class="main container">
+    <h1 class="main__title heading-2">Behind each of our cups hides an <span class="main__title_font italic">amazing
+        surprise</span></h1>
+    <ul class="main__list-tabs link-button">
+      <li class="main__item-tab"><a class="main__link-tab" href="">
+          <div class="main__link-wrapper"><img class="main__link-icon" src="./assets/img/coffee_cup.png"
+              alt="coffee-cup"></div>Coffee
+        </a></li>
+      <li class="main__item-tab"><a class="main__link-tab" href="">
+          <div class="main__link-wrapper"><img class="main__link-icon" src="./assets/img/tea-pot.png" alt="tea-pot">
+          </div>Tea
+        </a></li>
+      <li class="main__item-tab"><a class="main__link-tab" href="">
+          <div class="main__link-wrapper"><img class="main__link-icon" src="./assets/img/desert.png" alt="dessert">
+          </div>Dessert
+        </a></li>
+    </ul>
+    <ul class="main__cards link-button coffee">
+      <li class="main__card">
+        <div class="main__card-wrapper"><img class="main__card-img" src="./assets/img/menu-coffee/coffee-1.jpg" alt="">
+        </div>
+        <div class="main__card-container">
+          <h3 class="main__card-title heading-3">Irish coffee</h3>
+          <p class="main__card-description medium">Fragrant black coffee with Jameson Irish whiskey and whipped milk</p>
+          <span class="main__card-price heading-3">$7.00</span>
+        </div>
+      </li>
+      <li class="main__card">
+        <div class="main__card-wrapper"><img class="main__card-img" src="./assets/img/menu-coffee/coffee-2.jpg" alt="">
+        </div>
+        <div class="main__card-container">
+          <h3 class="main__card-title heading-3">Kahlua coffee</h3>
+          <p class="main__card-description medium">Classic coffee with milk and Kahlua liqueur under a cap of frothed
+            milk</p>
+          <span class="main__card-price heading-3">$7.00</span>
+        </div>
+      </li>
+      <li class="main__card">
+        <div class="main__card-wrapper"><img class="main__card-img" src="./assets/img/menu-coffee/coffee-3.jpg" alt="">
+        </div>
+        <div class="main__card-container">
+          <h3 class="main__card-title heading-3">Honey raf</h3>
+          <p class="main__card-description medium">Espresso with frothed milk, cream and aromatic honey</p>
+          <span class="main__card-price heading-3">$5.50</span>
+        </div>
+      </li>
+      <li class="main__card">
+        <div class="main__card-wrapper"><img class="main__card-img" src="./assets/img/menu-coffee/coffee-4.jpg" alt="">
+        </div>
+        <div class="main__card-container">
+          <h3 class="main__card-title heading-3">Ice cappuccino</h3>
+          <p class="main__card-description medium">Cappuccino with soft thick foam in summer version with ice</p>
+          <span class="main__card-price heading-3">$5.00</span>
+        </div>
+      </li>
+      <li class="main__card">
+        <div class="main__card-wrapper"><img class="main__card-img" src="./assets/img/menu-coffee/coffee-5.jpg" alt="">
+        </div>
+        <div class="main__card-container">
+          <h3 class="main__card-title heading-3">Espresso</h3>
+          <p class="main__card-description medium">Classic black coffee</p>
+          <span class="main__card-price heading-3">$4.50</span>
+        </div>
+      </li>
+      <li class="main__card">
+        <div class="main__card-wrapper"><img class="main__card-img" src="./assets/img/menu-coffee/coffee-6.jpg" alt="">
+        </div>
+        <div class="main__card-container">
+          <h3 class="main__card-title heading-3">Latte</h3>
+          <p class="main__card-description medium">Espresso coffee with the addition of steamed milk and dense milk foam
+          </p>
+          <span class="main__card-price heading-3">$5.50</span>
+        </div>
+      </li>
+      <li class="main__card">
+        <div class="main__card-wrapper"><img class="main__card-img" src="./assets/img/menu-coffee/coffee-7.jpg" alt="">
+        </div>
+        <div class="main__card-container">
+          <h3 class="main__card-title heading-3">Latte macchiato</h3>
+          <p class="main__card-description medium">Espresso with frothed milk and chocolate</p>
+          <span class="main__card-price heading-3">$5.50</span>
+        </div>
+      </li>
+      <li class="main__card">
+        <div class="main__card-wrapper"><img src="./assets/img/menu-coffee/coffee-8.jpg" alt=""></div>
+        <div class="main__card-container">
+          <h3 class="main__card-title heading-3">Coffee with cognac</h3>
+          <p class="main__card-description medium">Fragrant black coffee with cognac and whipped cream</p>
+          <span class="main__card-price heading-3">$6.50</span>
+        </div>
+      </li>
+    </ul>
+  </main>
+  <footer id="footer">
+
+  </footer>
 </body>
+
 </html>
