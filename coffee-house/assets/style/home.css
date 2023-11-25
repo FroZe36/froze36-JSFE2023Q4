@@ -303,6 +303,9 @@
   border: 1px solid var(--border-light);
   transition: all 0.3s;
 }
+.footer-contacts__btn-svg {
+  transition: all 0.3s;
+}
 .footer-contacts__container {
   display: flex;
   flex-direction: column;
