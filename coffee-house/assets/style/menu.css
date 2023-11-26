@@ -48,27 +48,25 @@
   align-items: flex-start;
   gap: 8px;
 }
-.main {
+.menu {
   display: flex;
   flex-direction: column;
   gap: 40px;
   align-items: center;
 }
-.main__title {
+.menu__title {
   color: var(--text-dark);
   text-align: center;
   width: 800px;
 }
-.main__title_font {
+.menu__title_font {
   color: var(--text-accent);
 }
-.main__list-tabs {
+.menu__list-tabs {
   display: inline-flex;
   gap: 16px;
 }
-.main__item-tab {
-}
-.main__link-tab {
+.menu__button-tab {
   display: flex;
   padding: 8px 16px 8px 8px;
   justify-content: center;
@@ -77,19 +75,31 @@
   border-radius: 100px;
   border: 1px solid var(--border-light);
   color: var(--text-dark);
+  background-color: var(--background-body);
+  transition: all 0.3s;
 }
-.main__link-wrapper {
+.menu__button-tab.active {
+  background-color: var(--background-container);
+  color: var(--text-light);
+  border-color: var(--border-dark);
+  cursor: default;
+}
+.menu__button-tab.active .menu__btn-wrapper {
+  background-color: var(--background-body);
+}
+.menu__btn-wrapper {
   display: flex;
   width: 30px;
   height: 30px;
   justify-content: center;
   align-items: center;
   border-radius: 100px;
-  background: var(--border-light);
+  background-color: var(--border-light);
+  transition: all 0.3s;
 }
-.main__link-icon {
+.menu__btn-icon {
 }
-.main__cards {
+.menu__cards {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -99,14 +109,14 @@
 }
 .coffee {
 }
-.main__card {
+.menu__card {
   width: 310px;
   border: 1px solid var(--border-light);
   border-radius: 40px;
   height: 506px;
   cursor: pointer;
 }
-.main__card-wrapper {
+.menu__card-wrapper {
   width: 308px;
   height: 310px;
   border-radius: 40px;
@@ -115,12 +125,12 @@
   align-items: center;
   justify-content: center;
 }
-.main__card-img {
+.menu__card-img {
   max-width: 340px;
   max-height: 340px;
   transition: all 0.3s;
 }
-.main__card-container {
+.menu__card-container {
   display: flex;
   padding: 20px;
   flex-direction: column;
@@ -130,16 +140,16 @@
   color: var(--text-dark);
   height: 196px;
 }
-.main__card-inner {
+.menu__card-inner {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-.main__card-title {
+.menu__card-title {
 }
-.main__card-description {
+.menu__card-description {
 }
-.main__card-price {
+.menu__card-price {
 }
 .footer-contacts {
   display: flex;
@@ -193,7 +203,8 @@
 .footer-contacts__list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  padding-bottom: 5px;
 }
 .footer-contacts__item:not(:last-child) {
   position: relative;
@@ -219,7 +230,15 @@
   a.header__link:hover::after {
     background-color: var(--text-dark);
   }
-  .main__card:hover .main__card-img {
+  .menu__button-tab:not(:first-child):hover {
+    background-color: var(--background-container);
+    color: var(--text-light);
+    border-color: var(--border-dark);
+  }
+  .menu__button-tab:not(:first-child):hover .menu__btn-wrapper {
+    background-color: var(--background-body);
+  }
+  .menu__card:hover .menu__card-img {
     transform: scale(0.91);
   }
   .footer-contacts__btn:hover {

@@ -29,6 +29,7 @@ svg {
 button {
   padding: 0;
   cursor: pointer;
+  font-family: inherit;
 }
 
 a {
