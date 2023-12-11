@@ -1,4 +1,4 @@
-.no-scroll {
+body.no-scroll {
   overflow-y: hidden;
 }
 .header {
@@ -166,6 +166,9 @@
   height: 506px;
   cursor: pointer;
 }
+.menu__card.hidden {
+  display: none;
+}
 .menu__card-wrapper {
   width: 308px;
   height: 310px;
@@ -203,6 +206,15 @@
 }
 .menu__upload {
   display: none;
+  width: 60px;
+  height: 60px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  border: 1px solid var(--border-dark);
+  background-color: var(--background-body);
+  flex-shrink: 0;
+  transition: all 0.3s;
 }
 .footer-contacts {
   display: flex;
@@ -281,6 +293,138 @@
 }
 .footer-contacts__item-link_text {
 }
+
+.modal-buy {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background-backdrop);
+}
+.modal-buy.active {
+  display: flex;
+}
+.modal-buy__wrapper {
+  position: relative;
+  display: flex;
+  gap: 20px;
+  width: 800px;
+  background-color: var(--background-body);
+  border-radius: 40px;
+  padding: 16px;
+  cursor: default;
+}
+.modal-buy__wrapper-img {
+  flex: 1 0 314px;
+  height: 310px;
+  border-radius: 40px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-buy__img {
+  max-width: 340px;
+  max-height: 340px;
+  transition: all 0.3s;
+}
+.modal-buy__container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.modal-buy__title {
+  color: var(--text-dark);
+}
+.modal-buy__descr {
+  color: var(--text-dark);
+}
+.modal-buy__inner {
+  color: var(--text-dark);
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+}
+.modal-buy__inner-title {
+}
+.modal-buy__inner-btns {
+  display: flex;
+  gap: 8px;
+}
+.modal-buy-tab {
+  display: flex;
+  padding: 8px 16px 8px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 100px;
+  border: 1px solid var(--border-light);
+  color: var(--text-dark);
+  background-color: var(--background-body);
+  transition: all 0.3s;
+}
+.modal-buy-tab_size {
+}
+.modal-buy-wrapper {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  background-color: var(--border-light);
+  transition: all 0.3s;
+  color: var(--text-dark);
+}
+.modal-buy-tab.active {
+  background-color: var(--background-container);
+  border-color: var(--border-dark);
+  color: var(--text-light);
+  cursor: default;
+}
+.modal-buy-tab.active .modal-buy-wrapper {
+  background-color: var(--background-body);
+}
+.modal-buy-tab_additives {
+}
+.modal-buy__wrapper-total {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-dark);
+}
+.modal-buy__wrapper-total-title {
+}
+.modal-buy__wrapper-total-price {
+}
+.modal-buy__about {
+  display: flex;
+  gap: 8px;
+  padding: 12px 0px;
+  border-top: 1px solid var(--border-light);
+}
+.modal-buy__about-svg {
+  display: block;
+  width: 100%;
+  max-width: 16px;
+  align-self: flex-start;
+}
+.modal-buy__about-title {
+  color: var(--text-dark);
+}
+.modal-buy__btn-close {
+  display: flex;
+  padding: 10px 78px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 100px;
+  background-color: var(--background-body);
+  border: 1px solid var(--border-dark);
+  color: var(--text-dark);
+}
 @media (hover: hover) {
   a.header__link:hover::after {
     background-color: var(--text-dark);
@@ -311,6 +455,14 @@
   }
   .footer-contacts__item:hover::after {
     background-color: var(--text-light);
+  }
+  .modal-buy-tab:hover {
+    background-color: var(--background-container);
+    border-color: var(--border-dark);
+    color: var(--text-light);
+  }
+  .modal-buy-tab:hover .modal-buy-wrapper {
+    background-color: var(--background-body);
   }
 }
 @media (max-width: 928px) {
@@ -375,23 +527,8 @@
   .menu {
     gap: 39px;
   }
-  .menu__upload {
-    display: flex;
-    width: 60px;
-    height: 60px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 100px;
-    border: 1px solid var(--border-dark);
-    background-color: var(--background-body);
-    flex-shrink: 0;
-    transition: all 0.3s;
-  }
-  ul.menu__cards li:nth-child(n+5) {
-    display: none;
-  }
   .footer-contacts {
-    align-items: flex-start
+    align-items: flex-start;
   }
 }
 @media (max-width: 550px) {
