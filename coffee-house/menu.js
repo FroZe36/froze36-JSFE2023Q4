@@ -129,7 +129,6 @@ modalAdditives.forEach((item, i) =>
 );
 
 document.addEventListener('click', e => {
-  console.log(e.target)
   if (e.target === modal || e.target === modalBtnClose) {
     modal.classList.remove('active');
     document.body.style.overflowY = 'unset';
