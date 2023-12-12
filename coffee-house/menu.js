@@ -1,146 +1,4 @@
 //------------------------------------------------------------Menu------------------------------------------------------------
-// let jsonData;
-// let coffee;
-// fetch('../products.json')
-//   .then(response => response.json())
-//   .then(data => {});
-// const coffeeMenu = [
-//   {
-//     img: '../assets/img/menu-coffee/coffee-1.jpg',
-//     name: 'Irish coffee',
-//     description:
-//       'Fragrant black coffee with Jameson Irish whiskey and whipped milk',
-//     price: '7.00',
-//   },
-//   {
-//     img: '../assets/img/menu-coffee/coffee-2.jpg',
-//     name: 'Kahlua coffee',
-//     description:
-//       'Classic coffee with milk and Kahlua liqueur under a cap of frothed milk',
-//     price: '7.00',
-//   },
-//   {
-//     img: '../assets/img/menu-coffee/coffee-3.jpg',
-//     name: 'Honey raf',
-//     description: 'Espresso with frothed milk, cream and aromatic honey',
-//     price: '5.50',
-//   },
-//   {
-//     img: '../assets/img/menu-coffee/coffee-4.jpg',
-//     name: 'Ice cappuccino',
-//     description: 'Cappuccino with soft thick foam in summer version with ice',
-//     price: '5.00',
-//   },
-//   {
-//     img: '../assets/img/menu-coffee/coffee-5.jpg',
-//     name: 'Espresso',
-//     description: 'Classic black coffee',
-//     price: '7.00',
-//   },
-//   {
-//     img: '../assets/img/menu-coffee/coffee-6.jpg',
-//     name: 'Latte',
-//     description:
-//       'Espresso coffee with the addition of steamed milk and dense milk foam',
-//     price: '5.50',
-//   },
-//   {
-//     img: '../assets/img/menu-coffee/coffee-7.jpg',
-//     name: 'Latte macchiato',
-//     description: 'Espresso with frothed milk and chocolate',
-//     price: '5.50',
-//   },
-//   {
-//     img: '../assets/img/menu-coffee/coffee-8.jpg',
-//     name: 'Coffee with cognac',
-//     description: 'Fragrant black coffee with cognac and whipped cream',
-//     price: '6.50',
-//   },
-// ];
-// const teaMenu = [
-//   {
-//     img: '../assets/img/menu-tea/tea-1.jpg',
-//     name: 'Moroccan',
-//     description:
-//       'Fragrant black tea with the addition of tangerine, cinnamon, honey, lemon and mint',
-//     price: '4.50',
-//   },
-//   {
-//     img: '../assets/img/menu-tea/tea-2.jpg',
-//     name: 'Ginger',
-//     description: 'Original black tea with fresh ginger, lemon and honey',
-//     price: '5.00',
-//   },
-//   {
-//     img: '../assets/img/menu-tea/tea-3.jpg',
-//     name: 'Cranberry',
-//     description: 'Invigorating black tea with cranberry and honey',
-//     price: '5.00',
-//   },
-//   {
-//     img: '../assets/img/menu-tea/tea-4.jpg',
-//     name: 'Sea buckthorn',
-//     description:
-//       'Toning sweet black tea with sea buckthorn, fresh thyme and cinnamon',
-//     price: '5.50',
-//   },
-// ];
-// const dessertMenu = [
-//   {
-//     img: '../assets/img/menu-desserts/dessert-1.jpg',
-//     name: 'Marble cheesecake',
-//     description:
-//       'Philadelphia cheese with lemon zest on a light sponge cake and red currant jam',
-//     price: '3.50',
-//   },
-//   {
-//     img: '../assets/img/menu-desserts/dessert-2.jpg',
-//     name: 'Red velvet',
-//     description: 'Layer cake with cream cheese frosting',
-//     price: '4.00',
-//   },
-//   {
-//     img: '../assets/img/menu-desserts/dessert-3.jpg',
-//     name: 'Cheesecakes',
-//     description:
-//       'Soft cottage cheese pancakes with sour cream and fresh berries and sprinkled with powdered sugar',
-//     price: '4.50',
-//   },
-//   {
-//     img: '../assets/img/menu-desserts/dessert-4.jpg',
-//     name: 'Creme brulee',
-//     description:
-//       'Delicate creamy dessert in a caramel basket with wild berries',
-//     price: '4.00',
-//   },
-//   {
-//     img: '../assets/img/menu-desserts/dessert-5.jpg',
-//     name: 'Pancakes',
-//     description: 'Tender pancakes with strawberry jam and fresh strawberries',
-//     price: '4.50',
-//   },
-//   {
-//     img: '../assets/img/menu-desserts/dessert-6.jpg',
-//     name: 'Honey cake',
-//     description: 'Classic honey cake with delicate custard',
-//     price: '4.50',
-//   },
-//   {
-//     img: '../assets/img/menu-desserts/dessert-7.jpg',
-//     name: 'Chocolate cake',
-//     description: 'Cake with hot chocolate filling and nuts with dried apricots',
-//     price: '5.50',
-//   },
-//   {
-//     img: '../assets/img/menu-desserts/dessert-8.jpg',
-//     name: 'Black forest',
-//     description:
-//       'A combination of thin sponge cake with cherry jam and light chocolate mousse',
-//     price: '6.50',
-//   },
-// ];
-
-// const arrProducts = [coffeeMenu, teaMenu, dessertMenu];
 
 const buttonsCategory = document.querySelectorAll('.menu__button-tab');
 const listCards = document.querySelector('.menu__cards');
@@ -215,7 +73,9 @@ function renderCards(index = 0) {
           menuCard.append(wrapperImgCard, containerCard);
           listCards.append(menuCard);
         });
-      document.querySelectorAll('.menu__card').forEach((item) => item.addEventListener('click', (e) => openModal(e)))
+      document
+        .querySelectorAll('.menu__card')
+        .forEach(item => item.addEventListener('click', e => openModal(e)));
       activeButton(index);
       displayCard(screenWidth);
     });
@@ -252,73 +112,84 @@ function displayCard(width) {
 //------------------------------------------------------------Modal------------------------------------------------------------
 
 const modal = document.querySelector('.modal-buy');
-const modalImg = document.querySelector('.modal-buy__img')
+const modalImg = document.querySelector('.modal-buy__img');
 const modalTitle = document.querySelector('.modal-buy__title');
 const modalDescr = document.querySelector('.modal-buy__descr');
 const modalSize = document.querySelectorAll('.modal-buy-tab_size');
 const modalAdditives = document.querySelectorAll('.modal-buy-tab_additives');
-const modalTotalPrice = document.querySelector('.modal-buy__wrapper-total-price');
+const modalTotalPrice = document.querySelector(
+  '.modal-buy__wrapper-total-price',
+);
 const modalBtnClose = document.querySelector('.modal-buy__btn-close');
 let selectedSize;
+let productData;
 
-modalAdditives.forEach((item, i) => item.addEventListener('click', () => activeBtnAdditives(i)))
+modalAdditives.forEach((item, i) =>
+  item.addEventListener('click', () => activeBtnAdditives(i)),
+);
+
+document.addEventListener('click', e => {
+  console.log(e.target)
+  if (e.target === modal || e.target === modalBtnClose) {
+    modal.classList.remove('active');
+    document.body.style.overflowY = 'unset';
+  }
+});
 function openModal(event) {
-  const elem = event.currentTarget
+  const elem = event.currentTarget;
   modalImg.src = elem.firstChild.firstChild.attributes[0].value;
   modalTitle.innerHTML = elem.lastChild.childNodes[0].childNodes[0].innerHTML;
   fetch('../products.json')
     .then(response => response.json())
     .then(data => {
-      data.filter(item => {
-        if(item.name === modalTitle.innerHTML) {
-          modalDescr.innerHTML = item.description
-          modalSize[0].children[1].innerHTML = item.sizes.s.size
-          modalSize[1].children[1].innerHTML = item.sizes.m.size
-          modalSize[2].children[1].innerHTML = item.sizes.l.size
-          for(let i = 0; i < modalAdditives.length; i++) {
-            modalAdditives[i].children[1].innerHTML = item.additives[i].name
-            modalSize[i].addEventListener('click', () => activeBtnSize(i, item.price))
-          }
-          modalTotalPrice.innerHTML = `$${item.price}`
+      productData = data.find(item => item.name === modalTitle.innerHTML);
+      modalDescr.innerHTML = productData.description;
+      modalSize[0].children[1].innerHTML = productData.sizes.s.size;
+      modalSize[1].children[1].innerHTML = productData.sizes.m.size;
+      modalSize[2].children[1].innerHTML = productData.sizes.l.size;
+      modalAdditives.forEach((additive, i) => {
+        if (productData.additives[i]) {
+          additive.children[1].innerHTML = productData.additives[i].name;
         }
-      })
+      });
+      modalSize.forEach((size, i) => {
+        size.addEventListener('click', () => activeBtnSize(i, productData.sizes));
+      });
+      modalTotalPrice.innerHTML = `$${productData.price}`;
+      activeBtnSize();
     });
   document.body.style.overflowY = 'hidden';
-  modal.classList.toggle('active')
-}
-function activeBtnSize(index = 0, price) {
-  modalSize.forEach(item => item.classList.remove('active'))
-  modalSize[index].classList.add('active')
-  let newprice = +price
-  if (index === 0) {
-    modalTotalPrice.innerHTML = `$${newprice.toFixed(2)}`
-  }
-  if (index === 1) {
-    newprice += 0.50;
-    modalTotalPrice.innerHTML = `$${newprice.toFixed(2)}`
-  }
-  if (index === 2) {
-    newprice += 1.00;
-    modalTotalPrice.innerHTML = `$${newprice.toFixed(2)}`
-  }
-;
-}
-activeBtnSize()
-function activeBtnAdditives(index, price) {
-  if(!modalAdditives[index].classList.contains('active')) {
-    modalAdditives[index].classList.add('active')
-  } else {
-    modalAdditives[index].classList.remove('active');
-  }
-  // let arr = Array.from(modalAdditives).filter(item => item.classList.contains('active'))
-  // let newprice = +modalTotalPrice.innerHTML.slice(1);
-  // newprice += (arr.length * 0.50);
-  // modalTotalPrice.innerHTML = `$${newprice.toFixed(2)}`
+  modal.classList.toggle('active');
 }
 
-document.addEventListener('click', (e) => {
-  if(e.target === modal || e.target === modalBtnClose) {
-    modal.classList.remove('active')
-    document.body.style.overflowY = 'unset';
+function activeBtnSize(index = 0, sizesData = productData.sizes) {
+  modalSize.forEach(item => item.classList.remove('active'));
+  modalSize[index].classList.add('active');
+  let newPrice = +productData.price;
+  const selectedSize = Object.values(sizesData)[index];
+  if (selectedSize && selectedSize['add-price']) {
+    const addPrice = +selectedSize['add-price'];
+    newPrice += addPrice;
   }
-})
+
+  const activeAdditives = Array.from(modalAdditives).filter(item => item.classList.contains('active'));
+  activeAdditives.forEach(additive => {
+    const additiveIndex = Array.from(modalAdditives).indexOf(additive);
+    if (productData.additives[additiveIndex]) {
+      const additiveData = productData.additives[additiveIndex];
+      if (additiveData && additiveData['add-price']) {
+        const additivePrice = +additiveData['add-price'];
+        newPrice += additivePrice;
+      }
+    }
+  });
+
+  modalTotalPrice.innerHTML = `$${newPrice.toFixed(2)}`;
+}
+
+function activeBtnAdditives(index) {
+  modalAdditives[index].classList.toggle('active');
+  activeBtnSize(Array.from(modalSize).findIndex(size => size.classList.contains('active')), productData.sizes);
+}
+
+activeBtnSize();
