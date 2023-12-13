@@ -48,7 +48,7 @@ slideWrapper.addEventListener('touchstart', e => {
   e.stopPropagation();
   initialPoint = e.changedTouches[0];
   Pause(e);
-});
+}, false);
 slideWrapper.addEventListener('touchend', e => {
   e.preventDefault();
   e.stopPropagation();
@@ -57,12 +57,12 @@ slideWrapper.addEventListener('touchend', e => {
   Play(e);
   if (x > 20) {
     if (finalPoint.pageX < initialPoint.pageX) {
-      prevSlide();
-    } else {
       nextSlide();
+    } else {
+      prevSlide();
     }
   }
-});
+}, false);
 
 function prevSlide() {
   sliderIndex--;
