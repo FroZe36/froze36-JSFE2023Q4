@@ -155,13 +155,13 @@ function openModal(event) {
         size.addEventListener('click', () => activeBtnSize(i, productData.sizes));
       });
       modalTotalPrice.innerHTML = `$${productData.price}`;
-      activeBtnSize();
+      activeBtnSize(0, productData.sizes);
     });
   document.body.style.overflowY = 'hidden';
   modal.classList.toggle('active');
 }
 
-function activeBtnSize(index = 0, sizesData = productData.sizes) {
+function activeBtnSize(index, sizesData) {
   modalSize.forEach(item => item.classList.remove('active'));
   modalSize[index].classList.add('active');
   let newPrice = +productData.price;
@@ -190,7 +190,4 @@ function activeBtnAdditives(index) {
   modalAdditives[index].classList.toggle('active');
   activeBtnSize(Array.from(modalSize).findIndex(size => size.classList.contains('active')), productData.sizes);
 }
-
-activeBtnSize();
-
 
