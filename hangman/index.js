@@ -49,9 +49,6 @@ const modalResult = document.createElement('h3');
 modalResult.textContent = 'Game Over!';
 const modalSecretWord = document.createElement('p');
 const spanSecretWord = document.createElement('span');
-spanSecretWord.textContent = 'Barabedsadasda';
-modalSecretWord.textContent = 'The word was: ';
-modalSecretWord.append(spanSecretWord);
 const modalBtn = document.createElement('button');
 modalBtn.textContent = 'Play again';
 modalContent.append(modalResult, modalSecretWord, modalBtn);
@@ -59,25 +56,30 @@ modal.append(modalContent);
 document.body.append(modal);
 
 //GAME
-document.addEventListener('keydown', e =>
-  gamePlay(
-    Array.from(keyboard.querySelectorAll('button')).filter(
-      item => item.textContent === e.key,
-    )[0],
-    e.key,
-  ),
-);
 let currentWord;
 let wrongCount = 0;
 let currentLetters = [];
 const maxWrongGuesses = 6;
 spanGuessesText.textContent = `${wrongCount} / ${maxWrongGuesses}`;
+document.addEventListener('keydown', bindKeyDown);
+modalBtn.addEventListener('click', () => {
+  setTimeout(() => {
+    gallowImage.src = './assets/img/hangman-0.svg';
+    wrongCount = 0;
+    spanGuessesText.textContent = `${wrongCount} / ${maxWrongGuesses}`;
+    currentLetters = [];
+    keyboard.querySelectorAll('button').forEach(btn => (btn.disabled = false));
+    getRandomWord();
+    document.addEventListener('keydown', bindKeyDown);
+    modal.classList.remove('show');
+  }, 400);
+});
 
 function getRandomWord() {
   const { word, hint } = wordList[Math.floor(Math.random() * wordList.length)];
   currentWord = word;
+  console.log(`THE SECRET WORD: ${currentWord}`)
   spanHintText.textContent = hint;
-  console.log(word, hint);
   letterList.innerHTML = word
     .split('')
     .map(() => `<li></li>`)
@@ -86,18 +88,45 @@ function getRandomWord() {
 function gamePlay(target, letter) {
   if (currentWord.includes(letter)) {
     [...currentWord].forEach((item, i) => {
-      if (item === letter) {
+      if (item === letter && !target.hasAttributes('disabled')) {
         currentLetters.push(letter);
         letterList.querySelectorAll('li')[i].textContent = letter;
         letterList.querySelectorAll('li')[i].className = 'guessed';
       }
     });
   } else {
-    wrongCount++;
+    wrongCount < maxWrongGuesses &&
+    alphabet.includes(letter) &&
+    !target.hasAttributes('disabled')
+      ? wrongCount++
+      : maxWrongGuesses;
     gallowImage.src = `./assets/img/hangman-${wrongCount}.svg`;
     spanGuessesText.textContent = `${wrongCount} / ${maxWrongGuesses}`;
   }
   target.disabled = true;
+  if (currentLetters.length === currentWord.length) return gameLogic(true);
+  if (wrongCount === maxWrongGuesses) return gameLogic(false);
 }
-
+function bindKeyDown(e) {
+  gamePlay(
+    Array.from(keyboard.querySelectorAll('button')).filter(
+      item => item.textContent === e.key,
+    )[0],
+    e.key,
+  );
+}
+function gameLogic(isWin) {
+  setTimeout(() => {
+    modalResult.textContent = isWin
+      ? 'Your Winner! Congratulations!'
+      : 'Game Over! Try Again!';
+    spanSecretWord.textContent = currentWord;
+    modalSecretWord.textContent = isWin
+      ? 'You found the word, the word was: '
+      : 'You was so close, the correct word was: ';
+    modalSecretWord.append(spanSecretWord);
+    document.removeEventListener('keydown', bindKeyDown);
+    modal.classList.add('show');
+  }, 400);
+}
 getRandomWord();

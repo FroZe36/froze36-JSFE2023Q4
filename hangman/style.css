@@ -110,9 +110,10 @@ body {
   background-color: rgba(0, 0, 0, 0.6);
   width: 100%;
   height: 100%;
-  padding: 0 20px;
+  padding: 0 30px;
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.3s ease-in;
 }
 .modal.show {
   opacity: 1;
@@ -139,6 +140,7 @@ body {
 .modal p span {
   color: red;
   font-weight: 600;
+  font-size: 20px;
 }
 .modal button {
   padding: 10px 20px;
@@ -153,6 +155,9 @@ body {
   }
 }
 @media (max-width: 470px) {
+  .container {
+    padding: 40px 20px;
+  }
   .gallow-wrapper .gallow-image {
     max-width: 240px;
   }
