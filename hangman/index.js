@@ -63,22 +63,20 @@ const maxWrongGuesses = 6;
 spanGuessesText.textContent = `${wrongCount} / ${maxWrongGuesses}`;
 document.addEventListener('keydown', bindKeyDown);
 modalBtn.addEventListener('click', () => {
-  setTimeout(() => {
-    gallowImage.src = './assets/img/hangman-0.svg';
-    wrongCount = 0;
-    spanGuessesText.textContent = `${wrongCount} / ${maxWrongGuesses}`;
-    currentLetters = [];
-    keyboard.querySelectorAll('button').forEach(btn => (btn.disabled = false));
-    getRandomWord();
-    document.addEventListener('keydown', bindKeyDown);
-    modal.classList.remove('show');
-  }, 400);
+  gallowImage.src = './assets/img/hangman-0.svg';
+  wrongCount = 0;
+  spanGuessesText.textContent = `${wrongCount} / ${maxWrongGuesses}`;
+  currentLetters = [];
+  keyboard.querySelectorAll('button').forEach(btn => (btn.disabled = false));
+  getRandomWord();
+  document.addEventListener('keydown', bindKeyDown);
+  modal.classList.remove('show');
 });
 
 function getRandomWord() {
   const { word, hint } = wordList[Math.floor(Math.random() * wordList.length)];
   currentWord = word;
-  console.log(`THE SECRET WORD: ${currentWord}`)
+  console.log(`THE SECRET WORD: ${currentWord}`);
   spanHintText.textContent = hint;
   letterList.innerHTML = word
     .split('')
