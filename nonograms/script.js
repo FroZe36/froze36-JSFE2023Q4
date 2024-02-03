@@ -19,6 +19,7 @@ const nanogramsFiveXFive = [
     ],
   },
 ];
+
 function generatePuzzle(size) {
   let puzzle = [];
 
@@ -93,7 +94,7 @@ function toggleCell(cell, row, col) {
     cell.firstChild.style.backgroundColor = 'black';
     puzzle[row][col] = 1;
   }
-  console.log(puzzle);
+  checkWin(nanogramsFiveXFive[0].solution, puzzle);
 }
 function renderTable() {
   const cells = [];
@@ -145,3 +146,14 @@ function renderTable() {
   }
 }
 renderTable();
+
+function checkNanogram(solution, puzzle) {
+  return puzzle.every((row, i) => {
+    return row.every((value, j) => value === solution[i][j]);
+  });
+}
+function checkWin(solution, puzzle) {
+  if (checkNanogram(solution, puzzle)) {
+    alert(winMessage);
+  }
+}
