@@ -4,10 +4,17 @@ let timer = document.createElement('div');
 timer.textContent = '00:00';
 const resetBtn = document.createElement('button');
 resetBtn.type = 'button';
-resetBtn.className = 'reset-btn';
+resetBtn.className = 'btn btn-reset';
 resetBtn.textContent = 'Reset Game';
-wrapperResetAndTimer.append(timer);
-wrapperResetAndTimer.append(resetBtn);
+const saveGameBtn = document.createElement('button');
+saveGameBtn.type = 'button';
+saveGameBtn.textContent = 'Save Game';
+saveGameBtn.className = 'btn btn-save';
+const continueGameBtn = document.createElement('button');
+continueGameBtn.type = 'button';
+continueGameBtn.textContent = 'Continue Last Game';
+continueGameBtn.className = 'btn btn-continue';
+wrapperResetAndTimer.append(timer, resetBtn, saveGameBtn, continueGameBtn);
 document.body.append(wrapperResetAndTimer);
 
 const gameContainer = document.createElement('table');
@@ -73,14 +80,17 @@ const nanogramsFiveXFive = [
   },
 ];
 
-let selectNanogram = nanogramsFiveXFive[0];
-let puzzle = generatePuzzle(selectNanogram.size);
-let clues = generateClues(selectNanogram.solution);
+let selectedNanogram = nanogramsFiveXFive[0];
+let puzzle = generatePuzzle(selectedNanogram.size);
+let clues = generateClues(selectedNanogram.solution);
 let startTime;
 let timerInterval;
+let initialElapsedTime = 0;
 let gameFinished = false;
 
 resetBtn.addEventListener('click', reset);
+saveGameBtn.addEventListener('click', saveGame);
+continueGameBtn.addEventListener('click', continueGame);
 
 function generateLevels(nonogram) {
   const fieldset = document.createElement('fieldset');
@@ -105,10 +115,10 @@ function generateLevels(nonogram) {
     input.addEventListener('click', e => {
       nonogram.forEach(item => {
         if (item.name === e.target.value) {
-          selectNanogram = item;
-          puzzle = generatePuzzle(selectNanogram.size);
-          clues = generateClues(selectNanogram.solution);
-          renderTable(selectNanogram.size);
+          selectedNanogram = item;
+          puzzle = generatePuzzle(selectedNanogram.size);
+          clues = generateClues(selectedNanogram.solution);
+          renderTable(selectedNanogram.size);
         }
       });
     });
@@ -214,7 +224,7 @@ function toggleCell(cell, row, col, e) {
       puzzle[row][col] = 0;
     }
   }
-  checkWin(selectNanogram.solution, puzzle);
+  checkWin(selectedNanogram.solution, puzzle);
 }
 
 function renderTable(size) {
@@ -275,8 +285,9 @@ function renderTable(size) {
     }
     gameContainer.append(tr);
   }
+  return cells;
 }
-renderTable(selectNanogram.size);
+renderTable(selectedNanogram.size);
 
 function checkNanogram(solution, puzzle) {
   return puzzle.every((row, i) => {
@@ -289,7 +300,7 @@ function checkWin(solution, puzzle) {
     const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
     setTimeout(() => {
       alert(`${winMessage} in ${elapsedTime} seconds!`);
-      reset()
+      reset();
     }, 300);
     const audio = new Audio('./assets/sound4.mp3');
     audio.play();
@@ -297,12 +308,13 @@ function checkWin(solution, puzzle) {
 }
 function updateTimer() {
   if (!gameFinished) {
-    const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+    const elapsedTime = Math.floor((Date.now() - startTime + initialElapsedTime) / 1000);
     const minutes = Math.floor(elapsedTime / 60);
     const seconds = elapsedTime % 60;
     const formattedTime = `${String(minutes).padStart(2, '0')}:${String(
       seconds,
     ).padStart(2, '0')}`;
+    console.log(elapsedTime)
     timer.textContent = formattedTime;
   }
 }
@@ -311,6 +323,39 @@ function reset() {
   startTime = 0;
   gameFinished = false;
   clearInterval(timerInterval);
-  puzzle = generatePuzzle(selectNanogram.size);
-  renderTable(selectNanogram.size);
+  puzzle = generatePuzzle(selectedNanogram.size);
+  renderTable(selectedNanogram.size);
+}
+
+function saveGame() {
+  const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+  const storageItem = { elapsedTime, selectedNanogram, puzzle };
+  localStorage.setItem('last-game', JSON.stringify(storageItem));
+}
+function continueGame() {
+  let storageItem;
+  if (localStorage.getItem('last-game')) {
+    storageItem = JSON.parse(localStorage.getItem('last-game'));
+    selectedNanogram = storageItem.selectedNanogram;
+    puzzle = storageItem.puzzle;
+    clues = generateClues(selectedNanogram.solution);
+    initialElapsedTime = storageItem.elapsedTime ? storageItem.elapsedTime : 0;
+    startTime = Date.now() - initialElapsedTime * 1000;
+    timerInterval = setInterval(updateTimer, 1000);
+    const cells = renderTable(storageItem.selectedNanogram.size);
+    for (let i = 0; i < puzzle.length; i++) {
+      for (let j = 0; j < puzzle[i].length; j++) {
+        if (puzzle[i][j] === 1) {
+          cells[i][j].firstChild.style.backgroundColor = 'black';
+        }
+      }
+    }
+    document.querySelector('.level-container div').querySelectorAll('input').forEach((input) => {
+      if (input.value === selectedNanogram.name) {
+        input.checked = true;
+      }
+    })
+  } else {
+    console.log('localStorage = null');
+  }
 }

@@ -17,12 +17,18 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  .reset-btn {
+  .btn {
     font-size: 18px;
     background-color: white;
     border: 1px solid black;
     padding: 3px;
     border-radius: 5px;
+    cursor: pointer;
+    transform: scale(1);
+    transition: all 0.3s;
+  }
+  .btn:active {
+    transform: scale(0.95);
   }
 }
 .game-container {
