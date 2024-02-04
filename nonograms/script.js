@@ -116,9 +116,8 @@ function generateLevels(nonogram) {
       nonogram.forEach(item => {
         if (item.name === e.target.value) {
           selectedNanogram = item;
-          puzzle = generatePuzzle(selectedNanogram.size);
           clues = generateClues(selectedNanogram.solution);
-          renderTable(selectedNanogram.size);
+          reset()
         }
       });
     });
@@ -314,7 +313,6 @@ function updateTimer() {
     const formattedTime = `${String(minutes).padStart(2, '0')}:${String(
       seconds,
     ).padStart(2, '0')}`;
-    console.log(elapsedTime)
     timer.textContent = formattedTime;
   }
 }
