@@ -14,7 +14,20 @@ const continueGameBtn = document.createElement('button');
 continueGameBtn.type = 'button';
 continueGameBtn.textContent = 'Continue Last Game';
 continueGameBtn.className = 'btn btn-continue';
-wrapperResetAndTimer.append(timer, resetBtn, saveGameBtn, continueGameBtn);
+const selectRandomGameBtn = document.createElement('button');
+selectRandomGameBtn.textContent = 'Random Game';
+selectRandomGameBtn.className = 'btn btn-random';
+const solutionGameBtn = document.createElement('button');
+solutionGameBtn.textContent = 'Solution';
+solutionGameBtn.className = 'btn btn-solution';
+wrapperResetAndTimer.append(
+  timer,
+  resetBtn,
+  saveGameBtn,
+  continueGameBtn,
+  selectRandomGameBtn,
+  solutionGameBtn,
+);
 document.body.append(wrapperResetAndTimer);
 
 const gameContainer = document.createElement('table');
@@ -276,6 +289,7 @@ let gameFinished = false;
 resetBtn.addEventListener('click', reset);
 saveGameBtn.addEventListener('click', saveGame);
 continueGameBtn.addEventListener('click', continueGame);
+selectRandomGameBtn.addEventListener('click', randomGame);
 
 function generateLevels(nonogram) {
   for (let i = 0; i < nonogram.length; i += 5) {
@@ -549,4 +563,29 @@ function continueGame() {
   } else {
     console.log('localStorage = null');
   }
+}
+function randomGame() {
+  const getRandomIndex = getRandomNonRepeatingIndex(nanograms);
+  selectedNanogram = nanograms[getRandomIndex()];
+  clues = generateClues(selectedNanogram.solution);
+  puzzle = generatePuzzle(selectedNanogram.size);
+  renderTable(selectedNanogram.size);
+  document.querySelectorAll('input').forEach(input => {
+    if (input.value === selectedNanogram.name) {
+      input.checked = true;
+    }
+  });
+}
+function getRandomNonRepeatingIndex(arr) {
+  let lastIndex = null;
+
+  return function () {
+    let randomIndex = Math.floor(Math.random() * arr.length);
+
+    while (randomIndex === lastIndex) {
+      randomIndex = Math.floor(Math.random() * arr.length);
+    }
+    lastIndex = randomIndex;
+    return randomIndex;
+  };
 }
