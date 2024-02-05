@@ -22,7 +22,7 @@ gameContainer.className = 'game-container';
 document.body.append(gameContainer);
 
 const winMessage = 'Great! You have solved the nonogram';
-const nanogramsFiveXFive = [
+const nanograms = [
   {
     name: 'Umbrella',
     size: 5,
@@ -78,9 +78,194 @@ const nanogramsFiveXFive = [
       [0, 1, 1, 1, 0],
     ],
   },
+  {
+    name: 'Single Sailboat',
+    size: 10,
+    solution: [
+      [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+      [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+      [0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+      [0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+      [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+      [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+      [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+    ],
+  },
+  {
+    name: 'Ornament',
+    size: 10,
+    solution: [
+      [1, 1, 1, 1, 0, 0, 1, 1, 1, 1],
+      [1, 1, 1, 0, 0, 0, 0, 1, 1, 1],
+      [1, 1, 0, 1, 0, 0, 1, 0, 1, 1],
+      [1, 0, 1, 0, 1, 1, 0, 1, 0, 1],
+      [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+      [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+      [1, 0, 1, 0, 1, 1, 0, 1, 0, 1],
+      [1, 1, 0, 1, 0, 0, 1, 0, 1, 1],
+      [1, 1, 1, 0, 0, 0, 0, 1, 1, 1],
+      [1, 1, 1, 1, 0, 0, 1, 1, 1, 1],
+    ],
+  },
+  {
+    name: 'Duck',
+    size: 10,
+    solution: [
+      [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+      [0, 0, 1, 0, 1, 0, 0, 0, 0, 0],
+      [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+      [0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+      [0, 1, 1, 0, 0, 0, 0, 0, 1, 0],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 0, 0, 1, 1, 1, 1, 1, 0],
+      [1, 1, 1, 1, 0, 1, 1, 1, 0, 0],
+      [0, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+      [0, 0, 1, 1, 1, 1, 0, 0, 0, 0],
+    ],
+  },
+  {
+    name: 'Heart',
+    size: 10,
+    solution: [
+      [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+      [0, 1, 1, 1, 0, 0, 1, 1, 1, 0],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+      [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+      [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    ],
+  },
+  {
+    name: 'Music',
+    size: 10,
+    solution: [
+      [0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+      [0, 0, 0, 1, 1, 1, 0, 0, 0, 1],
+      [0, 0, 0, 1, 0, 0, 0, 1, 1, 1],
+      [0, 0, 0, 1, 1, 1, 1, 0, 0, 1],
+      [0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+      [0, 0, 0, 1, 0, 0, 0, 1, 1, 1],
+      [0, 1, 1, 1, 0, 0, 1, 1, 1, 1],
+      [1, 1, 1, 1, 0, 0, 1, 1, 1, 1],
+      [1, 1, 1, 1, 0, 0, 0, 1, 1, 0],
+      [0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+    ],
+  },
+  {
+    name: 'Spade',
+    size: 15,
+    solution: [
+      [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+      [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+      [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+      [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1],
+      [0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0],
+      [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+    ],
+  },
+  {
+    name: 'Smile Sun',
+    size: 15,
+    solution: [
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+      [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0],
+      [0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0],
+      [0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+      [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ],
+  },
+  {
+    name: 'Lamp',
+    size: 15,
+    solution: [
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0],
+      [0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0],
+      [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0],
+      [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+      [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+      [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+      [0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    ],
+  },
+  {
+    name: 'Clover',
+    size: 15,
+    solution: [
+      [0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+      [0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0],
+      [1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1],
+      [0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0],
+      [1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1],
+      [0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0],
+      [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ],
+  },
+  {
+    name: 'Church',
+    size: 15,
+    solution: [
+      [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+      [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0],
+      [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+      [0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0],
+      [0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0],
+      [0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0],
+      [0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0],
+      [0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0],
+      [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    ],
+  },
 ];
 
-let selectedNanogram = nanogramsFiveXFive[0];
+let selectedNanogram = nanograms[0];
 let puzzle = generatePuzzle(selectedNanogram.size);
 let clues = generateClues(selectedNanogram.solution);
 let startTime;
@@ -93,43 +278,46 @@ saveGameBtn.addEventListener('click', saveGame);
 continueGameBtn.addEventListener('click', continueGame);
 
 function generateLevels(nonogram) {
-  const fieldset = document.createElement('fieldset');
-  fieldset.className = 'level-container';
-  const legend = document.createElement('legend');
-  legend.textContent = (function () {
-    if (nonogram[nonogram.length - 1].size === 5) {
-      return 'Easy';
-    } else if (nonogram[nonogram.length - 1].size === 10) {
-      return 'Medium';
-    } else return 'Hard';
-  })();
-  fieldset.append(legend);
-  const div = document.createElement('div');
-  for (let i = 0; i < nonogram.length; i++) {
-    const label = document.createElement('label');
-    const input = document.createElement('input');
-    input.type = 'radio';
-    input.name = 'easy';
-    input.value = nonogram[i].name;
-    label.textContent = nonogram[i].name;
-    input.addEventListener('click', e => {
-      nonogram.forEach(item => {
-        if (item.name === e.target.value) {
-          selectedNanogram = item;
-          clues = generateClues(selectedNanogram.solution);
-          reset()
-        }
+  for (let i = 0; i < nonogram.length; i += 5) {
+    const nonogramsSlice = nonogram.slice(i, i + 5);
+    const fieldset = document.createElement('fieldset');
+    fieldset.className = 'level-container';
+    const legend = document.createElement('legend');
+    const div = document.createElement('div');
+    legend.textContent = (function () {
+      if (nonogramsSlice[nonogramsSlice.length - 1].size === 5) {
+        return 'Easy 5x5';
+      } else if (nonogramsSlice[nonogramsSlice.length - 1].size === 10) {
+        return 'Medium 10x10';
+      } else return 'Hard 15x15';
+    })();
+    fieldset.append(legend);
+    fieldset.append(div);
+    document.body.append(fieldset);
+    nonogramsSlice.forEach(el => {
+      const label = document.createElement('label');
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'nanogram';
+      input.value = el.name;
+      label.textContent = el.name;
+      input.addEventListener('click', e => {
+        nonogram.forEach(item => {
+          if (item.name === e.target.value) {
+            selectedNanogram = item;
+            clues = generateClues(selectedNanogram.solution);
+            reset();
+          }
+        });
       });
+      label.append(input);
+      div.append(label);
     });
-    label.append(input);
-    div.append(label);
   }
-  fieldset.append(div);
-  document.body.append(fieldset);
   document.querySelector('.level-container div input').checked = true;
 }
 
-generateLevels(nanogramsFiveXFive);
+generateLevels(nanograms);
 
 function generatePuzzle(size) {
   let puzzle = [];
@@ -307,7 +495,9 @@ function checkWin(solution, puzzle) {
 }
 function updateTimer() {
   if (!gameFinished) {
-    const elapsedTime = Math.floor((Date.now() - startTime + initialElapsedTime) / 1000);
+    const elapsedTime = Math.floor(
+      (Date.now() - startTime + initialElapsedTime) / 1000,
+    );
     const minutes = Math.floor(elapsedTime / 60);
     const seconds = elapsedTime % 60;
     const formattedTime = `${String(minutes).padStart(2, '0')}:${String(
@@ -348,11 +538,14 @@ function continueGame() {
         }
       }
     }
-    document.querySelector('.level-container div').querySelectorAll('input').forEach((input) => {
-      if (input.value === selectedNanogram.name) {
-        input.checked = true;
-      }
-    })
+    document
+      .querySelector('.level-container div')
+      .querySelectorAll('input')
+      .forEach(input => {
+        if (input.value === selectedNanogram.name) {
+          input.checked = true;
+        }
+      });
   } else {
     console.log('localStorage = null');
   }
