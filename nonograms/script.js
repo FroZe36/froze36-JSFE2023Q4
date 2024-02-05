@@ -33,7 +33,11 @@ document.body.append(wrapperResetAndTimer);
 const gameContainer = document.createElement('table');
 gameContainer.className = 'game-container';
 document.body.append(gameContainer);
-
+const scoreTable = document.createElement('fieldset');
+const scoreTableLegend = document.createElement('legend');
+scoreTableLegend.textContent = 'High Score Table';
+scoreTable.className = 'score-table';
+scoreTable.append(scoreTableLegend);
 const winMessage = 'Great! You have solved the nonogram';
 const nanograms = [
   {
@@ -277,7 +281,13 @@ const nanograms = [
     ],
   },
 ];
-
+if (!localStorage.getItem('highScores')) {
+  localStorage.setItem('highScores', JSON.stringify([]));
+}
+if (JSON.parse(localStorage.getItem('highScores').length > 0)) {
+  document.body.append(scoreTable);
+  getHighScores();
+}
 let selectedNanogram = nanograms[0];
 let puzzle = generatePuzzle(selectedNanogram.size);
 let clues = generateClues(selectedNanogram.solution);
@@ -502,8 +512,10 @@ function checkWin(solution, puzzle) {
   if (checkNanogram(solution, puzzle)) {
     gameFinished = true;
     const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+    addHighScore(selectedNanogram, elapsedTime);
     setTimeout(() => {
       alert(`${winMessage} in ${elapsedTime} seconds!`);
+      getHighScores();
       reset();
     }, 300);
     const audio = new Audio('./assets/sound4.mp3');
@@ -594,18 +606,53 @@ function getRandomNonRepeatingIndex(arr) {
 }
 function getSolution() {
   const cells = renderTable(selectedNanogram.size);
-  for(let i = 0; i < selectedNanogram.solution.length; i++) {
+  for (let i = 0; i < selectedNanogram.solution.length; i++) {
     for (let j = 0; j < selectedNanogram.solution[i].length; j++) {
-      puzzle[i][j] = selectedNanogram.solution[i][j]
-      if (puzzle[i][j] === 1) {
-        cells[i][j].firstChild.style.backgroundColor = 'black'
+      if (selectedNanogram.solution[i][j] === 1) {
+        cells[i][j].firstChild.style.backgroundColor = 'black';
       } else {
-        cells[i][j].firstChild.style.backgroundColor = 'white'
+        cells[i][j].firstChild.style.backgroundColor = 'white';
       }
     }
   }
   clearInterval(timerInterval);
-  setTimeout(() => {
-    alert('You was close!')
-  }, 500)
+}
+function addHighScore(solution, time) {
+  const highScores = JSON.parse(localStorage.getItem('highScores'));
+  let difficultLevel;
+  if (solution.size === 5) {
+    difficultLevel = 'Easy 5x5';
+  } else if (solution.size === 10) {
+    difficultLevel = 'Medium 10x10';
+  } else {
+    difficultLevel = 'Hard 15x15';
+  }
+  highScores.push({ name: solution.name, difficultLevel, time });
+  const latestHighScores = highScores.slice(-5);
+  localStorage.setItem('highScores', JSON.stringify(latestHighScores));
+}
+function getHighScores() {
+  while (scoreTable.firstChild) {
+    scoreTable.firstChild.remove();
+  }
+  const highScores = JSON.parse(localStorage.getItem('highScores'));
+  highScores.sort((a, b) => {
+    return a.time - b.time
+  })
+  highScores.forEach((score, index) => {
+    const minutes = Math.floor(score.time / 60);
+    const seconds = score.time % 60;
+    const formattedTime = `${String(minutes).padStart(2, '0')}:${String(
+      seconds,
+    ).padStart(2, '0')}`;
+    const div = document.createElement('div');
+    const namePuzzle = document.createElement('span');
+    namePuzzle.textContent = `${index + 1}. ${score.name}`;
+    const difficultLevel = document.createElement('span');
+    difficultLevel.textContent = score.difficultLevel;
+    const time = document.createElement('span');
+    time.textContent = formattedTime;
+    div.append(namePuzzle, difficultLevel, time);
+    scoreTable.append(div);
+  });
 }
