@@ -289,7 +289,8 @@ let gameFinished = false;
 resetBtn.addEventListener('click', reset);
 saveGameBtn.addEventListener('click', saveGame);
 continueGameBtn.addEventListener('click', continueGame);
-selectRandomGameBtn.addEventListener('click', randomGame);
+selectRandomGameBtn.addEventListener('click', getRandomGame);
+solutionGameBtn.addEventListener('click', getSolution);
 
 function generateLevels(nonogram) {
   for (let i = 0; i < nonogram.length; i += 5) {
@@ -308,6 +309,7 @@ function generateLevels(nonogram) {
     fieldset.append(legend);
     fieldset.append(div);
     document.body.append(fieldset);
+
     nonogramsSlice.forEach(el => {
       const label = document.createElement('label');
       const input = document.createElement('input');
@@ -324,6 +326,7 @@ function generateLevels(nonogram) {
           }
         });
       });
+
       label.append(input);
       div.append(label);
     });
@@ -532,12 +535,12 @@ function reset() {
 function saveGame() {
   const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
   const storageItem = { elapsedTime, selectedNanogram, puzzle };
-  localStorage.setItem('last-game', JSON.stringify(storageItem));
+  localStorage.setItem('saved-game', JSON.stringify(storageItem));
 }
 function continueGame() {
   let storageItem;
-  if (localStorage.getItem('last-game')) {
-    storageItem = JSON.parse(localStorage.getItem('last-game'));
+  if (localStorage.getItem('saved-game')) {
+    storageItem = JSON.parse(localStorage.getItem('saved-game'));
     selectedNanogram = storageItem.selectedNanogram;
     puzzle = storageItem.puzzle;
     clues = generateClues(selectedNanogram.solution);
@@ -564,7 +567,7 @@ function continueGame() {
     console.log('localStorage = null');
   }
 }
-function randomGame() {
+function getRandomGame() {
   const getRandomIndex = getRandomNonRepeatingIndex(nanograms);
   selectedNanogram = nanograms[getRandomIndex()];
   clues = generateClues(selectedNanogram.solution);
@@ -588,4 +591,21 @@ function getRandomNonRepeatingIndex(arr) {
     lastIndex = randomIndex;
     return randomIndex;
   };
+}
+function getSolution() {
+  const cells = renderTable(selectedNanogram.size);
+  for(let i = 0; i < selectedNanogram.solution.length; i++) {
+    for (let j = 0; j < selectedNanogram.solution[i].length; j++) {
+      puzzle[i][j] = selectedNanogram.solution[i][j]
+      if (puzzle[i][j] === 1) {
+        cells[i][j].firstChild.style.backgroundColor = 'black'
+      } else {
+        cells[i][j].firstChild.style.backgroundColor = 'white'
+      }
+    }
+  }
+  clearInterval(timerInterval);
+  setTimeout(() => {
+    alert('You was close!')
+  }, 500)
 }
