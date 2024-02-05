@@ -15,11 +15,18 @@ continueGameBtn.type = 'button';
 continueGameBtn.textContent = 'Continue Last Game';
 continueGameBtn.className = 'btn btn-continue';
 const selectRandomGameBtn = document.createElement('button');
+selectRandomGameBtn.type = 'button';
 selectRandomGameBtn.textContent = 'Random Game';
 selectRandomGameBtn.className = 'btn btn-random';
 const solutionGameBtn = document.createElement('button');
+solutionGameBtn.type = 'button';
 solutionGameBtn.textContent = 'Solution';
 solutionGameBtn.className = 'btn btn-solution';
+const changeThemeBtn = document.createElement('button');
+changeTheme.type = 'button';
+changeThemeBtn.textContent = 'Theme: Light';
+changeThemeBtn.className = 'btn btn-theme';
+changeThemeBtn.setAttribute('theme', 'light');
 wrapperResetAndTimer.append(
   timer,
   resetBtn,
@@ -27,6 +34,7 @@ wrapperResetAndTimer.append(
   continueGameBtn,
   selectRandomGameBtn,
   solutionGameBtn,
+  changeThemeBtn,
 );
 document.body.append(wrapperResetAndTimer);
 
@@ -37,7 +45,6 @@ const scoreTable = document.createElement('fieldset');
 const scoreTableLegend = document.createElement('legend');
 scoreTableLegend.textContent = 'High Score Table';
 scoreTable.className = 'score-table';
-scoreTable.append(scoreTableLegend);
 const winMessage = 'Great! You have solved the nonogram';
 const nanograms = [
   {
@@ -284,7 +291,7 @@ const nanograms = [
 if (!localStorage.getItem('highScores')) {
   localStorage.setItem('highScores', JSON.stringify([]));
 }
-if (JSON.parse(localStorage.getItem('highScores').length > 0)) {
+if (JSON.parse(localStorage.getItem('highScores').length !== 0)) {
   document.body.append(scoreTable);
   getHighScores();
 }
@@ -295,12 +302,24 @@ let startTime;
 let timerInterval;
 let initialElapsedTime = 0;
 let gameFinished = false;
+let isUsedSolution = false;
 
 resetBtn.addEventListener('click', reset);
 saveGameBtn.addEventListener('click', saveGame);
 continueGameBtn.addEventListener('click', continueGame);
 selectRandomGameBtn.addEventListener('click', getRandomGame);
 solutionGameBtn.addEventListener('click', getSolution);
+changeThemeBtn.addEventListener('click', e => {
+  if (e.target.getAttribute('theme') === 'light') {
+    changeTheme('dark');
+    e.target.setAttribute('theme', 'dark');
+    changeThemeBtn.textContent = 'Theme: Dark';
+  } else {
+    changeTheme('light');
+    e.target.setAttribute('theme', 'light');
+    changeThemeBtn.textContent = 'Theme: Light';
+  }
+});
 
 function generateLevels(nonogram) {
   for (let i = 0; i < nonogram.length; i += 5) {
@@ -417,12 +436,14 @@ function toggleCell(cell, row, col, e) {
     if (puzzle[row][col] === 1) {
       const audio = new Audio('./assets/sound2.mp3');
       audio.play();
-      cell.firstChild.style.backgroundColor = 'white';
+      cell.firstChild.style.backgroundColor =
+        changeThemeBtn.getAttribute('theme') === 'light' ? 'white' : 'black';
       puzzle[row][col] = 0;
     } else {
       const audio = new Audio('./assets/sound1.mp3');
       audio.play();
-      cell.firstChild.style.backgroundColor = 'black';
+      cell.firstChild.style.backgroundColor =
+        changeThemeBtn.getAttribute('theme') === 'light' ? 'black' : 'white';
       cell.firstChild.textContent = '';
       puzzle[row][col] = 1;
     }
@@ -433,7 +454,8 @@ function toggleCell(cell, row, col, e) {
     ) {
       const audio = new Audio('./assets/sound3.mp3');
       audio.play();
-      cell.firstChild.style.backgroundColor = 'white';
+      cell.firstChild.style.backgroundColor =
+        changeThemeBtn.getAttribute('theme') === 'light' ? 'white' : 'black';
       cell.firstChild.textContent = 'X';
       puzzle[row][col] = 0;
     }
@@ -509,7 +531,7 @@ function checkNanogram(solution, puzzle) {
   });
 }
 function checkWin(solution, puzzle) {
-  if (checkNanogram(solution, puzzle)) {
+  if (checkNanogram(solution, puzzle) && !isUsedSolution) {
     gameFinished = true;
     const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
     addHighScore(selectedNanogram, elapsedTime);
@@ -539,6 +561,7 @@ function reset() {
   timer.textContent = '00:00';
   startTime = 0;
   gameFinished = false;
+  isUsedSolution = false;
   clearInterval(timerInterval);
   puzzle = generatePuzzle(selectedNanogram.size);
   renderTable(selectedNanogram.size);
@@ -563,7 +586,10 @@ function continueGame() {
     for (let i = 0; i < puzzle.length; i++) {
       for (let j = 0; j < puzzle[i].length; j++) {
         if (puzzle[i][j] === 1) {
-          cells[i][j].firstChild.style.backgroundColor = 'black';
+          cells[i][j].firstChild.style.backgroundColor =
+            changeThemeBtn.getAttribute('theme') === 'light'
+              ? 'black'
+              : 'white';
         }
       }
     }
@@ -608,14 +634,22 @@ function getSolution() {
   const cells = renderTable(selectedNanogram.size);
   for (let i = 0; i < selectedNanogram.solution.length; i++) {
     for (let j = 0; j < selectedNanogram.solution[i].length; j++) {
-      if (selectedNanogram.solution[i][j] === 1) {
-        cells[i][j].firstChild.style.backgroundColor = 'black';
+      puzzle[i][j] = selectedNanogram.solution[i][j];
+      if (puzzle[i][j] === 1) {
+        cells[i][j].firstChild.style.backgroundColor =
+          changeThemeBtn.getAttribute('theme') === 'light' ? 'black' : 'white';
       } else {
-        cells[i][j].firstChild.style.backgroundColor = 'white';
+        cells[i][j].firstChild.style.backgroundColor =
+          changeThemeBtn.getAttribute('theme') === 'light' ? 'white' : 'black';
       }
     }
   }
   clearInterval(timerInterval);
+  isUsedSolution = true;
+  setTimeout(() => {
+    alert('You was close');
+    reset();
+  }, 500);
 }
 function addHighScore(solution, time) {
   const highScores = JSON.parse(localStorage.getItem('highScores'));
@@ -635,10 +669,11 @@ function getHighScores() {
   while (scoreTable.firstChild) {
     scoreTable.firstChild.remove();
   }
+  scoreTable.append(scoreTableLegend);
   const highScores = JSON.parse(localStorage.getItem('highScores'));
   highScores.sort((a, b) => {
-    return a.time - b.time
-  })
+    return a.time - b.time;
+  });
   highScores.forEach((score, index) => {
     const minutes = Math.floor(score.time / 60);
     const seconds = score.time % 60;
@@ -655,4 +690,35 @@ function getHighScores() {
     div.append(namePuzzle, difficultLevel, time);
     scoreTable.append(div);
   });
+}
+function changeTheme(theme) {
+  if (theme === 'dark') {
+    document.documentElement.style.setProperty('--background-color', 'black');
+    document.documentElement.style.setProperty('--font-color', 'white');
+    document.documentElement.style.setProperty('--border-color', 'white');
+    document.documentElement.style.setProperty('--button-color', 'black');
+    let cells = document.querySelectorAll('tr td');
+    let copyPuzzle = puzzle;
+    for (let i = 0; i < copyPuzzle.flat().length; i++) {
+      if (copyPuzzle.flat()[i] === 1) {
+        cells[i].firstChild.style.backgroundColor = 'white';
+      } else {
+        cells[i].firstChild.style.backgroundColor = 'black';
+      }
+    }
+  } else if (theme === 'light') {
+    document.documentElement.style.setProperty('--background-color', 'white');
+    document.documentElement.style.setProperty('--font-color', 'black');
+    document.documentElement.style.setProperty('--border-color', 'black');
+    document.documentElement.style.setProperty('--button-color', 'white');
+    let cells = document.querySelectorAll('tr td');
+    let copyPuzzle = puzzle;
+    for (let i = 0; i < copyPuzzle.flat().length; i++) {
+      if (copyPuzzle.flat()[i] === 1) {
+        cells[i].firstChild.style.backgroundColor = 'black';
+      } else {
+        cells[i].firstChild.style.backgroundColor = 'white';
+      }
+    }
+  }
 }

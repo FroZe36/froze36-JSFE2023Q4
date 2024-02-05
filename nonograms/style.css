@@ -1,8 +1,15 @@
+:root {
+  --background-color: white;
+  --font-color: black;
+  --border-color: black;
+  --button-color: white;
+}
 * {
   margin: 0;
   padding: 0;
 }
 body {
+  background-color: var(--background-color);
   font-family: Arial, sans-serif;
   display: flex;
   width: 100%;
@@ -19,11 +26,14 @@ body {
   flex-wrap: wrap;
   padding: 20px;
   gap: 10px;
+  color: var(--font-color);
   .btn {
+    font-family: 'Montserrat', sans-serif;
     font-size: 18px;
-    background-color: white;
-    border: 1px solid black;
-    padding: 3px;
+    background-color: var(--button-color);
+    border: 1px solid var(--border-color);
+    color: var(--font-color);
+    padding: 5px;
     border-radius: 5px;
     cursor: pointer;
     transform: scale(1);
@@ -36,8 +46,9 @@ body {
 .game-container {
   border-collapse: collapse;
   border-spacing: 0px;
-  border: 4px solid black;
+  border: 4px solid var(--border-color);
   margin: 20px;
+  color: var(--font-color);
 }
 
 td,
@@ -46,22 +57,23 @@ th {
   height: clamp(1.5rem, 5vw, 3rem);
   white-space: nowrap;
   &:nth-child(5n + 1) {
-    border-right: 4px solid black;
+    border-right: 4px solid var(--border-color);
   }
 }
 
 tr:nth-child(5n + 1) {
   td,
   th {
-    border-bottom: 4px solid black;
+    border-bottom: 4px solid var(--border-color);
   }
 }
 th p {
+  font-size: clamp(0.8rem, 2.5vw, 1.2rem);
   padding: 3px;
 }
 td {
-  border-top: 1px solid black;
-  border-left: 1px solid black;
+  border-top: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
   > div {
     width: 75%;
     height: 75%;
@@ -76,8 +88,9 @@ td {
 
 .level-container {
   padding: 10px;
-  border-color: black;
+  border-color: var(--border-color);
   margin: 10px;
+  color: var(--font-color);
   legend {
     font-size: 20px;
     text-align: center;
@@ -94,14 +107,15 @@ td {
     input {
       width: 15px;
       height: 15px;
-      accent-color: black;
+      accent-color: var(--font-color);
     }
   }
 }
 .score-table {
   padding: 10px;
-  border-color: black;
+  border-color: var(--border-color);
   margin: 10px;
+  color: var(--font-color);
   legend {
     font-size: 20px;
     text-align: center;
