@@ -27,6 +27,11 @@ changeTheme.type = 'button';
 changeThemeBtn.textContent = 'Theme: Light';
 changeThemeBtn.className = 'btn btn-theme';
 changeThemeBtn.setAttribute('theme', 'light');
+const changeSoundBtn = document.createElement('button');
+changeSoundBtn.type = 'button';
+changeSoundBtn.textContent = 'Sound: ON';
+changeSoundBtn.className = 'btn btn-sound';
+
 wrapperResetAndTimer.append(
   timer,
   resetBtn,
@@ -35,6 +40,7 @@ wrapperResetAndTimer.append(
   selectRandomGameBtn,
   solutionGameBtn,
   changeThemeBtn,
+  changeSoundBtn,
 );
 document.body.append(wrapperResetAndTimer);
 
@@ -303,6 +309,7 @@ let timerInterval;
 let initialElapsedTime = 0;
 let gameFinished = false;
 let isUsedSolution = false;
+let isSoundOn = true;
 
 resetBtn.addEventListener('click', reset);
 saveGameBtn.addEventListener('click', saveGame);
@@ -318,6 +325,15 @@ changeThemeBtn.addEventListener('click', e => {
     changeTheme('light');
     e.target.setAttribute('theme', 'light');
     changeThemeBtn.textContent = 'Theme: Light';
+  }
+});
+changeSoundBtn.addEventListener('click', () => {
+  if (isSoundOn) {
+    isSoundOn = false;
+    changeSoundBtn.textContent = 'Sound: OFF';
+  } else {
+    isSoundOn = true;
+    changeSoundBtn.textContent = 'Sound: ON';
   }
 });
 
@@ -432,16 +448,20 @@ function generateClues(solution) {
 
 function toggleCell(cell, row, col, e) {
   e.preventDefault();
+  if (!startTime) {
+    startTime = Date.now();
+    timerInterval = setInterval(updateTimer, 1000);
+  }
   if (e.type === 'click') {
     if (puzzle[row][col] === 1) {
       const audio = new Audio('./assets/sound2.mp3');
-      audio.play();
+      isSoundOn ? audio.play() : null;
       cell.firstChild.style.backgroundColor =
         changeThemeBtn.getAttribute('theme') === 'light' ? 'white' : 'black';
       puzzle[row][col] = 0;
     } else {
       const audio = new Audio('./assets/sound1.mp3');
-      audio.play();
+      isSoundOn ? audio.play() : null;
       cell.firstChild.style.backgroundColor =
         changeThemeBtn.getAttribute('theme') === 'light' ? 'black' : 'white';
       cell.firstChild.textContent = '';
@@ -453,7 +473,7 @@ function toggleCell(cell, row, col, e) {
       cell.firstChild.textContent !== 'X'
     ) {
       const audio = new Audio('./assets/sound3.mp3');
-      audio.play();
+      isSoundOn ? audio.play() : null;
       cell.firstChild.style.backgroundColor =
         changeThemeBtn.getAttribute('theme') === 'light' ? 'white' : 'black';
       cell.firstChild.textContent = 'X';
@@ -496,12 +516,6 @@ function renderTable(size) {
       el.append(div);
       el.addEventListener('click', event => toggleCell(el, i, j, event));
       el.addEventListener('contextmenu', event => toggleCell(el, i, j, event));
-      el.addEventListener('click', () => {
-        if (!startTime) {
-          startTime = Date.now();
-          timerInterval = setInterval(updateTimer, 1000);
-        }
-      });
       cells[i].push(el);
     }
   }
@@ -541,7 +555,7 @@ function checkWin(solution, puzzle) {
       reset();
     }, 300);
     const audio = new Audio('./assets/sound4.mp3');
-    audio.play();
+    isSoundOn ? audio.play() : null;
   }
 }
 function updateTimer() {
