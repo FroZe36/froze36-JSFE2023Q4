@@ -541,7 +541,13 @@ renderTable(selectedNanogram.size);
 
 function checkNanogram(solution, puzzle) {
   return puzzle.every((row, i) => {
-    return row.every((value, j) => value === solution[i][j]);
+    return row.every((value, j) => {
+      if (solution[i][j] === 1 && value === 1) {
+        return true;
+      } else if (solution[i][j] === 0 && (value === 0 || value === 2)) {
+        return true;
+      }
+    });
   });
 }
 function checkWin(solution, puzzle) {
@@ -607,7 +613,7 @@ function continueGame() {
               : 'white';
         }
         if (puzzle[i][j] === 2) {
-          cells[i][j].firstChild.textContent = 'X'
+          cells[i][j].firstChild.textContent = 'X';
         }
       }
     }
