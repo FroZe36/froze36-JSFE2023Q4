@@ -477,7 +477,7 @@ function toggleCell(cell, row, col, e) {
       cell.firstChild.style.backgroundColor =
         changeThemeBtn.getAttribute('theme') === 'light' ? 'white' : 'black';
       cell.firstChild.textContent = 'X';
-      puzzle[row][col] = 0;
+      puzzle[row][col] = 2;
     }
   }
   checkWin(selectedNanogram.solution, puzzle);
@@ -588,6 +588,7 @@ function saveGame() {
 }
 function continueGame() {
   let storageItem;
+  clearInterval(timerInterval);
   if (localStorage.getItem('saved-game')) {
     storageItem = JSON.parse(localStorage.getItem('saved-game'));
     selectedNanogram = storageItem.selectedNanogram;
@@ -604,6 +605,9 @@ function continueGame() {
             changeThemeBtn.getAttribute('theme') === 'light'
               ? 'black'
               : 'white';
+        }
+        if (puzzle[i][j] === 2) {
+          cells[i][j].firstChild.textContent = 'X'
         }
       }
     }
@@ -658,6 +662,7 @@ function getSolution() {
       }
     }
   }
+
   clearInterval(timerInterval);
   isUsedSolution = true;
   setTimeout(() => {
