@@ -2,7 +2,7 @@
 
 ## Badges Overview
 
-> Here is a collection of badges I earned from completing Microsoft Learn's TypeScript modules:
+Here is a collection of badges I earned from completing Microsoft Learn's TypeScript modules:
 
 1. **Getting Started with TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/FroZe36/9NSFAW6U?sharingId=67818551DCC7BA6C)
 2. **Declare Variable Types in TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/FroZe36/3XLQS2NH?sharingId=67818551DCC7BA6C)
@@ -81,21 +81,31 @@
 > Namespaces in TypeScript serve as a way to organize code and prevent naming conflicts, grouping related functionalities together. They provide a level of encapsulation and organization that can be particularly helpful in larger codebases. Here's a breakdown of the key points regarding namespaces and modules:
 
 > **Namespaces**:
+> 
 > - Purpose: Helps organize related code and reduce global scope pollution.
 > - Use Cases: Grouping variables, functions, interfaces, or classes based on business rules or functionality.
+
 > **Benefits**:
+   
 > - Reduce naming collisions.
 > - Enhance reusability.
+
 > **Multi-File Usage**:
+    
 > - Use reference tags to establish relationships between files.
 > - Can compile multiple files per-file or into a single output file using --outFile option.
+
 > **Modules**:
+
 > - Purpose: Encapsulate code and declare dependencies.
 > - Benefits:
 >> - Better code reuse.
 >> - Strong isolation.
 >> - Improved tooling support for bundling.
+ 
 > ECMAScript 2015: Modules are now a native part of the language and recommended for new projects.
+
 > Recommendation: Modules are preferred over namespaces for Node.js applications and new projects.
+
 > **Combining namespaces and modules**:
 > - Not Recommended: It's discouraged to mix namespaces and modules in the same project.
