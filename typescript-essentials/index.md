@@ -17,7 +17,7 @@ Here is a collection of badges I earned from completing Microsoft Learn's TypeSc
 
 1. ### Getting Started with TypeScript:
 
-> In this module, I learned what TypeScript is and its advantages. I explored TypeScript Playground to see how it works and how >TypeScript is compiled. I also globally installed TypeScript in my VSCode and learned how to compile .ts files into .js.
+> In this module, I learned what TypeScript is and its advantages. I explored TypeScript Playground to see how it works and how TypeScript is compiled. I also globally installed TypeScript in my VSCode and learned how to compile .ts files into .js.
 
 2. ### Declare Variable Types in TypeScript:
 
