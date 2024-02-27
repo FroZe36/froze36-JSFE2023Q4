@@ -50,3 +50,13 @@ export interface NewsItem {
     publishedAt: string;
     content: string;
 }
+type statusApi = 'ok' | 'error';
+export interface NewsItemAPI {
+    status: statusApi;
+    totalResults: number;
+    articles: NewsItem[];
+}
+export interface SourceItemAPI {
+    status: statusApi;
+    sources: SourcesItem[];
+}
