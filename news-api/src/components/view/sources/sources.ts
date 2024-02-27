@@ -1,11 +1,11 @@
-import { SourcesItem } from '../../../types/types';
+import { SourcesItem, assertIsDefined } from '../../../types/types';
 import './sources.css';
 
 class Sources {
     draw(data: SourcesItem[]) {
         const fragment: DocumentFragment = document.createDocumentFragment();
         const sourceItemTemp: HTMLTemplateElement | null = document.querySelector('#sourceItemTemp');
-        if (!sourceItemTemp) throw new Error('No item');
+        assertIsDefined(sourceItemTemp);
         data.forEach((item: SourcesItem) => {
             const sourceClone = sourceItemTemp.content.cloneNode(true);
             if (sourceClone instanceof DocumentFragment) {
@@ -21,9 +21,8 @@ class Sources {
         });
 
         const sourcesElement = document.querySelector('.sources');
-        if (sourcesElement) {
-            sourcesElement.append(fragment);
-        }
+        assertIsDefined(sourcesElement);
+        sourcesElement.append(fragment);
     }
 }
 
