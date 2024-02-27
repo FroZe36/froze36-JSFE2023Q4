@@ -1,15 +1,13 @@
+import { NewsItem, assertIsElement } from '../../../types/types';
 import './news.css';
 
 class News {
-    draw(data) {
-        const news = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data;
-
-        const fragment = document.createDocumentFragment();
-        const newsItemTemp = document.querySelector('#newsItemTemp');
-
-        news.forEach((item, idx) => {
+    draw(data: NewsItem[]): void {
+        const news: NewsItem[] = data.length >= 10 ? data.filter((_item: NewsItem, idx: number) => idx < 10) : data;
+        const fragment: DocumentFragment = document.createDocumentFragment();
+        const newsItemTemp: HTMLTemplateElement | null = document.querySelector('#newsItemTemp');
+        news.forEach((item: NewsItem, idx: number) => {
             const newsClone = newsItemTemp.content.cloneNode(true);
-
             if (idx % 2) newsClone.querySelector('.news__item').classList.add('alt');
 
             newsClone.querySelector('.news__meta-photo').style.backgroundImage = `url(${
@@ -26,7 +24,6 @@ class News {
             newsClone.querySelector('.news__description-source').textContent = item.source.name;
             newsClone.querySelector('.news__description-content').textContent = item.description;
             newsClone.querySelector('.news__read-more a').setAttribute('href', item.url);
-
             fragment.append(newsClone);
         });
 
