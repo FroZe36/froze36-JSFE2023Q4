@@ -69,7 +69,7 @@ export interface Options {
     options?: object;
 }
 
-export type CallbackFunction = () => void;
+export type CallbackFunction<T> = (data: T) => void;
 export interface ServerResponse extends Response {
     ok: boolean;
     status: number;
