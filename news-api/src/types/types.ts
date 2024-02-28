@@ -50,7 +50,7 @@ export interface NewsItem {
     publishedAt: string;
     content: string;
 }
-type statusApi = 'ok' | 'error';
+export type statusApi = 'ok' | 'error';
 export interface NewsItemAPI {
     status: statusApi;
     totalResults: number;
@@ -59,4 +59,19 @@ export interface NewsItemAPI {
 export interface SourceItemAPI {
     status: statusApi;
     sources: SourcesItem[];
+}
+
+export type ProcessEnv = string | undefined;
+
+export type Method = 'GET' | 'POST';
+export interface Options {
+    endpoint: string;
+    options?: object;
+}
+
+export type CallbackFunction = () => void;
+export interface ServerResponse extends Response {
+    ok: boolean;
+    status: number;
+    statusText: string;
 }
