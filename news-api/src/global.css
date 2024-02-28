@@ -18,6 +18,25 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 20px;
+}
+.footer-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+#rs-logo {
+  width: 100px;
+}
+#data {
+  font-size: 25px;
+  font-weight: bold;
+  color: rgb(193, 255, 6);
+}
+#github {
+  color: rgb(193, 255, 6);
+  font-size: 40px;
 }
 footer .copyright {
     font-size: 14px;
