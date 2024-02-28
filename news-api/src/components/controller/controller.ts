@@ -20,23 +20,22 @@ class AppController extends AppLoader {
             if (target instanceof HTMLElement && newsContainer instanceof HTMLElement) {
                 if (target.classList.contains('source__item')) {
                     const sourceId: string | null = target.getAttribute('data-source-id');
-                    if (sourceId) {
-                        if (newsContainer.getAttribute('data-source') !== sourceId) {
-                            newsContainer.setAttribute('data-source', sourceId);
-                            super.getResp(
-                                {
-                                    endpoint: 'everything',
-                                    options: {
-                                        sources: sourceId,
-                                    },
+                    assertIsDefined(sourceId);
+                    if (newsContainer.getAttribute('data-source') !== sourceId) {
+                        newsContainer.setAttribute('data-source', sourceId);
+                        super.getResp(
+                            {
+                                endpoint: 'everything',
+                                options: {
+                                    sources: sourceId,
                                 },
-                                callback
-                            );
-                        }
-                        return;
+                            },
+                            callback
+                        );
                     }
-                    target = target.parentNode;
+                    return;
                 }
+                target = target.parentNode;
             }
         }
     }

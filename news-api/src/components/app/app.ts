@@ -1,6 +1,6 @@
 import AppController from '../controller/controller';
 import { AppView } from '../view/appView';
-import { NewsItemAPI, SourceItemAPI } from '../../types/types';
+import { NewsItemAPI, SourceItemAPI, assertIsDefined } from '../../types/types';
 class App {
     public controller: AppController;
     public view: AppView;
@@ -11,10 +11,10 @@ class App {
 
     start() {
         const sources: Element | null = document.querySelector('.sources');
-        if (sources)
-            sources.addEventListener('click', (e) =>
-                this.controller.getNews<NewsItemAPI>(e, (data) => this.view.drawNews(data))
-            );
+        assertIsDefined(sources);
+        sources.addEventListener('click', (e) =>
+            this.controller.getNews<NewsItemAPI>(e, (data) => this.view.drawNews(data))
+        );
         this.controller.getSources<SourceItemAPI>((data) => this.view.drawSources(data));
     }
 }
