@@ -21,6 +21,9 @@ class AppController extends AppLoader {
                 if (target.classList.contains('source__item')) {
                     const sourceId: string | null = target.getAttribute('data-source-id');
                     assertIsDefined(sourceId);
+                    const btns = document.querySelectorAll('.source__item');
+                    btns.forEach((btn) => btn.classList.remove('source__item_active'));
+                    target.classList.add('source__item_active');
                     if (newsContainer.getAttribute('data-source') !== sourceId) {
                         newsContainer.setAttribute('data-source', sourceId);
                         super.getResp(

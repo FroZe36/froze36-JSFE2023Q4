@@ -20,6 +20,8 @@
 .letter-container {
     display: flex;
     gap: 7px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 .letter {
     font:
@@ -31,6 +33,7 @@
     color: #5ad67d;
     background-color: inherit;
     border-radius: 8px;
+    cursor: pointer;
 }
 
 .source__item {
@@ -51,7 +54,18 @@
     box-shadow: 0 0.5em 0.5em -0.4em #3fcc59;
     transform: translateY(-0.25em);
 }
-
+.source__item_active {
+    border-color: #3fcc59;
+    color: #69db7e;
+    box-shadow: 0 0.5em 0.5em -0.4em #3fcc59;
+    transform: translateY(-0.25em);
+}
+.letter_active {
+    border-color: #30c5ff;
+    color: #30c5ff;
+    box-shadow: 0 0.5em 0.5em -0.4em #30c5ff;
+    transform: translateY(-0.25em);
+}
 .letter:is(:hover, :focus) {
     border-color: #30c5ff;
     color: #30c5ff;

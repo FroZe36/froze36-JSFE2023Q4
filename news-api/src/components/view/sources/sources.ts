@@ -35,7 +35,6 @@ class Sources {
             }
             return acc;
         }, []);
-
         let filteredData: SourcesItem[] = [];
         assertIsDefined(letterItemTemp);
         alphabet.forEach((letter) => {
@@ -44,7 +43,12 @@ class Sources {
                 const btn = letterClone.querySelector('.letter');
                 assertIsDefined(btn);
                 btn.textContent = letter;
-                btn.addEventListener('click', () => {
+                btn.addEventListener('click', (e) => {
+                    const btns = document.querySelectorAll('.letter');
+                    btns.forEach((btn) => btn.classList.remove('letter_active'));
+                    if (e.target instanceof HTMLElement) {
+                        e.target.classList.add('letter_active');
+                    }
                     filteredData = data.filter((item) => item.id.toLowerCase().startsWith(letter));
                     this.draw(filteredData);
                 });
