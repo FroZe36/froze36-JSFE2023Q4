@@ -22,7 +22,40 @@ class Sources {
 
         const sourcesElement = document.querySelector('.sources');
         assertIsDefined(sourcesElement);
+        sourcesElement.innerHTML = '';
         sourcesElement.append(fragment);
+    }
+    drawAlphabet(data: SourcesItem[]) {
+        const fragment: DocumentFragment = document.createDocumentFragment();
+        const letterItemTemp: HTMLTemplateElement | null = document.querySelector('#letterItem');
+        const alphabet = data.reduce((acc: string[], item) => {
+            const initial = item.id.charAt(0).toLowerCase();
+            if (!acc.includes(initial)) {
+                acc.push(initial);
+            }
+            return acc;
+        }, []);
+
+        let filteredData: SourcesItem[] = [];
+        assertIsDefined(letterItemTemp);
+        alphabet.forEach((letter) => {
+            const letterClone = letterItemTemp.content.cloneNode(true);
+            if (letterClone instanceof DocumentFragment) {
+                const btn = letterClone.querySelector('.letter');
+                assertIsDefined(btn);
+                btn.textContent = letter;
+                btn.addEventListener('click', () => {
+                    filteredData = data.filter((item) => item.id.toLowerCase().startsWith(letter));
+                    this.draw(filteredData);
+                });
+            }
+
+            fragment.append(letterClone);
+        });
+
+        const alphabetContainer = document.querySelector('.letter-container');
+        assertIsDefined(alphabetContainer);
+        alphabetContainer.append(fragment);
     }
 }
 

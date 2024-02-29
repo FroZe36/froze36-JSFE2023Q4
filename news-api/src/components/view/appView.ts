@@ -17,7 +17,7 @@ export class AppView {
 
     drawSources(data: SourceItemAPI) {
         const values = data?.sources ? data?.sources : [];
-        this.sources.draw(values);
+        this.sources.drawAlphabet(values);
     }
 }
 

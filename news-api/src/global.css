@@ -12,7 +12,9 @@ header h1 {
     font-size: 40px;
     font-weight: 800;
 }
-
+main {
+  max-width: 1920px;
+}
 footer {
     height: 100px;
     display: flex;
