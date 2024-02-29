@@ -1,3 +1,6 @@
+* {
+  box-sizing: border-box;
+}
 body {
     color: #fff;
     background: #17181c;
@@ -17,34 +20,34 @@ header h1 {
     font-weight: 800;
 }
 main {
-  max-width: 1920px;
-  flex: 1 0 auto;
+    max-width: 1920px;
+    flex: 1 0 auto;
 }
 footer {
     height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 15px;
     flex: 0 0 auto;
 }
 .footer-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
 #rs-logo {
-  width: 100px;
+    width: 100px;
 }
 #data {
-  font-size: 25px;
-  font-weight: bold;
-  color: rgb(193, 255, 6);
+    font-size: 25px;
+    font-weight: bold;
+    color: rgb(193, 255, 6);
 }
 #github {
-  color: rgb(193, 255, 6);
-  font-size: 40px;
+    color: rgb(193, 255, 6);
+    font-size: 40px;
 }
 footer .copyright {
     font-size: 14px;

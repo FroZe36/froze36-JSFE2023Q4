@@ -1,3 +1,34 @@
+@media (max-width: 1880px) {
+  .sources {
+    max-width: 1200px
+  }
+}
+@media (max-width: 1250px) {
+  .sources {
+    max-width: 950px
+  }
+}
+@media (max-width: 920px) {
+  .letter-container {
+    width: 500px;
+  }
+  .sources {
+    max-width: 700px
+  }
+}
+@media (max-width: 700px) {
+  .sources {
+    max-width: 520px
+  }
+}
+@media (max-width: 550px) {
+  .letter-container {
+    width: 300px;
+  }
+  .sources {
+    max-width: 291px;
+  }
+}
 .sources {
     display: flex;
     flex-wrap: wrap;
