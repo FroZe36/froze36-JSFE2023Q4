@@ -1,6 +1,7 @@
 import { View } from '../view';
-import { Form } from '../form/form';
+import { Form } from '../formPage/form';
 import './main.css';
+import { StartView } from '../startPage/start';
 
 export class MainView extends View {
   constructor() {
@@ -9,6 +10,11 @@ export class MainView extends View {
   }
 
   configureView() {
-    this.elementCreator.addInnerElement(new Form().getHtmlElement() as HTMLElement);
+    if (localStorage.getItem('login')) {
+      const startView = new StartView().getHtmlElement();
+      this.elementCreator.addInnerElement(startView as HTMLElement);
+    } else {
+      this.elementCreator.addInnerElement(new Form().getHtmlElement() as HTMLElement);
+    }
   }
 }

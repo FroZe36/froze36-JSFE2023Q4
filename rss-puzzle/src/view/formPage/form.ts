@@ -76,6 +76,7 @@ export class Form extends View {
         localStorage.setItem('login', JSON.stringify({ name: nameInput.value, surname: surnameInput.value }));
         nameInput.value = '';
         surnameInput.value = '';
+        // console.log(this.elementCreator.getElement()?.parentElement?.append());
       }
     });
   }
