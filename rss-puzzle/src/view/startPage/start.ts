@@ -14,10 +14,7 @@ export class StartView extends View {
       classNames: ['button-start'],
     });
     this.configureView();
-    this.init();
   }
-
-  init() {}
 
   configureView() {}
 }

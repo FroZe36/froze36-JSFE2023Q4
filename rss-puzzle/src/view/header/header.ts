@@ -3,6 +3,10 @@ import { View } from '../view';
 import './header.css';
 
 export class HeaderView extends View {
+  onLogOut: (() => void) | null = null;
+
+  name?: string;
+
   constructor() {
     super({
       tagName: 'header',
@@ -12,9 +16,17 @@ export class HeaderView extends View {
   }
 
   configureView() {
-    function logOut() {
+    const logOut = () => {
       localStorage.removeItem('login');
-    }
+      if (this.onLogOut) {
+        this.onLogOut();
+      }
+
+      // while (document.body.firstChild) {
+      //   document.body.firstChild.remove();
+      // }
+      // document.body.append(new Form().getHtmlElement() as HTMLElement);
+    };
 
     const logOutButton = new BaseElement({
       tagName: 'button',

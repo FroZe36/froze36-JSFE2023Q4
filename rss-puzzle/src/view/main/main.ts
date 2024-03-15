@@ -2,11 +2,15 @@ import { View } from '../view';
 import { Form } from '../formPage/form';
 import './main.css';
 import { StartView } from '../startPage/start';
+import { User } from '../../types/interface';
 
 export class MainView extends View {
-  constructor() {
+  onLogInCallback: (user: User) => void;
+
+  constructor(_onLogInCallback: (user: User) => void) {
     super({ tagName: 'main', classNames: [] });
     this.configureView();
+    this.onLogInCallback = _onLogInCallback;
   }
 
   configureView() {
@@ -14,7 +18,11 @@ export class MainView extends View {
       const startView = new StartView().getHtmlElement();
       this.elementCreator.addInnerElement(startView as HTMLElement);
     } else {
-      this.elementCreator.addInnerElement(new Form().getHtmlElement() as HTMLElement);
+      const onLogIn = (user: User) => {
+        this.onLogInCallback(user);
+      };
+      const form = new Form(onLogIn);
+      this.elementCreator.addInnerElement(form.getHtmlElement() as HTMLElement);
     }
   }
 }
