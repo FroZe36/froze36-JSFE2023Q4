@@ -12,15 +12,18 @@ export class StartView extends View {
 
   contentGreeting;
 
-  constructor() {
+  onGameStart: () => void;
+
+  constructor(_onGameStart: () => void) {
     super({
       tagName: 'div',
       classNames: ['start'],
     });
     this.buttonStart = new BaseElement({
       tagName: 'button',
-      classNames: ['start__button'],
+      classNames: ['start__button', 'montserrat-700'],
       text: 'Start Game',
+      callback: () => this.handlerBtnStart(),
     });
     this.content = new BaseElement({
       tagName: 'p',
@@ -36,6 +39,7 @@ export class StartView extends View {
       tagName: 'p',
       classNames: ['start__content', 'start__content_greeting', 'montserrat-500'],
     });
+    this.onGameStart = _onGameStart;
     this.configureView();
   }
 
@@ -50,7 +54,12 @@ export class StartView extends View {
       this.elementCreator.addInnerElement(content);
       contentGreeting.innerHTML = `<span class="span-text">Hello, ${localStorageUser.name} ${localStorageUser.surname}!</span> Are you ready to challenge your brain with a puzzle marathon? 🧩✨ Let's train your logic, piece together vibrant images, and dive into the world of mysteries! Let's go!`;
       this.elementCreator.addInnerElement(contentGreeting);
-      // this.elementCreator.addInnerElement(btnStart);
+      this.elementCreator.addInnerElement(btnStart);
     }
+  }
+
+  handlerBtnStart() {
+    this.elementCreator.getElement()?.parentElement?.setAttribute('game', '');
+    this.onGameStart();
   }
 }

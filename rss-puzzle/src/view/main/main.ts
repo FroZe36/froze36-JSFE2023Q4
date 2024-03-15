@@ -3,6 +3,7 @@ import { Form } from '../formPage/form';
 import './main.css';
 import { StartView } from '../startPage/start';
 import { User } from '../../types/interface';
+import { GameView } from '../gamePage/game';
 
 export class MainView extends View {
   onLogInCallback: (user: User) => void;
@@ -15,14 +16,23 @@ export class MainView extends View {
 
   configureView() {
     if (localStorage.getItem('login')) {
-      const startView = new StartView().getHtmlElement();
-      this.elementCreator.addInnerElement(startView as HTMLElement);
+      const onGameStart = () => {
+        this.configureView();
+      };
+      if (this.elementCreator.getElement()?.hasAttribute('game')) {
+        this.elementCreator.getElement()?.firstChild?.remove();
+        const gameView = new GameView();
+        this.elementCreator.addInnerElement(gameView.getHtmlElement() as HTMLElement);
+      } else {
+        const startView = new StartView(onGameStart);
+        this.elementCreator.addInnerElement(startView.getHtmlElement() as HTMLElement);
+      }
     } else {
       const onLogIn = (user: User) => {
         this.onLogInCallback(user);
       };
-      const form = new Form(onLogIn);
-      this.elementCreator.addInnerElement(form.getHtmlElement() as HTMLElement);
+      const formView = new Form(onLogIn);
+      this.elementCreator.addInnerElement(formView.getHtmlElement() as HTMLElement);
     }
   }
 }
