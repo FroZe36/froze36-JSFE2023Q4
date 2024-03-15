@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 50px;
+  gap: 40px;
   padding: 0px 30px;
 }
 .start__button {
@@ -29,4 +29,12 @@
   color: rgb(96, 144, 247);
   line-height: 1.8;
   text-align: center;
+}
+.start__content.start__content_greeting {
+  font-size: 20px;
+  line-height: 1.5;
+  .span-text {
+    font-size: 26px;
+    color: purple;
+  }
 }

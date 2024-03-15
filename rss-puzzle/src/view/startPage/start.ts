@@ -1,3 +1,4 @@
+import { User } from '../../types/interface';
 import { BaseElement } from '../../utils/createElement';
 import { View } from '../view';
 import './start.css';
@@ -8,6 +9,8 @@ export class StartView extends View {
   content;
 
   contentTitle;
+
+  contentGreeting;
 
   constructor() {
     super({
@@ -29,6 +32,10 @@ export class StartView extends View {
       classNames: ['start__content-title', 'montserrat-900'],
       text: 'ENGLISH PUZZLE GAME',
     });
+    this.contentGreeting = new BaseElement({
+      tagName: 'p',
+      classNames: ['start__content', 'start__content_greeting', 'montserrat-500'],
+    });
     this.configureView();
   }
 
@@ -36,9 +43,13 @@ export class StartView extends View {
     const btnStart = this.buttonStart.getElement();
     const title = this.contentTitle.getElement();
     const content = this.content.getElement();
-    if (btnStart && title && content) {
+    const contentGreeting = this.contentGreeting.getElement();
+    const localStorageUser: User = JSON.parse(localStorage.getItem('login')!);
+    if (btnStart && title && content && contentGreeting) {
       this.elementCreator.addInnerElement(title);
       this.elementCreator.addInnerElement(content);
+      contentGreeting.innerHTML = `<span class="span-text">Hello, ${localStorageUser.name} ${localStorageUser.surname}!</span> Are you ready to challenge your brain with a puzzle marathon? 🧩✨ Let's train your logic, piece together vibrant images, and dive into the world of mysteries! Let's go!`;
+      this.elementCreator.addInnerElement(contentGreeting);
       // this.elementCreator.addInnerElement(btnStart);
     }
   }
