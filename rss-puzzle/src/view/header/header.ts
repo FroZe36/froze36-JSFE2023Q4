@@ -30,7 +30,7 @@ export class HeaderView extends View {
 
     const logOutButton = new BaseElement({
       tagName: 'button',
-      classNames: ['button-logout'],
+      classNames: ['button-logout', 'montserrat-700'],
       text: 'Log Out',
       callback: logOut,
     });

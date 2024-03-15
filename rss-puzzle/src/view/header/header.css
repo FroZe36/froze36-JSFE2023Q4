@@ -1,15 +1,16 @@
 .header {
-  height: 10%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  background-color: white;
+  background-color: inherit;
+  flex: 0 1 auto;
 
   .button-logout {
     margin-top: 25px;
     margin-right: 25px;
     font-size: 32px;
-    background-color: yellow;
+    background-color: purple;
+    color: rgb(255, 208, 0);
     border: none;
     padding: 12px 50px;
     border-radius: 8px;
