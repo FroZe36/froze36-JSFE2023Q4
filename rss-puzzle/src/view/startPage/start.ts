@@ -52,7 +52,7 @@ export class StartView extends View {
     if (btnStart && title && content && contentGreeting) {
       this.elementCreator.addInnerElement(title);
       this.elementCreator.addInnerElement(content);
-      contentGreeting.innerHTML = `<span class="span-text">Hello, ${localStorageUser.name} ${localStorageUser.surname}!</span> Are you ready to challenge your brain with a puzzle marathon? 🧩✨ Let's train your logic, piece together vibrant images, and dive into the world of mysteries! Let's go!`;
+      contentGreeting.innerHTML = `<span class="span-text">Hello, ${localStorageUser.name} ${localStorageUser.surname} !</span> Are you ready to challenge your brain with a puzzle marathon? 🧩✨ Let's train your logic, piece together vibrant images, and dive into the world of mysteries! Let's go!`;
       this.elementCreator.addInnerElement(contentGreeting);
       this.elementCreator.addInnerElement(btnStart);
     }

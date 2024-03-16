@@ -55,7 +55,7 @@ button {
   padding: 0;
   cursor: pointer;
 }
-button:hover {
+button:not(.button-submit):hover {
   opacity: 0.8;
 }
 
