@@ -94,24 +94,23 @@ export class GameView extends View {
     setTimeout(() => this.setWidth(shuffledWords), 300);
   }
 
-  /** БАГ С ВОЗВРАЩЕНИЕМ ЭЛЕМЕНТОВ!!! */
-
   handleWordClick(event: MouseEvent | Event | KeyboardEvent | null, number: number) {
     const resultSentenceContainer = document.body.querySelectorAll('.game__result-sentence')[number];
     const shuffleSentenceContainer = document.body.querySelector('.game__shuffle-sentence');
     const target = event?.target;
     if (target instanceof HTMLElement) {
       const originalIndex = parseInt(target.getAttribute('data-index') || '0', 10);
-      if (target.parentNode === resultSentenceContainer) {
-        const originalPosition = shuffleSentenceContainer?.querySelectorAll('.game-word')[originalIndex];
-        console.log(shuffleSentenceContainer?.querySelectorAll('.game-word'), originalIndex);
-        if (originalPosition) {
-          shuffleSentenceContainer?.insertBefore(target, originalPosition);
-        } else {
+      if (target.parentNode === resultSentenceContainer && shuffleSentenceContainer) {
+        const shuffleSentenceContainerWords = shuffleSentenceContainer.querySelectorAll('.game-word');
+        for (let i = 0; i < shuffleSentenceContainerWords.length; i += 1) {
+          const wordAttribute = parseInt(shuffleSentenceContainerWords[i].getAttribute('data-index') || '0', 10);
+          if (wordAttribute > originalIndex) {
+            shuffleSentenceContainer?.insertBefore(target, shuffleSentenceContainerWords[i]);
+            return;
+          }
           shuffleSentenceContainer?.append(target);
         }
       } else {
-        console.log('undefined');
         resultSentenceContainer?.append(target);
       }
     }
