@@ -1,5 +1,5 @@
 .game {
-  width: 50%;
+  width: 48%;
 }
 .game-header {
 }
@@ -19,12 +19,10 @@
 }
 .game__result-sentence {
   display: flex;
-  gap: 3px;
   height: 57px;
 }
 .game__shuffle-sentence {
   display: flex;
-  gap: 3px;
   border-radius: 8px;
   height: 57px;
   /* border: 1px solid grey; */
@@ -35,9 +33,11 @@
   background-color: #f0f0f0;
 }
 .game-word {
-  display: inline-block;
-  padding: 15px;
-  font-size: 20px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 5px;
+  font-size: clamp(0.6rem, 1.1vw, 1.5rem);
   border: 2px solid purple;
   border-radius: 8px;
   cursor: pointer;

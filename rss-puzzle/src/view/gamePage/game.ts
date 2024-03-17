@@ -48,6 +48,11 @@ export class GameView extends View {
     this.word = wordCollectionLevel1.rounds[0].words[0].textExample.split(' ');
     this.configureView();
     this.init();
+    window.addEventListener('resize', () => {
+      // const parentSize = this.elementCreator.getElement()?.offsetWidth;
+      // const clientSize = this.elementCreator.getElement()?.clientWidth;
+      // console.log(parentSize, clientSize);
+    });
   }
 
   init() {
@@ -80,11 +85,15 @@ export class GameView extends View {
         classNames: ['game-word', 'montserrat-700'],
         callback: (e) => this.handleWordClick(e, number),
       }).getElement();
-      if (word) word.textContent = shuffledWords[i];
-      word?.setAttribute('data-index', i.toString());
+      if (word) {
+        word.textContent = shuffledWords[i];
+        word?.setAttribute('data-index', i.toString());
+      }
       this.containerWithShuffleSentence.addInnerElement(word as HTMLElement);
     }
+    setTimeout(() => this.setWidth(shuffledWords), 300);
   }
+
   /** БАГ С ВОЗВРАЩЕНИЕМ ЭЛЕМЕНТОВ!!! */
 
   handleWordClick(event: MouseEvent | Event | KeyboardEvent | null, number: number) {
@@ -105,6 +114,26 @@ export class GameView extends View {
         console.log('undefined');
         resultSentenceContainer?.append(target);
       }
+    }
+  }
+
+  setWidth(shuffledWords: string[]) {
+    const containerWidth = this.containerForPlayGround.getElement()?.offsetWidth;
+    const copyShuffleWords = shuffledWords;
+    const words = document.body.querySelectorAll('.game-word');
+    if (containerWidth) {
+      const averageLengthLetters = copyShuffleWords.reduce((acc, curr) => {
+        let copyAcc = acc;
+        copyAcc += curr.length;
+        return copyAcc;
+      }, 0);
+      const width = containerWidth / averageLengthLetters;
+      words.forEach((item, index) => {
+        const element = item;
+        if (element instanceof HTMLElement) {
+          element.style.width = `${width * copyShuffleWords[index].length}px`;
+        }
+      });
     }
   }
 }
