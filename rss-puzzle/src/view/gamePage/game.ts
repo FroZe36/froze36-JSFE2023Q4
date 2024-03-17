@@ -5,10 +5,6 @@ import { WordCollection } from '../../types/interface';
 import { BaseElement } from '../../utils/createElement';
 
 export class GameView extends View {
-  playGround: HTMLElement[];
-
-  wordResult: HTMLElement[];
-
   word: string[];
 
   wrapperHeader;
@@ -20,6 +16,12 @@ export class GameView extends View {
   containerWithShuffleSentence;
 
   containerForPlayGround;
+
+  containerForButtons;
+
+  number: number;
+
+  shuffledWords: BaseElement[];
 
   constructor() {
     super({
@@ -43,28 +45,29 @@ export class GameView extends View {
       tagName: 'div',
       classNames: ['game__ground'],
     });
-    this.playGround = [];
-    this.wordResult = [];
+    this.containerForButtons = new BaseElement({
+      tagName: 'div',
+      classNames: ['game-btn-container'],
+    });
+    this.shuffledWords = [];
+    this.number = 0;
     this.word = wordCollectionLevel1.rounds[0].words[0].textExample.split(' ');
     this.configureView();
     this.init();
-    window.addEventListener('resize', () => {
-      // const parentSize = this.elementCreator.getElement()?.offsetWidth;
-      // const clientSize = this.elementCreator.getElement()?.clientWidth;
-      // console.log(parentSize, clientSize);
-    });
   }
 
   init() {
     this.wrapperGame.addInnerElement(this.containerForPlayGround.getElement() as HTMLElement);
     this.wrapperGame.addInnerElement(this.containerWithShuffleSentence.getElement() as HTMLElement);
+    this.wrapperGame.addInnerElement(this.containerForButtons.getElement() as HTMLElement);
     this.elementCreator.addInnerElement(this.wrapperGame.getElement() as HTMLElement);
   }
 
   configureView() {
     console.log(this.collection[0]);
     this.configurePlayGround();
-    this.createNewWord(0);
+    this.createNewWord(this.number);
+    this.createButton();
   }
 
   configurePlayGround() {
@@ -77,25 +80,28 @@ export class GameView extends View {
     }
   }
 
-  createNewWord(number: number) {
-    const shuffledWords = [...this.word].sort(() => Math.random() - 0.5);
+  createNewWord(number: number, wordItem = this.word) {
+    const shuffledWords = [...wordItem].sort(() => Math.random() - 0.5);
     for (let i = 0; i < shuffledWords.length; i += 1) {
       const word = new BaseElement({
         tagName: 'div',
         classNames: ['game-word', 'montserrat-700'],
-        callback: (e) => this.handleWordClick(e, number),
-      }).getElement();
-      if (word) {
-        word.textContent = shuffledWords[i];
-        word?.setAttribute('data-index', i.toString());
+        callback: (e) => this.handlerWordClick(e, number),
+      });
+      this.shuffledWords.push(word);
+      const wordElement = word.getElement();
+      if (wordElement) {
+        wordElement.textContent = shuffledWords[i];
+        wordElement?.setAttribute('data-index', i.toString());
       }
-      this.containerWithShuffleSentence.addInnerElement(word as HTMLElement);
+      this.containerWithShuffleSentence.addInnerElement(wordElement as HTMLElement);
     }
     setTimeout(() => this.setWidth(shuffledWords), 300);
   }
 
-  handleWordClick(event: MouseEvent | Event | KeyboardEvent | null, number: number) {
+  handlerWordClick(event: MouseEvent | Event | KeyboardEvent | null, number: number) {
     const resultSentenceContainer = document.body.querySelectorAll('.game__result-sentence')[number];
+    resultSentenceContainer.classList.add('inprogress');
     const shuffleSentenceContainer = document.body.querySelector('.game__shuffle-sentence');
     const target = event?.target;
     if (target instanceof HTMLElement) {
@@ -108,10 +114,14 @@ export class GameView extends View {
             shuffleSentenceContainer?.insertBefore(target, shuffleSentenceContainerWords[i]);
             return;
           }
-          shuffleSentenceContainer?.append(target);
         }
+        shuffleSentenceContainer?.append(target);
+        // if (resultSentenceContainer) {
+        //   this.checkWin(resultSentenceContainer.querySelectorAll('.game-word'));
+        // }
       } else {
         resultSentenceContainer?.append(target);
+        this.checkWin(resultSentenceContainer.querySelectorAll('.game-word'));
       }
     }
   }
@@ -119,8 +129,8 @@ export class GameView extends View {
   setWidth(shuffledWords: string[]) {
     const containerWidth = this.containerForPlayGround.getElement()?.offsetWidth;
     const copyShuffleWords = shuffledWords;
-    const words = document.body.querySelectorAll('.game-word');
-    if (containerWidth) {
+    const words = this.containerWithShuffleSentence.getElement()?.querySelectorAll('.game-word');
+    if (containerWidth && words) {
       const averageLengthLetters = copyShuffleWords.reduce((acc, curr) => {
         let copyAcc = acc;
         copyAcc += curr.length;
@@ -134,5 +144,56 @@ export class GameView extends View {
         }
       });
     }
+  }
+
+  createButton() {
+    const buttonContinue = new BaseElement({
+      tagName: 'button',
+      classNames: ['game__button-continue', 'montserrat-700'],
+      text: 'Continue',
+      callback: (event) => this.handlerCheckBtn(event),
+    }).getElement() as HTMLButtonElement;
+    buttonContinue.disabled = true;
+    this.containerForButtons.addInnerElement(buttonContinue as HTMLButtonElement);
+  }
+
+  handlerCheckBtn(event: MouseEvent | Event | KeyboardEvent | null) {
+    const target = event?.target;
+    if (target && target instanceof HTMLElement) {
+      // const resultSentenceContainer = document.body.querySelector('.game__result-sentence.inprogress');
+      // const resultWords = resultSentenceContainer?.querySelectorAll('.game-word');
+      if (target.classList.contains('ready')) {
+        this.shuffledWords.forEach((item) => item.removeCallback());
+        this.number += 1;
+        this.nextSentense(this.number);
+        const buttonContinue = target as HTMLButtonElement;
+        buttonContinue.disabled = true;
+      }
+    }
+  }
+
+  checkWin(container: NodeListOf<Element>) {
+    const buttonContinue = this.containerForButtons
+      .getElement()
+      ?.querySelector('.game__button-continue') as HTMLButtonElement;
+    const result = Array.from(container).map((item) => item.textContent);
+    if (this.word.every((word, index) => word === result[index])) {
+      buttonContinue?.classList.add('ready');
+      buttonContinue.disabled = false;
+    }
+    // if (container.length === 0 && buttonContinue) {
+    //   buttonContinue?.classList.add('ready');
+    //   buttonContinue.disabled = false;
+    // } else {
+    //   buttonContinue?.classList.remove('ready');
+    //   buttonContinue.disabled = true;
+    // }
+  }
+
+  nextSentense(number: number) {
+    this.word = wordCollectionLevel1.rounds[0].words[number].textExample.split(' ');
+    const resultSentenceContainer = document.body.querySelectorAll('.game__result-sentence');
+    resultSentenceContainer.forEach((item) => item.classList.remove('inprogress'));
+    this.createNewWord(number);
   }
 }

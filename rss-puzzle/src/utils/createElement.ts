@@ -3,8 +3,11 @@ import { ElementParam } from '../types/interface';
 export class BaseElement {
   element: HTMLElement | null;
 
+  clickHandler: ((event: MouseEvent) => void) | null;
+
   constructor(param: ElementParam) {
     this.element = null;
+    this.clickHandler = null;
     this.createElement(param);
   }
 
@@ -40,7 +43,15 @@ export class BaseElement {
 
   setCallback(callback: (e: null | MouseEvent | Event) => void) {
     if (typeof callback === 'function' && this.element) {
-      this.element.addEventListener('click', (event) => callback(event));
+      this.clickHandler = (event: MouseEvent) => callback(event);
+      this.element.addEventListener('click', this.clickHandler);
+    }
+  }
+
+  removeCallback() {
+    if (this.element && this.clickHandler) {
+      this.element.removeEventListener('click', this.clickHandler);
+      this.clickHandler = null;
     }
   }
 }

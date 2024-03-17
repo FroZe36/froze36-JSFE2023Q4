@@ -42,3 +42,20 @@
   border-radius: 8px;
   cursor: pointer;
 }
+.game__button-continue {
+  border: none;
+  font-size: 32px;
+  background-color: purple;
+  color: rgb(255, 208, 0);
+  border: none;
+  padding: 12px 50px;
+  border-radius: 8px;
+}
+.game__button-continue:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.game__button-continue.ready {
+}
+.game-btn-container {
+}
