@@ -61,6 +61,7 @@ export class GameView extends View {
     this.wrapperGame.addInnerElement(this.containerWithShuffleSentence.getElement() as HTMLElement);
     this.wrapperGame.addInnerElement(this.containerForButtons.getElement() as HTMLElement);
     this.elementCreator.addInnerElement(this.wrapperGame.getElement() as HTMLElement);
+    console.log(this.word);
   }
 
   configureView() {
@@ -127,7 +128,7 @@ export class GameView extends View {
       }
       if (emptyContainer) emptyContainer[i].appendChild(wordElement as HTMLElement);
     }
-    setTimeout(() => this.setWidth(shuffledWords), 0);
+    setTimeout(() => this.setWidth(shuffledWords));
   }
 
   handlerWordClick(event: MouseEvent | Event | KeyboardEvent | null) {
@@ -141,19 +142,19 @@ export class GameView extends View {
         resultSentenceContainer
       ) {
         const emptyWordsResult = resultSentenceContainer?.querySelectorAll('.empty');
-        this.checkContainer(emptyWordsResult, target);
+        this.insertElement(emptyWordsResult, target);
         this.checkWin(resultSentenceContainer);
       } else {
         const emptyWordsShuffle = shuffleSentenceContainer?.querySelectorAll('.empty');
         if (emptyWordsShuffle && shuffleSentenceContainer) {
-          this.checkContainer(emptyWordsShuffle, target);
+          this.insertElement(emptyWordsShuffle, target);
           this.checkWin(shuffleSentenceContainer);
         }
       }
     }
   }
 
-  checkContainer(containerEmptyWords: NodeListOf<Element>, target: HTMLElement) {
+  insertElement(containerEmptyWords: NodeListOf<Element>, target: HTMLElement) {
     for (let i = 0; i < containerEmptyWords.length; i += 1) {
       if (containerEmptyWords[i].classList.contains('empty') && !containerEmptyWords[i].classList.contains('insert')) {
         const firstEmptySlot = containerEmptyWords[i];
@@ -168,10 +169,10 @@ export class GameView extends View {
     }
   }
 
-  setWidth(shuffledWords: string[]) {
+  setWidth(shuffledWords: string[], parentContainer = this.containerWithShuffleSentence.getElement()) {
     const containerWidth = this.containerForPlayGround.getElement()?.offsetWidth;
     const copyShuffleWords = shuffledWords;
-    const words = this.containerWithShuffleSentence.getElement()?.querySelectorAll('.game-word');
+    const words = parentContainer?.querySelectorAll('.game-word');
     if (containerWidth && words) {
       const averageLengthLetters = copyShuffleWords.reduce((acc, curr) => {
         let copyAcc = acc;
@@ -196,7 +197,14 @@ export class GameView extends View {
       callback: (event) => this.handlerCheckBtn(event),
     }).getElement() as HTMLButtonElement;
     buttonContinue.disabled = true;
-    this.containerForButtons.addInnerElement(buttonContinue as HTMLButtonElement);
+    const buttonAutoComplete = new BaseElement({
+      tagName: 'button',
+      classNames: ['game__button-autocomplete', 'montserrat-700'],
+      text: 'Auto-Complete',
+      callback: () => this.handlerAutoCompletBtn(),
+    }).getElement() as HTMLButtonElement;
+    this.containerForButtons.addInnerElement(buttonContinue);
+    this.containerForButtons.addInnerElement(buttonAutoComplete);
   }
 
   handlerCheckBtn(event: MouseEvent | Event | KeyboardEvent | null) {
@@ -230,6 +238,43 @@ export class GameView extends View {
           buttonContinue.textContent = 'Check';
         }
       }
+    }
+  }
+
+  handlerAutoCompletBtn() {
+    const resultSentenceContainer = document.body.querySelector('.game__result-sentence.inprogress');
+    const resultEmptyBlock = resultSentenceContainer?.querySelectorAll('.empty');
+    const shuffleSentenceWords = this.containerWithShuffleSentence.getElement()?.querySelectorAll('.empty');
+    const buttonContinue = this.containerForButtons
+      .getElement()
+      ?.querySelector('.game__button-continue') as HTMLButtonElement;
+
+    if (resultEmptyBlock && shuffleSentenceWords && resultSentenceContainer && buttonContinue) {
+      resultEmptyBlock.forEach((item) => {
+        item.firstChild?.remove();
+        item.classList.add('insert');
+      });
+      shuffleSentenceWords.forEach((item) => {
+        item.firstChild?.remove();
+        item.classList.remove('insert');
+      });
+      resultEmptyBlock.forEach((item, index) => {
+        item.appendChild(
+          new BaseElement({
+            tagName: 'div',
+            classNames: ['game-word', 'montserrat-700'],
+            text: `${this.word[index]}`,
+          }).getElement() as HTMLElement,
+        );
+      });
+      const wordsResult = resultSentenceContainer?.querySelectorAll('.game-word');
+      const wordsShuffleArray = Array.from(wordsResult)
+        .map((word) => word.textContent)
+        .filter((item): item is string => item !== null);
+      setTimeout(() => this.setWidth(wordsShuffleArray, resultSentenceContainer as HTMLElement));
+      buttonContinue.textContent = 'Continue';
+      buttonContinue?.classList.add('ready');
+      buttonContinue.disabled = false;
     }
   }
 
