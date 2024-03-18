@@ -204,25 +204,31 @@ export class GameView extends View {
     if (target && target instanceof HTMLElement) {
       const resultSentenceContainer = document.body.querySelector('.game__result-sentence.inprogress');
       const resultWords = resultSentenceContainer?.querySelectorAll('.game-word');
-      if (target.classList.contains('check') && resultWords) {
+      const buttonContinue = target as HTMLButtonElement;
+      if (resultWords) {
         const result = Array.from(resultWords).map((word) => word.textContent);
-        this.word.forEach((word, index) => {
-          if (word === result[index]) {
-            resultWords[index].classList.add('right');
-          } else {
-            resultWords[index].classList.add('wrong');
+        if (target.classList.contains('check')) {
+          this.word.forEach((word, index) => {
+            if (word === result[index]) {
+              resultWords[index].classList.add('right');
+            } else {
+              resultWords[index].classList.add('wrong');
+            }
+          });
+          setTimeout(() => resultWords.forEach((item) => item.classList.remove('right', 'wrong')), 3000);
+          if (this.word.every((word, index) => word === result[index])) {
+            buttonContinue.classList.remove('check');
+            buttonContinue.textContent = 'Continue';
+            buttonContinue?.classList.add('ready');
           }
-        });
-        setTimeout(() => resultWords.forEach((item) => item.classList.remove('right', 'wrong')), 3000);
-      }
-      if (target.classList.contains('ready')) {
-        this.shuffledWords.forEach((item) => item.removeCallback());
-        this.number += 1;
-        this.nextSentense(this.number);
-        const buttonContinue = target as HTMLButtonElement;
-        buttonContinue.disabled = true;
-        buttonContinue.classList.remove('ready');
-        buttonContinue.textContent = 'Check';
+        } else if (target.classList.contains('ready')) {
+          this.shuffledWords.forEach((item) => item.removeCallback());
+          this.number += 1;
+          this.nextSentense(this.number);
+          buttonContinue.disabled = true;
+          buttonContinue.classList.remove('ready');
+          buttonContinue.textContent = 'Check';
+        }
       }
     }
   }
@@ -232,15 +238,10 @@ export class GameView extends View {
       .getElement()
       ?.querySelector('.game__button-continue') as HTMLButtonElement;
     const resultWords = containerResult.querySelectorAll('.game-word');
-    const result = Array.from(resultWords).map((item) => item.textContent);
+    // const result = Array.from(resultWords).map((item) => item.textContent);
     if (resultWords.length === this.word.length && containerResult.classList.contains('inprogress')) {
       buttonContinue.disabled = false;
       buttonContinue.classList.add('check');
-      if (this.word.every((word, index) => word === result[index])) {
-        buttonContinue.classList.remove('check');
-        buttonContinue.textContent = 'Continue';
-        buttonContinue?.classList.add('ready');
-      }
     } else {
       buttonContinue.disabled = true;
       buttonContinue.textContent = 'Check';
