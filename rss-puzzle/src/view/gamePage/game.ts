@@ -283,7 +283,6 @@ export class GameView extends View {
       .getElement()
       ?.querySelector('.game__button-continue') as HTMLButtonElement;
     const resultWords = containerResult.querySelectorAll('.game-word');
-    // const result = Array.from(resultWords).map((item) => item.textContent);
     if (resultWords.length === this.word.length && containerResult.classList.contains('inprogress')) {
       buttonContinue.disabled = false;
       buttonContinue.classList.add('check');
@@ -292,14 +291,6 @@ export class GameView extends View {
       buttonContinue.textContent = 'Check';
       buttonContinue.classList.remove('check', 'ready');
     }
-    // if (resultContainer.length !== this.word.length) buttonContinue.disabled = true;
-    // if (container.length === 0 && buttonContinue) {
-    //   buttonContinue?.classList.add('ready');
-    //   buttonContinue.disabled = false;
-    // } else {
-    //   buttonContinue?.classList.remove('ready');
-    //   buttonContinue.disabled = true;
-    // }
   }
 
   nextSentense(number: number) {

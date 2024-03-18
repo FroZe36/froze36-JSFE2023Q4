@@ -19,6 +19,7 @@
     "browser": true,
     "node": true
   },
+  "noInlineConfig": true,
   "ignorePatterns": ["webpack.config.js", "webpack.dev.config.js", "webpack.prod.config.js"],
   "rules": {
     "no-debugger": "off",
@@ -34,6 +35,5 @@
       }
     ],
     "max-lines-per-function": ["error", 40]
-
   }
 }
