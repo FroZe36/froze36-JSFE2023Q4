@@ -127,7 +127,7 @@ export class GameView extends View {
       }
       if (emptyContainer) emptyContainer[i].appendChild(wordElement as HTMLElement);
     }
-    setTimeout(() => this.setWidth(shuffledWords), 100);
+    setTimeout(() => this.setWidth(shuffledWords), 0);
   }
 
   handlerWordClick(event: MouseEvent | Event | KeyboardEvent | null) {
@@ -137,16 +137,17 @@ export class GameView extends View {
     if (target instanceof HTMLElement) {
       if (
         target.parentNode?.parentNode === shuffleSentenceContainer &&
-        resultSentenceContainer &&
-        shuffleSentenceContainer
+        shuffleSentenceContainer &&
+        resultSentenceContainer
       ) {
         const emptyWordsResult = resultSentenceContainer?.querySelectorAll('.empty');
         this.checkContainer(emptyWordsResult, target);
-        this.checkWin(resultSentenceContainer?.querySelectorAll('.game-word'));
+        this.checkWin(resultSentenceContainer);
       } else {
         const emptyWordsShuffle = shuffleSentenceContainer?.querySelectorAll('.empty');
-        if (emptyWordsShuffle) {
+        if (emptyWordsShuffle && shuffleSentenceContainer) {
           this.checkContainer(emptyWordsShuffle, target);
+          this.checkWin(shuffleSentenceContainer);
         }
       }
     }
@@ -191,7 +192,7 @@ export class GameView extends View {
     const buttonContinue = new BaseElement({
       tagName: 'button',
       classNames: ['game__button-continue', 'montserrat-700'],
-      text: 'Continue',
+      text: 'Check',
       callback: (event) => this.handlerCheckBtn(event),
     }).getElement() as HTMLButtonElement;
     buttonContinue.disabled = true;
@@ -201,8 +202,19 @@ export class GameView extends View {
   handlerCheckBtn(event: MouseEvent | Event | KeyboardEvent | null) {
     const target = event?.target;
     if (target && target instanceof HTMLElement) {
-      // const resultSentenceContainer = document.body.querySelector('.game__result-sentence.inprogress');
-      // const resultWords = resultSentenceContainer?.querySelectorAll('.game-word');
+      const resultSentenceContainer = document.body.querySelector('.game__result-sentence.inprogress');
+      const resultWords = resultSentenceContainer?.querySelectorAll('.game-word');
+      if (target.classList.contains('check') && resultWords) {
+        const result = Array.from(resultWords).map((word) => word.textContent);
+        this.word.forEach((word, index) => {
+          if (word === result[index]) {
+            resultWords[index].classList.add('right');
+          } else {
+            resultWords[index].classList.add('wrong');
+          }
+        });
+        setTimeout(() => resultWords.forEach((item) => item.classList.remove('right', 'wrong')), 3000);
+      }
       if (target.classList.contains('ready')) {
         this.shuffledWords.forEach((item) => item.removeCallback());
         this.number += 1;
@@ -210,20 +222,31 @@ export class GameView extends View {
         const buttonContinue = target as HTMLButtonElement;
         buttonContinue.disabled = true;
         buttonContinue.classList.remove('ready');
+        buttonContinue.textContent = 'Check';
       }
     }
   }
 
-  checkWin(container: NodeListOf<Element>) {
+  checkWin(containerResult: Element) {
     const buttonContinue = this.containerForButtons
       .getElement()
       ?.querySelector('.game__button-continue') as HTMLButtonElement;
-    console.log(container);
-    const result = Array.from(container).map((item) => item.textContent);
-    if (this.word.every((word, index) => word === result[index])) {
-      buttonContinue?.classList.add('ready');
+    const resultWords = containerResult.querySelectorAll('.game-word');
+    const result = Array.from(resultWords).map((item) => item.textContent);
+    if (resultWords.length === this.word.length && containerResult.classList.contains('inprogress')) {
       buttonContinue.disabled = false;
+      buttonContinue.classList.add('check');
+      if (this.word.every((word, index) => word === result[index])) {
+        buttonContinue.classList.remove('check');
+        buttonContinue.textContent = 'Continue';
+        buttonContinue?.classList.add('ready');
+      }
+    } else {
+      buttonContinue.disabled = true;
+      buttonContinue.textContent = 'Check';
+      buttonContinue.classList.remove('check', 'ready');
     }
+    // if (resultContainer.length !== this.word.length) buttonContinue.disabled = true;
     // if (container.length === 0 && buttonContinue) {
     //   buttonContinue?.classList.add('ready');
     //   buttonContinue.disabled = false;
