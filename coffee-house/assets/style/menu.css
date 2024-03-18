@@ -316,6 +316,7 @@ body.no-scroll {
   border-radius: 40px;
   padding: 16px;
   cursor: default;
+  margin: 0 40px;
 }
 .modal-buy__wrapper-img {
   flex: 1 0 314px;
@@ -540,6 +541,9 @@ body.no-scroll {
 @media (max-width: 630px) {
   .modal-buy__wrapper-img {
     display: none;
+  }
+  .modal-buy__wrapper {
+    margin: 0 19px;
   }
 }
 @media (max-width: 550px) {
