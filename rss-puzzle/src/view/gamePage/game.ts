@@ -66,27 +66,58 @@ export class GameView extends View {
   configureView() {
     console.log(this.collection[0]);
     this.configurePlayGround();
-    this.createNewWord(this.number);
+    this.createEmptyBlock();
+    this.createNewWord();
     this.createButton();
   }
 
-  configurePlayGround() {
+  configurePlayGround(number = this.number) {
     for (let i = 0; i < this.collection[0].rounds[0].words.length; i += 1) {
       const playGroundSentence = new BaseElement({
         tagName: 'div',
         classNames: ['game__result-sentence'],
       }).getElement();
+
       this.containerForPlayGround.addInnerElement(playGroundSentence as HTMLElement);
+    }
+    this.containerForPlayGround
+      .getElement()
+      ?.querySelectorAll('.game__result-sentence')
+      [number].classList.add('inprogress');
+  }
+
+  createEmptyBlock(emptyItem = this.word) {
+    const container = this.containerWithShuffleSentence.getElement();
+    if (container) container.innerHTML = '';
+    for (let i = 0; i < emptyItem.length; i += 1) {
+      const emptyDiv = new BaseElement({
+        tagName: 'div',
+        classNames: ['empty'],
+      }).getElement();
+      emptyDiv?.setAttribute('empty-index', i.toString());
+      this.containerForPlayGround
+        .getElement()
+        ?.querySelector('.inprogress')
+        ?.append(emptyDiv as HTMLElement);
+    }
+    for (let i = 0; i < emptyItem.length; i += 1) {
+      const emptyDiv = new BaseElement({
+        tagName: 'div',
+        classNames: ['empty', 'insert'],
+      }).getElement();
+      emptyDiv?.setAttribute('empty-index', i.toString());
+      this.containerWithShuffleSentence.getElement()?.append(emptyDiv as HTMLElement);
     }
   }
 
-  createNewWord(number: number, wordItem = this.word) {
+  createNewWord(wordItem = this.word) {
     const shuffledWords = [...wordItem].sort(() => Math.random() - 0.5);
+    const emptyContainer = this.containerWithShuffleSentence.getElement()?.querySelectorAll('.empty');
     for (let i = 0; i < shuffledWords.length; i += 1) {
       const word = new BaseElement({
         tagName: 'div',
         classNames: ['game-word', 'montserrat-700'],
-        callback: (e) => this.handlerWordClick(e, number),
+        callback: (e) => this.handlerWordClick(e),
       });
       this.shuffledWords.push(word);
       const wordElement = word.getElement();
@@ -94,34 +125,44 @@ export class GameView extends View {
         wordElement.textContent = shuffledWords[i];
         wordElement?.setAttribute('data-index', i.toString());
       }
-      this.containerWithShuffleSentence.addInnerElement(wordElement as HTMLElement);
+      if (emptyContainer) emptyContainer[i].appendChild(wordElement as HTMLElement);
     }
-    setTimeout(() => this.setWidth(shuffledWords), 300);
+    setTimeout(() => this.setWidth(shuffledWords), 100);
   }
 
-  handlerWordClick(event: MouseEvent | Event | KeyboardEvent | null, number: number) {
-    const resultSentenceContainer = document.body.querySelectorAll('.game__result-sentence')[number];
-    resultSentenceContainer.classList.add('inprogress');
-    const shuffleSentenceContainer = document.body.querySelector('.game__shuffle-sentence');
+  handlerWordClick(event: MouseEvent | Event | KeyboardEvent | null) {
+    const resultSentenceContainer = this.containerForPlayGround.getElement()?.querySelector('.inprogress');
+    const shuffleSentenceContainer = this.containerWithShuffleSentence.getElement();
     const target = event?.target;
     if (target instanceof HTMLElement) {
-      const originalIndex = parseInt(target.getAttribute('data-index') || '0', 10);
-      if (target.parentNode === resultSentenceContainer && shuffleSentenceContainer) {
-        const shuffleSentenceContainerWords = shuffleSentenceContainer.querySelectorAll('.game-word');
-        for (let i = 0; i < shuffleSentenceContainerWords.length; i += 1) {
-          const wordAttribute = parseInt(shuffleSentenceContainerWords[i].getAttribute('data-index') || '0', 10);
-          if (wordAttribute > originalIndex) {
-            shuffleSentenceContainer?.insertBefore(target, shuffleSentenceContainerWords[i]);
-            return;
-          }
-        }
-        shuffleSentenceContainer?.append(target);
-        // if (resultSentenceContainer) {
-        //   this.checkWin(resultSentenceContainer.querySelectorAll('.game-word'));
-        // }
+      if (
+        target.parentNode?.parentNode === shuffleSentenceContainer &&
+        resultSentenceContainer &&
+        shuffleSentenceContainer
+      ) {
+        const emptyWordsResult = resultSentenceContainer?.querySelectorAll('.empty');
+        this.checkContainer(emptyWordsResult, target);
+        this.checkWin(resultSentenceContainer?.querySelectorAll('.game-word'));
       } else {
-        resultSentenceContainer?.append(target);
-        this.checkWin(resultSentenceContainer.querySelectorAll('.game-word'));
+        const emptyWordsShuffle = shuffleSentenceContainer?.querySelectorAll('.empty');
+        if (emptyWordsShuffle) {
+          this.checkContainer(emptyWordsShuffle, target);
+        }
+      }
+    }
+  }
+
+  checkContainer(containerEmptyWords: NodeListOf<Element>, target: HTMLElement) {
+    for (let i = 0; i < containerEmptyWords.length; i += 1) {
+      if (containerEmptyWords[i].classList.contains('empty') && !containerEmptyWords[i].classList.contains('insert')) {
+        const firstEmptySlot = containerEmptyWords[i];
+        const ParentEmptyTarget = target.parentNode;
+        if (ParentEmptyTarget instanceof HTMLElement) {
+          ParentEmptyTarget.classList.remove('insert');
+        }
+        firstEmptySlot.appendChild(target);
+        firstEmptySlot.classList.add('insert');
+        break;
       }
     }
   }
@@ -168,6 +209,7 @@ export class GameView extends View {
         this.nextSentense(this.number);
         const buttonContinue = target as HTMLButtonElement;
         buttonContinue.disabled = true;
+        buttonContinue.classList.remove('ready');
       }
     }
   }
@@ -176,6 +218,7 @@ export class GameView extends View {
     const buttonContinue = this.containerForButtons
       .getElement()
       ?.querySelector('.game__button-continue') as HTMLButtonElement;
+    console.log(container);
     const result = Array.from(container).map((item) => item.textContent);
     if (this.word.every((word, index) => word === result[index])) {
       buttonContinue?.classList.add('ready');
@@ -194,6 +237,8 @@ export class GameView extends View {
     this.word = wordCollectionLevel1.rounds[0].words[number].textExample.split(' ');
     const resultSentenceContainer = document.body.querySelectorAll('.game__result-sentence');
     resultSentenceContainer.forEach((item) => item.classList.remove('inprogress'));
-    this.createNewWord(number);
+    resultSentenceContainer[number].classList.add('inprogress');
+    this.createEmptyBlock();
+    this.createNewWord();
   }
 }
