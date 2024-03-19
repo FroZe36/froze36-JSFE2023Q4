@@ -1,8 +1,24 @@
 import { View } from '../view';
 import './game.css';
 import wordCollectionLevel1 from '../../rss-puzzle-data/data/wordCollectionLevel1.json';
+import wordCollectionLevel2 from '../../rss-puzzle-data/data/wordCollectionLevel2.json';
+import wordCollectionLevel3 from '../../rss-puzzle-data/data/wordCollectionLevel3.json';
+import WordCollectionLevel4 from '../../rss-puzzle-data/data/wordCollectionLevel4.json';
+import WordCollectionLevel5 from '../../rss-puzzle-data/data/wordCollectionLevel5.json';
+import WordCollectionLevel6 from '../../rss-puzzle-data/data/wordCollectionLevel6.json';
 import { WordCollection } from '../../types/interface';
 import { BaseElement } from '../../utils/createElement';
+
+function createElementOption(collection: WordCollection[], container: Element, levelSelect: number) {
+  for (let i = 1; i <= collection[levelSelect].roundsCount; i += 1) {
+    const option = new BaseElement({
+      tagName: 'option',
+      classNames: ['game-header__option', 'montserrat-500'],
+      text: `${i}`,
+    }).getElement() as HTMLElement;
+    container.append(option);
+  }
+}
 
 export class GameView extends View {
   word: string[];
@@ -19,39 +35,35 @@ export class GameView extends View {
 
   containerForButtons;
 
-  number: number;
-
   shuffledWords: BaseElement[];
 
+  numberWord: number;
+
+  numberRound: number;
+
+  numberOfCollection: number;
+
   constructor() {
-    super({
-      tagName: 'div',
-      classNames: ['game', 'container'],
-    });
-    this.collection = [wordCollectionLevel1];
-    this.wrapperHeader = new BaseElement({
-      tagName: 'div',
-      classNames: ['game-header'],
-    });
-    this.wrapperGame = new BaseElement({
-      tagName: 'div',
-      classNames: ['game-wrapper'],
-    });
-    this.containerWithShuffleSentence = new BaseElement({
-      tagName: 'div',
-      classNames: ['game__shuffle-sentence'],
-    });
-    this.containerForPlayGround = new BaseElement({
-      tagName: 'div',
-      classNames: ['game__ground'],
-    });
-    this.containerForButtons = new BaseElement({
-      tagName: 'div',
-      classNames: ['game-btn-container'],
-    });
+    super({ tagName: 'div', classNames: ['game', 'container'] });
+    this.collection = [
+      wordCollectionLevel1,
+      wordCollectionLevel2,
+      wordCollectionLevel3,
+      WordCollectionLevel4,
+      WordCollectionLevel5,
+      WordCollectionLevel6,
+    ];
+    this.wrapperHeader = new BaseElement({ tagName: 'div', classNames: ['game-header'] });
+    this.wrapperGame = new BaseElement({ tagName: 'div', classNames: ['game-wrapper'] });
+    this.containerWithShuffleSentence = new BaseElement({ tagName: 'div', classNames: ['game__shuffle-sentence'] });
+    this.containerForPlayGround = new BaseElement({ tagName: 'div', classNames: ['game__ground'] });
+    this.containerForButtons = new BaseElement({ tagName: 'div', classNames: ['game-btn-container'] });
     this.shuffledWords = [];
-    this.number = 0;
-    this.word = wordCollectionLevel1.rounds[0].words[0].textExample.split(' ');
+    this.numberWord = 0;
+    this.numberRound = 0;
+    this.numberOfCollection = 0;
+    this.word =
+      this.collection[this.numberOfCollection].rounds[this.numberRound].words[this.numberWord].textExample.split(' ');
     this.configureView();
     this.init();
   }
@@ -60,20 +72,27 @@ export class GameView extends View {
     this.wrapperGame.addInnerElement(this.containerForPlayGround.getElement() as HTMLElement);
     this.wrapperGame.addInnerElement(this.containerWithShuffleSentence.getElement() as HTMLElement);
     this.wrapperGame.addInnerElement(this.containerForButtons.getElement() as HTMLElement);
+    this.elementCreator.addInnerElement(this.wrapperHeader.getElement() as HTMLElement);
     this.elementCreator.addInnerElement(this.wrapperGame.getElement() as HTMLElement);
-    console.log(this.word);
   }
 
   configureView() {
-    console.log(this.collection[0]);
+    this.createSelectLevel();
+    this.createSelectRound();
     this.configurePlayGround();
     this.createEmptyBlock();
     this.createNewWord();
     this.createButton();
   }
 
-  configurePlayGround(number = this.number) {
-    for (let i = 0; i < this.collection[0].rounds[0].words.length; i += 1) {
+  configurePlayGround(
+    numberWord = this.numberWord,
+    numberRound = this.numberRound,
+    numberOfCollection = this.numberOfCollection,
+  ) {
+    const container = this.containerForPlayGround.getElement();
+    if (container) container.innerHTML = '';
+    for (let i = 0; i < this.collection[numberOfCollection].rounds[numberRound].words.length; i += 1) {
       const playGroundSentence = new BaseElement({
         tagName: 'div',
         classNames: ['game__result-sentence'],
@@ -84,7 +103,7 @@ export class GameView extends View {
     this.containerForPlayGround
       .getElement()
       ?.querySelectorAll('.game__result-sentence')
-      [number].classList.add('inprogress');
+      [numberWord].classList.add('inprogress');
   }
 
   createEmptyBlock(emptyItem = this.word) {
@@ -95,7 +114,6 @@ export class GameView extends View {
         tagName: 'div',
         classNames: ['empty'],
       }).getElement();
-      emptyDiv?.setAttribute('empty-index', i.toString());
       this.containerForPlayGround
         .getElement()
         ?.querySelector('.inprogress')
@@ -106,7 +124,6 @@ export class GameView extends View {
         tagName: 'div',
         classNames: ['empty', 'insert'],
       }).getElement();
-      emptyDiv?.setAttribute('empty-index', i.toString());
       this.containerWithShuffleSentence.getElement()?.append(emptyDiv as HTMLElement);
     }
   }
@@ -217,11 +234,8 @@ export class GameView extends View {
         const result = Array.from(resultWords).map((word) => word.textContent);
         if (target.classList.contains('check')) {
           this.word.forEach((word, index) => {
-            if (word === result[index]) {
-              resultWords[index].classList.add('right');
-            } else {
-              resultWords[index].classList.add('wrong');
-            }
+            if (word === result[index]) resultWords[index].classList.add('right');
+            else resultWords[index].classList.add('wrong');
           });
           setTimeout(() => resultWords.forEach((item) => item.classList.remove('right', 'wrong')), 3000);
           if (this.word.every((word, index) => word === result[index])) {
@@ -229,16 +243,41 @@ export class GameView extends View {
             buttonContinue.textContent = 'Continue';
             buttonContinue?.classList.add('ready');
           }
-        } else if (target.classList.contains('ready')) {
-          this.shuffledWords.forEach((item) => item.removeCallback());
-          this.number += 1;
-          this.nextSentense(this.number);
-          buttonContinue.disabled = true;
-          buttonContinue.classList.remove('ready');
-          buttonContinue.textContent = 'Check';
-        }
+        } else if (target.classList.contains('ready')) this.reset(buttonContinue);
       }
     }
+  }
+
+  reset(button: HTMLButtonElement) {
+    const buttonContinue = button;
+    if (this.numberWord === 9) {
+      const selectRound = this.wrapperHeader.getElement()?.querySelector('.game-header__select_round');
+      const selectLevel = this.wrapperHeader.getElement()?.querySelector('.game-header__select_level');
+      this.shuffledWords.forEach((item) => item.removeCallback());
+      this.shuffledWords = [];
+      this.numberWord = 0;
+      this.numberRound += 1;
+      if (this.numberRound === this.collection[this.numberOfCollection].roundsCount) {
+        this.numberOfCollection =
+          this.numberOfCollection === this.collection.length - 1 ? 0 : (this.numberOfCollection += 1);
+        this.numberRound = 0;
+        if (selectRound) {
+          selectRound.innerHTML = '';
+          createElementOption(this.collection, selectRound, this.numberOfCollection);
+        }
+        if (selectLevel instanceof HTMLSelectElement) selectLevel.value = (this.numberOfCollection + 1).toString();
+      }
+      this.configurePlayGround();
+      if (selectRound instanceof HTMLSelectElement) selectRound.value = (this.numberRound + 1).toString();
+    } else {
+      this.shuffledWords.forEach((item) => item.removeCallback());
+      this.shuffledWords = [];
+      this.numberWord += 1;
+    }
+    this.nextSentense(this.numberWord);
+    buttonContinue.disabled = true;
+    buttonContinue.classList.remove('ready');
+    buttonContinue.textContent = 'Check';
   }
 
   handlerAutoCompletBtn() {
@@ -293,12 +332,76 @@ export class GameView extends View {
     }
   }
 
-  nextSentense(number: number) {
-    this.word = wordCollectionLevel1.rounds[0].words[number].textExample.split(' ');
+  nextSentense(numberWord: number, numberRound = this.numberRound, numberOfCollection = this.numberOfCollection) {
+    this.word = this.collection[numberOfCollection].rounds[numberRound].words[numberWord].textExample.split(' ');
     const resultSentenceContainer = document.body.querySelectorAll('.game__result-sentence');
     resultSentenceContainer.forEach((item) => item.classList.remove('inprogress'));
-    resultSentenceContainer[number].classList.add('inprogress');
+    resultSentenceContainer[numberWord].classList.add('inprogress');
     this.createEmptyBlock();
     this.createNewWord();
+  }
+
+  createSelectLevel() {
+    const container = new BaseElement({
+      tagName: 'div',
+      classNames: ['game-header__container', 'montserrat-700'],
+      text: 'Level',
+    });
+    const levelSelect = new BaseElement({
+      tagName: 'select',
+      classNames: ['game-header__select', 'game-header__select_level', 'montserrat-500'],
+    });
+    levelSelect.getElement()?.addEventListener('change', (e) => this.changeLevel(e));
+    for (let i = 1; i <= this.collection.length; i += 1) {
+      const option = new BaseElement({
+        tagName: 'option',
+        classNames: ['game-header__option', 'montserrat-500'],
+        text: `${i}`,
+      }).getElement();
+      if (option) levelSelect.addInnerElement(option);
+    }
+    container.addInnerElement(levelSelect.getElement() as HTMLElement);
+    this.wrapperHeader.addInnerElement(container.getElement() as HTMLElement);
+  }
+
+  createSelectRound() {
+    const container = new BaseElement({
+      tagName: 'div',
+      classNames: ['game-header__container', 'montserrat-700'],
+      text: 'Round',
+    });
+    const roundSelect = new BaseElement({
+      tagName: 'select',
+      classNames: ['game-header__select', 'game-header__select_round', 'montserrat-500'],
+    }).getElement();
+    if (roundSelect) {
+      roundSelect?.addEventListener('change', (e) => this.changeLevel(e));
+      createElementOption(this.collection, roundSelect, this.numberOfCollection);
+      container.addInnerElement(roundSelect);
+      this.wrapperHeader.addInnerElement(container.getElement() as HTMLElement);
+    }
+  }
+
+  changeLevel(event: Event | MouseEvent | KeyboardEvent | null) {
+    const target = event?.target;
+    if (target instanceof HTMLSelectElement) {
+      if (target.classList.contains('game-header__select_level')) {
+        const container = this.wrapperHeader.getElement()?.querySelector('.game-header__select_round');
+        if (container) {
+          container.innerHTML = '';
+          createElementOption(this.collection, container, +target.value - 1);
+          this.numberWord = 0;
+          this.numberRound = 0;
+          this.numberOfCollection = +target.value - 1;
+          this.configurePlayGround();
+          this.nextSentense(this.numberWord);
+        }
+      } else if (target.classList.contains('game-header__select_round')) {
+        this.numberWord = 0;
+        this.numberRound = +target.value - 1;
+        this.configurePlayGround();
+        this.nextSentense(this.numberWord);
+      }
+    }
   }
 }

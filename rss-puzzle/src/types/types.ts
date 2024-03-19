@@ -1,1 +1,3 @@
-export type ShuffleItem = string | null;
+import { BaseElement } from '../utils/createElement';
+
+export type SelectElement = BaseElement | HTMLElement;

@@ -33,4 +33,5 @@ export interface WordCollection {
     levelData: LevelData;
     words: WordItem[];
   }[];
+  roundsCount: number;
 }
