@@ -43,6 +43,8 @@ export class GameView extends View {
 
   numberOfCollection: number;
 
+  hintText: BaseElement;
+
   constructor() {
     super({ tagName: 'div', classNames: ['game', 'container'] });
     this.collection = [
@@ -58,6 +60,7 @@ export class GameView extends View {
     this.containerWithShuffleSentence = new BaseElement({ tagName: 'div', classNames: ['game__shuffle-sentence'] });
     this.containerForPlayGround = new BaseElement({ tagName: 'div', classNames: ['game__ground'] });
     this.containerForButtons = new BaseElement({ tagName: 'div', classNames: ['game-btn-container'] });
+    this.hintText = new BaseElement({ tagName: 'span', classNames: ['hint-text', 'montserrat-700'] });
     this.shuffledWords = [];
     this.numberWord = 0;
     this.numberRound = 0;
@@ -69,6 +72,7 @@ export class GameView extends View {
   }
 
   init() {
+    this.wrapperGame.addInnerElement(this.hintText.getElement() as HTMLElement);
     this.wrapperGame.addInnerElement(this.containerForPlayGround.getElement() as HTMLElement);
     this.wrapperGame.addInnerElement(this.containerWithShuffleSentence.getElement() as HTMLElement);
     this.wrapperGame.addInnerElement(this.containerForButtons.getElement() as HTMLElement);
@@ -145,6 +149,9 @@ export class GameView extends View {
       }
       if (emptyContainer) emptyContainer[i].appendChild(wordElement as HTMLElement);
     }
+    this.hintText.setTextContent(
+      `${this.collection[this.numberOfCollection].rounds[this.numberRound].words[this.numberWord].textExampleTranslate}`,
+    );
     setTimeout(() => this.setWidth(shuffledWords));
   }
 
@@ -404,4 +411,11 @@ export class GameView extends View {
       }
     }
   }
+
+  // changeHintText() {
+  //   const createHintTranslateText = new BaseElement({
+  //     tagName: 'span',
+  //     classNames: ['hint-text'],
+  //   });
+  // }
 }
