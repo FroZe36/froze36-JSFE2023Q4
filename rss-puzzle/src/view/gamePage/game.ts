@@ -83,6 +83,7 @@ export class GameView extends View {
   configureView() {
     this.createSelectLevel();
     this.createSelectRound();
+    this.configureHint();
     this.configurePlayGround();
     this.createEmptyBlock();
     this.createNewWord();
@@ -233,6 +234,8 @@ export class GameView extends View {
 
   handlerCheckBtn(event: MouseEvent | Event | KeyboardEvent | null) {
     const target = event?.target;
+    const hintElement = this.hintText.getElement();
+    const hintButton = this.wrapperHeader.getElement()?.querySelector('.hint-button');
     if (target && target instanceof HTMLElement) {
       const resultSentenceContainer = document.body.querySelector('.game__result-sentence.inprogress');
       const resultWords = resultSentenceContainer?.querySelectorAll('.game-word');
@@ -246,11 +249,15 @@ export class GameView extends View {
           });
           setTimeout(() => resultWords.forEach((item) => item.classList.remove('right', 'wrong')), 3000);
           if (this.word.every((word, index) => word === result[index])) {
+            if (hintButton?.classList.contains('turnOFF')) hintElement?.classList.add('show-on');
             buttonContinue.classList.remove('check');
             buttonContinue.textContent = 'Continue';
             buttonContinue?.classList.add('ready');
           }
-        } else if (target.classList.contains('ready')) this.reset(buttonContinue);
+        } else if (target.classList.contains('ready')) {
+          if (hintButton?.classList.contains('turnOFF')) hintElement?.classList.remove('show-on');
+          this.reset(buttonContinue);
+        }
       }
     }
   }
@@ -318,6 +325,8 @@ export class GameView extends View {
         .map((word) => word.textContent)
         .filter((item): item is string => item !== null);
       setTimeout(() => this.setWidth(wordsShuffleArray, resultSentenceContainer as HTMLElement));
+      const hintButton = this.wrapperHeader.getElement()?.querySelector('.hint-button');
+      if (hintButton?.classList.contains('turnOFF')) this.hintText.getElement()?.classList.add('show-on');
       buttonContinue.textContent = 'Continue';
       buttonContinue?.classList.add('ready');
       buttonContinue.disabled = false;
@@ -412,10 +421,29 @@ export class GameView extends View {
     }
   }
 
-  // changeHintText() {
-  //   const createHintTranslateText = new BaseElement({
-  //     tagName: 'span',
-  //     classNames: ['hint-text'],
-  //   });
-  // }
+  configureHint() {
+    const isHint = (e: MouseEvent | Event | KeyboardEvent | null) => {
+      const target = e?.currentTarget;
+      const hintElement = this.hintText.getElement();
+      if (target instanceof HTMLElement) {
+        target.classList.toggle('turnOFF');
+        if (target.classList.contains('turnOFF')) {
+          hintElement?.classList.add('show-off');
+        } else {
+          hintElement?.classList.remove('show-off');
+        }
+      }
+    };
+    const createHintTranslateText = new BaseElement({
+      tagName: 'div',
+      classNames: ['hint-button'],
+      callback: (e) => isHint(e),
+    }).getElement();
+    if (createHintTranslateText) {
+      createHintTranslateText.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0,0,256,256">
+    <g transform=""><g fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.12,5.12)"><path d="M6,3c-1.69922,0 -3,1.30078 -3,3v20c0,1.69922 1.30078,3 3,3h0.40625l1.59375,-2h-2c-0.60156,0 -1,-0.39844 -1,-1v-20c0,-0.60156 0.39844,-1 1,-1h20c0.60156,0 1,0.39844 1,1v15h-3c-1.69922,0 -3,1.30078 -3,3v3h-5l1.59375,2h3.40625v3.40625l2,1.6875v-10.09375c0,-0.60156 0.39844,-1 1,-1h20c0.60156,0 1,0.39844 1,1v20c0,0.60156 -0.39844,1 -1,1h-20c-0.60156,0 -1,-0.39844 -1,-1v-2l-2,1.6875v0.3125c0,1.69922 1.30078,3 3,3h20c1.69922,0 3,-1.30078 3,-3v-20c0,-1.69922 -1.30078,-3 -3,-3h-15v-15c0,-1.69922 -1.30078,-3 -3,-3zM16,8v2h-8v2h11.90625c-0.30859,2.22656 -1.61328,4.05469 -3.25,5.53125c-2.50781,-2.19922 -3.78125,-4.5 -3.78125,-4.5l-1.75,0.9375c0,0 1.30859,2.41016 3.9375,4.8125c-0.06641,0.04688 -0.12109,0.10938 -0.1875,0.15625c-2.64062,1.82031 -5.28125,2.71875 -5.28125,2.71875l0.625,1.90625c0,0 2.90625,-0.96484 5.8125,-2.96875c0.20703,-0.14453 0.41797,-0.3125 0.625,-0.46875c1.14063,0.84375 2.46875,1.61719 3.96875,2.21875l0.75,-1.875c-1.14844,-0.45703 -2.17578,-1.05078 -3.09375,-1.6875c1.82813,-1.73047 3.35547,-3.98828 3.65625,-6.78125h3.0625v-2h-7v-2zM12,25l-5,6h3v4h4v-4h3zM33,26.40625l-5.1875,13.78125h2.5l1.09375,-3.1875h5.28125l1.125,3.1875h2.5l-5.21875,-13.78125zM34,29.40625l2,5.6875h-4zM19,33v3h-9l4,4h5v3l6,-5z"></path></g></g></g>
+    </svg>`;
+      this.wrapperHeader.addInnerElement(createHintTranslateText);
+    }
+  }
 }
