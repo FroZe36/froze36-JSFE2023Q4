@@ -35,7 +35,7 @@ export class GameView extends View {
 
   containerForButtons;
 
-  shuffledWords: BaseElement[];
+  WordsArray: BaseElement[];
 
   numberWord: number;
 
@@ -61,7 +61,7 @@ export class GameView extends View {
     this.containerForPlayGround = new BaseElement({ tagName: 'div', classNames: ['game__ground'] });
     this.containerForButtons = new BaseElement({ tagName: 'div', classNames: ['game-btn-container'] });
     this.hintText = new BaseElement({ tagName: 'span', classNames: ['hint-text', 'montserrat-700'] });
-    this.shuffledWords = [];
+    this.WordsArray = [];
     this.numberWord = 0;
     this.numberRound = 0;
     this.numberOfCollection = 0;
@@ -134,18 +134,18 @@ export class GameView extends View {
   }
 
   createNewWord(wordItem = this.word) {
-    const shuffledWords = [...wordItem].sort(() => Math.random() - 0.5);
+    const copyArr = [...wordItem];
     const emptyContainer = this.containerWithShuffleSentence.getElement()?.querySelectorAll('.empty');
-    for (let i = 0; i < shuffledWords.length; i += 1) {
+    for (let i = 0; i < copyArr.length; i += 1) {
       const word = new BaseElement({
         tagName: 'div',
         classNames: ['game-word', 'montserrat-700'],
         callback: (e) => this.handlerWordClick(e),
       });
-      this.shuffledWords.push(word);
+      this.WordsArray.push(word);
       const wordElement = word.getElement();
       if (wordElement) {
-        wordElement.textContent = shuffledWords[i];
+        wordElement.textContent = copyArr[i];
         wordElement?.setAttribute('data-index', i.toString());
       }
       if (emptyContainer) emptyContainer[i].appendChild(wordElement as HTMLElement);
@@ -153,7 +153,7 @@ export class GameView extends View {
     this.hintText.setTextContent(
       `${this.collection[this.numberOfCollection].rounds[this.numberRound].words[this.numberWord].textExampleTranslate}`,
     );
-    setTimeout(() => this.setWidth(shuffledWords));
+    setTimeout(() => this.setWidth(copyArr));
   }
 
   handlerWordClick(event: MouseEvent | Event | KeyboardEvent | null) {
@@ -194,23 +194,43 @@ export class GameView extends View {
     }
   }
 
-  setWidth(shuffledWords: string[], parentContainer = this.containerWithShuffleSentence.getElement()) {
+  setWidth(copyArr: string[], parentContainer = this.containerWithShuffleSentence.getElement()) {
     const containerWidth = this.containerForPlayGround.getElement()?.offsetWidth;
-    const copyShuffleWords = shuffledWords;
+    const copyArrWords = copyArr;
     const words = parentContainer?.querySelectorAll('.game-word');
+    const emptyContainer = this.containerWithShuffleSentence.getElement()?.querySelectorAll('.empty');
     if (containerWidth && words) {
-      const averageLengthLetters = copyShuffleWords.reduce((acc, curr) => {
+      const averageLengthLetters = copyArrWords.reduce((acc, curr) => {
         let copyAcc = acc;
         copyAcc += curr.length;
         return copyAcc;
       }, 0);
       const width = containerWidth / averageLengthLetters;
+      let sentenceWidth = 0;
+      const firstElementWidth = width * copyArrWords[0].length;
       words.forEach((item, index) => {
         const element = item;
+        const wordWidth = width * copyArrWords[index].length;
+        if (index === 0) sentenceWidth += wordWidth - firstElementWidth;
+        else {
+          const previousElementWidth = width * copyArrWords[index - 1].length;
+          sentenceWidth += previousElementWidth;
+        }
         if (element instanceof HTMLElement) {
-          element.style.width = `${width * copyShuffleWords[index].length}px`;
+          element.style.width = `${wordWidth}px`;
+          this.addBackgroundImage(element, containerWidth, sentenceWidth);
         }
       });
+
+      if (emptyContainer) {
+        const randomSort = () => Math.random() - 0.5;
+        const sortedArr = Array.from(emptyContainer).sort(randomSort);
+        const sortedDivCollection = document.createDocumentFragment();
+        sortedArr.forEach((div) => sortedDivCollection.append(div));
+        const shuffleContainer = this.containerWithShuffleSentence.getElement();
+        if (shuffleContainer) shuffleContainer.innerHTML = '';
+        shuffleContainer?.append(sortedDivCollection);
+      }
     }
   }
 
@@ -267,8 +287,8 @@ export class GameView extends View {
     if (this.numberWord === 9) {
       const selectRound = this.wrapperHeader.getElement()?.querySelector('.game-header__select_round');
       const selectLevel = this.wrapperHeader.getElement()?.querySelector('.game-header__select_level');
-      this.shuffledWords.forEach((item) => item.removeCallback());
-      this.shuffledWords = [];
+      this.WordsArray.forEach((item) => item.removeCallback());
+      this.WordsArray = [];
       this.numberWord = 0;
       this.numberRound += 1;
       if (this.numberRound === this.collection[this.numberOfCollection].roundsCount) {
@@ -284,8 +304,8 @@ export class GameView extends View {
       this.configurePlayGround();
       if (selectRound instanceof HTMLSelectElement) selectRound.value = (this.numberRound + 1).toString();
     } else {
-      this.shuffledWords.forEach((item) => item.removeCallback());
-      this.shuffledWords = [];
+      this.WordsArray.forEach((item) => item.removeCallback());
+      this.WordsArray = [];
       this.numberWord += 1;
     }
     this.nextSentense(this.numberWord);
@@ -355,6 +375,7 @@ export class GameView extends View {
     resultSentenceContainer[numberWord].classList.add('inprogress');
     this.createEmptyBlock();
     this.createNewWord();
+    // this.addBackgroundImage();
   }
 
   createSelectLevel() {
@@ -444,6 +465,21 @@ export class GameView extends View {
     <g transform=""><g fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.12,5.12)"><path d="M6,3c-1.69922,0 -3,1.30078 -3,3v20c0,1.69922 1.30078,3 3,3h0.40625l1.59375,-2h-2c-0.60156,0 -1,-0.39844 -1,-1v-20c0,-0.60156 0.39844,-1 1,-1h20c0.60156,0 1,0.39844 1,1v15h-3c-1.69922,0 -3,1.30078 -3,3v3h-5l1.59375,2h3.40625v3.40625l2,1.6875v-10.09375c0,-0.60156 0.39844,-1 1,-1h20c0.60156,0 1,0.39844 1,1v20c0,0.60156 -0.39844,1 -1,1h-20c-0.60156,0 -1,-0.39844 -1,-1v-2l-2,1.6875v0.3125c0,1.69922 1.30078,3 3,3h20c1.69922,0 3,-1.30078 3,-3v-20c0,-1.69922 -1.30078,-3 -3,-3h-15v-15c0,-1.69922 -1.30078,-3 -3,-3zM16,8v2h-8v2h11.90625c-0.30859,2.22656 -1.61328,4.05469 -3.25,5.53125c-2.50781,-2.19922 -3.78125,-4.5 -3.78125,-4.5l-1.75,0.9375c0,0 1.30859,2.41016 3.9375,4.8125c-0.06641,0.04688 -0.12109,0.10938 -0.1875,0.15625c-2.64062,1.82031 -5.28125,2.71875 -5.28125,2.71875l0.625,1.90625c0,0 2.90625,-0.96484 5.8125,-2.96875c0.20703,-0.14453 0.41797,-0.3125 0.625,-0.46875c1.14063,0.84375 2.46875,1.61719 3.96875,2.21875l0.75,-1.875c-1.14844,-0.45703 -2.17578,-1.05078 -3.09375,-1.6875c1.82813,-1.73047 3.35547,-3.98828 3.65625,-6.78125h3.0625v-2h-7v-2zM12,25l-5,6h3v4h4v-4h3zM33,26.40625l-5.1875,13.78125h2.5l1.09375,-3.1875h5.28125l1.125,3.1875h2.5l-5.21875,-13.78125zM34,29.40625l2,5.6875h-4zM19,33v3h-9l4,4h5v3l6,-5z"></path></g></g></g>
     </svg>`;
       this.wrapperHeader.addInnerElement(createHintTranslateText);
+    }
+  }
+
+  addBackgroundImage(element: HTMLElement, sizeParent: number, wordWidth: number) {
+    const pathUrl = `../../rss-puzzle-data/images/${this.collection[this.numberOfCollection].rounds[this.numberRound].levelData.imageSrc}`;
+    // const elem = this.containerForPlayGround.getElement();
+    const height = 57 * this.numberWord;
+    console.log(height);
+    console.log(wordWidth);
+    // if (elem) elem.style.backgroundImage = `url(${pathUrl})`;
+    const slicedElement = element;
+    if (slicedElement) {
+      slicedElement.style.backgroundImage = `url(${pathUrl})`;
+      slicedElement.style.backgroundSize = `${sizeParent}px 570px`;
+      slicedElement.style.backgroundPosition = `-${wordWidth}px -${height}px`;
     }
   }
 }
