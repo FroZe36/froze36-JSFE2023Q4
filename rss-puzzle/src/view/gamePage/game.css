@@ -90,6 +90,10 @@
   cursor: pointer;
   color: rgb(250, 246, 4);
 }
+.game-word.off {
+  color: rgb(0, 0, 0);
+}
+
 .game-word.right {
   border: 3px solid yellowgreen;
 }
