@@ -268,7 +268,8 @@ export class GameView extends View {
   handlerCheckBtn(event: MouseEvent | Event | KeyboardEvent | null) {
     const target = event?.target;
     const hintElement = this.hintText.getElement();
-    const hintButton = this.wrapperHeader.getElement()?.querySelector('.hint-button');
+    const hintTextButton = this.wrapperHeader.getElement()?.querySelector('.hint-button');
+    const hintAudioBtn = this.wrapperHeader.getElement()?.querySelector('.hint-button_sound');
     if (target && target instanceof HTMLElement) {
       const resultSentenceContainer = document.body.querySelector('.game__result-sentence.inprogress');
       const resultWords = resultSentenceContainer?.querySelectorAll('.game-word');
@@ -282,13 +283,15 @@ export class GameView extends View {
           });
           setTimeout(() => resultWords.forEach((item) => item.classList.remove('right', 'wrong')), 3000);
           if (this.word.every((word, index) => word === result[index])) {
-            if (hintButton?.classList.contains('turnOFF')) hintElement?.classList.add('show-on');
+            if (hintTextButton?.classList.contains('turnOFF')) hintElement?.classList.add('show-on');
+            if (hintAudioBtn?.classList.contains('turnOFF')) this.soundHear.getElement()?.classList.add('show-on');
             buttonContinue.classList.remove('check');
             buttonContinue.textContent = 'Continue';
             buttonContinue?.classList.add('ready');
           }
         } else if (target.classList.contains('ready')) {
-          if (hintButton?.classList.contains('turnOFF')) hintElement?.classList.remove('show-on');
+          if (hintTextButton?.classList.contains('turnOFF')) hintElement?.classList.remove('show-on');
+          if (hintAudioBtn?.classList.contains('turnOFF')) this.soundHear.getElement()?.classList.remove('show-on');
           this.reset(buttonContinue);
         }
       }
@@ -331,6 +334,7 @@ export class GameView extends View {
     const resultSentenceContainer = document.body.querySelector('.game__result-sentence.inprogress');
     const resultEmptyBlock = resultSentenceContainer?.querySelectorAll('.empty');
     const shuffleSentenceWords = this.containerWithShuffleSentence.getElement()?.querySelectorAll('.empty');
+    const hintAudioBtn = this.wrapperHeader.getElement()?.querySelector('.hint-button_sound');
     const buttonContinue = this.containerForButtons
       .getElement()
       ?.querySelector('.game__button-continue') as HTMLButtonElement;
@@ -360,6 +364,7 @@ export class GameView extends View {
       setTimeout(() => this.setWidth(wordsShuffleArray, resultSentenceContainer as HTMLElement));
       const hintButton = this.wrapperHeader.getElement()?.querySelector('.hint-button');
       if (hintButton?.classList.contains('turnOFF')) this.hintText.getElement()?.classList.add('show-on');
+      if (hintAudioBtn?.classList.contains('turnOFF')) this.soundHear.getElement()?.classList.add('show-on');
       buttonContinue.textContent = 'Continue';
       buttonContinue?.classList.add('ready');
       buttonContinue.disabled = false;
