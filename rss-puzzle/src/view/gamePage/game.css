@@ -39,8 +39,6 @@
     padding-left: 10px;
     font-size: clamp(1rem, 1.1vw, 1.2rem);
   }
-  .game-header__option {
-  }
 }
 .game-wrapper {
   display: flex;
@@ -60,8 +58,6 @@
   display: flex;
   height: 57px;
   justify-content: center;
-}
-.inprogress {
 }
 .empty {
   display: inline-flex;
@@ -93,7 +89,10 @@
 .game-word.off {
   color: rgb(0, 0, 0);
 }
-
+.sound-hear {
+  cursor: pointer;
+  margin-left: 20px;
+}
 .game-word.right {
   border: 3px solid yellowgreen;
 }
@@ -112,8 +111,6 @@
 .game__button-continue:disabled {
   cursor: not-allowed;
   opacity: 0.5;
-}
-.game__button-continue.ready {
 }
 .game__button-autocomplete {
   border: none;

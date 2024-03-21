@@ -45,6 +45,8 @@ export class GameView extends View {
 
   hintText: BaseElement;
 
+  soundHear: BaseElement;
+
   constructor() {
     super({ tagName: 'div', classNames: ['game', 'container'] });
     this.collection = [
@@ -61,6 +63,11 @@ export class GameView extends View {
     this.containerForPlayGround = new BaseElement({ tagName: 'div', classNames: ['game__ground'] });
     this.containerForButtons = new BaseElement({ tagName: 'div', classNames: ['game-btn-container'] });
     this.hintText = new BaseElement({ tagName: 'span', classNames: ['hint-text', 'montserrat-700'] });
+    this.soundHear = new BaseElement({
+      tagName: 'div',
+      classNames: ['sound-hear'],
+      callback: () => this.getSoundHint(),
+    });
     this.WordsArray = [];
     this.numberWord = 0;
     this.numberRound = 0;
@@ -85,10 +92,15 @@ export class GameView extends View {
     this.createSelectRound();
     this.configureTranslateHint();
     this.configureBackgroundHint();
+    this.configureSoundHint();
     this.configurePlayGround();
     this.createEmptyBlock();
     this.createNewWord();
     this.createButton();
+    const soundHear = this.soundHear.getElement();
+    if (soundHear)
+      soundHear.innerHTML = `<img width="64" height="64" src="https://img.icons8.com/dusk/64/medium-volume.png" alt="medium-volume"/>`;
+    this.wrapperHeader.addInnerElement(soundHear as HTMLElement);
   }
 
   configurePlayGround(
@@ -376,7 +388,6 @@ export class GameView extends View {
     resultSentenceContainer[numberWord].classList.add('inprogress');
     this.createEmptyBlock();
     this.createNewWord();
-    // this.addBackgroundImage();
   }
 
   createSelectLevel() {
@@ -491,24 +502,53 @@ export class GameView extends View {
         }
       }
     };
-    const createHintTranslateText = new BaseElement({
+    const createHintBackground = new BaseElement({
       tagName: 'div',
       classNames: ['hint-button', 'hint-button_background'],
       callback: (e) => isHint(e),
     }).getElement();
-    if (createHintTranslateText) {
-      createHintTranslateText.innerHTML = `<img width="50" height="50" src="https://img.icons8.com/ios/50/visible--v1.png" alt="visible--v1"/>`;
-      this.wrapperHeader.addInnerElement(createHintTranslateText);
+    if (createHintBackground) {
+      createHintBackground.innerHTML = `<img width="50" height="50" src="https://img.icons8.com/ios/50/visible--v1.png" alt="visible--v1"/>`;
+      this.wrapperHeader.addInnerElement(createHintBackground);
     }
+  }
+
+  configureSoundHint() {
+    const isHint = (e: MouseEvent | Event | KeyboardEvent | null) => {
+      const target = e?.currentTarget;
+      const soundButton = this.soundHear.getElement();
+      if (target instanceof HTMLElement) {
+        target.classList.toggle('turnOFF');
+        if (target.classList.contains('turnOFF')) {
+          soundButton?.classList.add('show-off');
+        } else {
+          soundButton?.classList.remove('show-off');
+        }
+      }
+    };
+    const createHintSound = new BaseElement({
+      tagName: 'div',
+      classNames: ['hint-button', 'hint-button_sound'],
+      callback: (e) => isHint(e),
+    }).getElement();
+    if (createHintSound) {
+      createHintSound.innerHTML = `<img width="50" height="50" src="https://img.icons8.com/ios-glyphs/30/audio-wave--v2.png" alt="audio-wave--v2"/>`;
+      this.wrapperHeader.addInnerElement(createHintSound);
+    }
+  }
+
+  getSoundHint() {
+    const audio = new Audio(
+      `../../rss-puzzle-data/${this.collection[this.numberOfCollection].rounds[this.numberRound].words[this.numberWord].audioExample}`,
+    );
+    audio.play();
   }
 
   addBackgroundImage(element: HTMLElement, sizeParent: number, wordWidth: number) {
     const pathUrl = `../../rss-puzzle-data/images/${this.collection[this.numberOfCollection].rounds[this.numberRound].levelData.imageSrc}`;
     const hintBackground = this.wrapperHeader.getElement()?.querySelector('.hint-button_background');
     const allWords = document.body?.querySelectorAll('.game-word');
-    // const elem = this.containerForPlayGround.getElement();
     const height = 57 * this.numberWord;
-    // if (elem) elem.style.backgroundImage = `url(${pathUrl})`;
     const slicedElement = element;
     if (slicedElement) {
       slicedElement.style.backgroundImage = `url(${pathUrl})`;
@@ -522,9 +562,7 @@ export class GameView extends View {
         });
         setTimeout(() => {
           allWords.forEach((word) => {
-            console.log('abs');
             const copyWord = word;
-            console.log(copyWord);
             copyWord.classList.add('off');
             if (copyWord instanceof HTMLElement) copyWord.style.backgroundImage = '';
           });
