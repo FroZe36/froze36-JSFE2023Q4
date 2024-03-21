@@ -498,7 +498,7 @@ export class GameView extends View {
             if (copyWord instanceof HTMLElement) copyWord.style.backgroundImage = '';
           });
         } else {
-          const pathUrl = `../../rss-puzzle-data/images/${this.collection[this.numberOfCollection].rounds[this.numberRound].levelData.imageSrc}`;
+          const pathUrl = `./rss-puzzle-data/images/${this.collection[this.numberOfCollection].rounds[this.numberRound].levelData.imageSrc}`;
           allWords?.forEach((word) => {
             const copyWord = word;
             copyWord.classList.remove('off');
@@ -544,13 +544,13 @@ export class GameView extends View {
 
   getSoundHint() {
     const audio = new Audio(
-      `../../rss-puzzle-data/${this.collection[this.numberOfCollection].rounds[this.numberRound].words[this.numberWord].audioExample}`,
+      `./rss-puzzle-data/${this.collection[this.numberOfCollection].rounds[this.numberRound].words[this.numberWord].audioExample}`,
     );
     audio.play();
   }
 
   addBackgroundImage(element: HTMLElement, sizeParent: number, wordWidth: number) {
-    const pathUrl = `../../rss-puzzle-data/images/${this.collection[this.numberOfCollection].rounds[this.numberRound].levelData.imageSrc}`;
+    const pathUrl = `./rss-puzzle-data/images/${this.collection[this.numberOfCollection].rounds[this.numberRound].levelData.imageSrc}`;
     const hintBackground = this.wrapperHeader.getElement()?.querySelector('.hint-button_background');
     const allWords = document.body?.querySelectorAll('.game-word');
     const height = 57 * this.numberWord;
