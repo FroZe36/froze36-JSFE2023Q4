@@ -38,12 +38,7 @@ const baseConfig = {
       filename: 'index.html'
     }),
     new CopyWebpackPlugin({
-      // patterns: [
-      //   {
-      //     from: path.resolve(__dirname, 'src/rss-puzzle-data'),
-      //     to: path.resolve(__dirname, 'dist/rss-puzzle-data')
-      //   }
-      // ]
+      patterns: [{ from: './src/assets', to: 'assets' }]
     }),
     new CleanWebpackPlugin(),
     new EslintPlugin({ extensions: 'ts' })

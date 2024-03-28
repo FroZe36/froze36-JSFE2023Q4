@@ -1,0 +1,17 @@
+.header {
+  padding: 20px;
+  background-color: inherit;
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+  .header__button {
+    background-color: orange;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: clamp(0.8rem, 1.1vw, 1.5rem);
+    transition: transform 0.3s ease;
+    &:hover {
+      transform: scale(0.95);
+    }
+  }
+}
