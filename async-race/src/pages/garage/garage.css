@@ -1,3 +1,46 @@
 .garage {
-  
+  .garage__control-wrapper {
+    margin-bottom: 10px;
+    display: flex;
+  }
+  .control__button {
+    font-size: clamp(0.7rem, 1vw, 1.3rem);
+    transition: transform 0.3s ease;
+    &:hover {
+      transform: scale(0.95);
+    }
+  }
+  .garage__control-wrapper:not(:last-of-type) {
+    align-items: center;
+    .control__input-name {
+      padding: 7px;
+      border-radius: 8px;
+      width: 200px;
+      border-color: black;
+    }
+    .control__input-color {
+      margin-left: 3px;
+      cursor: pointer;
+      border-color: black;
+    }
+    .control__button {
+      margin-left: 15px;
+    }
+  }
+  .garage__control-wrapper:last-of-type {
+    gap: 15px;
+  }
+  .control__button {
+    padding: 10px 15px;
+    background-color: black;
+    border-radius: 8px;
+    color: yellow;
+  }
+  .garage__title {
+    margin-bottom: 15px;
+  }
+  .garage__counter {
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    color: rgb(199, 158, 10);
+  }
 }

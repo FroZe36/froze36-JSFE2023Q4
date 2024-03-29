@@ -5,11 +5,11 @@ export interface ViewElement {
   parentElement?: HTMLElement;
 }
 export interface InputElement {
-  tagName: string;
+  tagName?: string;
   classes: string[];
-  content: string;
+  content?: string;
   parentElement: HTMLElement;
-  type: string;
+  type?: string;
 }
 export interface ButtonElement {
   parentElement: HTMLElement;
