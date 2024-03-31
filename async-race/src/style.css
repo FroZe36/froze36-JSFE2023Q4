@@ -72,5 +72,9 @@ fieldset {
   color: rgb(199, 158, 10)
 }
 .main {
-  padding: 20px;
+  padding: 0px 20px 20px 20px;
+}
+.icon {
+  width: 100px;
+  height: 60px;
 }

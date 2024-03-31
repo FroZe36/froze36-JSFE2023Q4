@@ -1,21 +1,35 @@
 .garage {
-  .garage__control-wrapper {
-    margin-bottom: 10px;
-    display: flex;
+  button[disabled] {
+    filter: opacity(0.5);
+    cursor: not-allowed;
+    &:hover {
+      transform: none;
+    }
   }
-  .control__button {
+  button {
+    padding: 10px 15px;
+    background-color: black;
+    border-radius: 8px;
+    color: yellow;
     font-size: clamp(0.7rem, 1vw, 1.3rem);
     transition: transform 0.3s ease;
     &:hover {
       transform: scale(0.95);
     }
   }
+  .garage__control-wrapper {
+    margin-bottom: 10px;
+    display: flex;
+  }
   .garage__control-wrapper:not(:last-of-type) {
-    align-items: center;
+    .control__car-form {
+      display: flex;
+      align-items: center;
+    }
     .control__input-name {
-      padding: 7px;
+      padding: 3px 10px;
       border-radius: 8px;
-      width: 200px;
+      width: 180px;
       border-color: black;
     }
     .control__input-color {
@@ -30,17 +44,64 @@
   .garage__control-wrapper:last-of-type {
     gap: 15px;
   }
-  .control__button {
-    padding: 10px 15px;
-    background-color: black;
-    border-radius: 8px;
-    color: yellow;
-  }
   .garage__title {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
   }
   .garage__counter {
     font-size: clamp(1.5rem, 2vw, 2rem);
     color: rgb(199, 158, 10);
+    margin-bottom: 15px;
+  }
+
+  .race {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    button {
+      padding: 5px 10px;
+    }
+    .track {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      .track-header {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+
+        .car-title {
+          font-size: clamp(1rem, 1.5vw, 1.5rem);
+          color: rgb(24, 219, 125);
+        }
+      }
+      .track-road {
+        display: flex;
+        align-items: flex-end;
+        .track-wrapper-btn {
+          display: inline-flex;
+          gap: 5px;
+          align-self: start;
+        }
+        .car-container {
+          margin-left: 10px;
+          margin-right: 10px;
+          flex-grow: 1;
+          border-bottom: 2px dashed #fff;
+        }
+        .icon {
+          position: relative;
+          top: 4.5px;
+        }
+        .track-finish {
+          position: absolute;
+          right: 100px;
+          width: 40px;
+          height: 40px;
+          background-image: url(../../assets/finish.svg);
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+      }
+    }
   }
 }
