@@ -18,7 +18,7 @@ export const carModels = [
   'Explorer',
   'CyberTruck',
   '350Z',
-  'Sport',
+  'Sportage',
   'Pride',
   'Scirocco R',
   '807',

@@ -5,8 +5,9 @@ import { UpdateCarControlView } from './view-controls/updateCarControlView';
 import './garage.css';
 import { Car } from '../../types/types';
 import Race from './view-controls/race';
-import { getCars } from '../../api';
-import { constants } from '../../components/shared';
+import { createCar, getCars } from '../../api';
+import { carBrands, carModels, constants } from '../../components/shared';
+import { subscribeEvent } from '../../components/event-bus/event-bus';
 
 export class GarageView extends View {
   updateControlCar: UpdateCarControlView;
@@ -29,7 +30,7 @@ export class GarageView extends View {
 
   maxPages = 1;
 
-  container: View;
+  containerPagination: View;
 
   constructor(parentElement: HTMLElement) {
     super({ tagName: 'section', classes: ['garage'], parentElement });
@@ -49,7 +50,9 @@ export class GarageView extends View {
       classes: ['garage__counter', 'ubuntu-bold'],
       content: `Page № (${this.currentPage} / ${this.maxPages})`
     });
-    this.container = new View({ parentElement: this.node });
+    this.containerPagination = new View({ parentElement: this.node });
+    subscribeEvent('cars/update', this.updateGarage.bind(this));
+    subscribeEvent('car/random', this.generateRandomCars.bind(this));
     this.render();
   }
 
@@ -61,29 +64,35 @@ export class GarageView extends View {
       this.titlePage.node,
       this.counterOnPage.node
     );
-    await this.refreshGarage();
+    await this.updateGarage();
   }
 
   async getCars() {
     const res = await getCars(this.currentPage);
-    console.log(res);
     this.carsCount = res.count;
     this.currentCars = res.data;
     this.maxPages = this.calcMaxPage();
     console.log(this.maxPages);
   }
 
-  async refreshGarage() {
+  async updateGarage() {
     await this.getCars();
-    // this.refreshPageTitle();
-    this.container.node.remove();
+    this.updatePageTitle();
+    this.updatePageNumber();
     this.renderRace(this.currentCars || []);
-    this.node.append(this.container.node);
-    // this.checkPagButtonsState();
+  }
+
+  updatePageTitle() {
+    this.titlePage.node.textContent = `Garage Cars (${this.carsCount})`;
+  }
+
+  updatePageNumber() {
+    this.counterOnPage.node.textContent = `Page № (${this.currentPage} / ${this.maxPages})`;
   }
 
   renderRace(data: Car[]) {
     if (this.race !== undefined) {
+      console.log(this.node);
       this.node.removeChild(this.race.node);
     }
     this.race = new Race(this.node, data);
@@ -92,5 +101,25 @@ export class GarageView extends View {
 
   calcMaxPage(): number {
     return Math.ceil(this.carsCount / constants.CARS_PER_PAGE_LIMIT);
+  }
+
+  async generateRandomCars() {
+    const cars = [];
+    for (let i = 0; i < 100; i += 1) {
+      const randBrand = carBrands[Math.floor(Math.random() * 10)];
+      const randModel = carModels[Math.floor(Math.random() * 10)];
+      const color = this.generateRandomColor();
+      const car = {
+        name: `${randBrand} ${randModel}`,
+        color
+      };
+      cars.push(createCar(JSON.stringify(car)));
+    }
+    await Promise.all(cars);
+  }
+
+  generateRandomColor(): string {
+    const randHex = Math.floor(Math.random() * 16777215).toString(16);
+    return `#${randHex}`;
   }
 }

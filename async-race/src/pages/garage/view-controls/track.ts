@@ -1,8 +1,10 @@
+import { deleteCar } from '../../../api';
 import { Button } from '../../../components/button';
+import { triggerEvent } from '../../../components/event-bus/event-bus';
 import { createSvg } from '../../../components/shared';
-// import { svgCar } from '../../../components/shared';
 import { View } from '../../../components/view';
 import { Car } from '../../../types/types';
+import { state } from '../../state';
 
 export default class Track extends View {
   car: Car;
@@ -19,6 +21,8 @@ export default class Track extends View {
 
   startBtn = new Button({ parentElement: this.node, content: 'A' });
 
+  isCarDriving = false;
+
   constructor(parentElement: HTMLElement, car: Car) {
     super({ parentElement, classes: ['track'] });
     this.car = car;
@@ -28,8 +32,10 @@ export default class Track extends View {
 
   createTrackHeader(): View {
     const trackHeader = new View({ classes: ['track-header'] });
-    this.selectBtn.node.onclick = () => {};
-    this.removeBtn.node.onclick = async () => {};
+    this.selectBtn.node.onclick = () => this.selectTrack();
+    this.removeBtn.node.onclick = async () => {
+      await this.deleteTrack();
+    };
     const carTitle = new View({ tagName: 'h4', classes: ['car-title'], content: this.car.name });
     trackHeader.node.append(this.selectBtn.node, this.removeBtn.node, carTitle.node);
     return trackHeader;
@@ -56,5 +62,17 @@ export default class Track extends View {
     };
     controls.node.append(this.startBtn.node, this.stopBtn.node);
     return controls;
+  }
+
+  selectTrack() {
+    state.activeCarId = this.car.id;
+    triggerEvent('car/select');
+  }
+
+  async deleteTrack() {
+    this.removeBtn.button.disabled = true;
+    await deleteCar(this.car.id);
+    triggerEvent('cars/update');
+    triggerEvent('car/remove');
   }
 }

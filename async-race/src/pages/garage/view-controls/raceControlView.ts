@@ -1,4 +1,5 @@
 import { Button } from '../../../components/button';
+import { triggerEvent } from '../../../components/event-bus/event-bus';
 import { View } from '../../../components/view';
 
 export class RaceControlView extends View {
@@ -31,7 +32,7 @@ export class RaceControlView extends View {
 
   render() {
     this.randomCarsButton.node.onclick = () => {
-      console.log('1');
+      this.generateRandomCars();
     };
     this.startRaceButton.node.onclick = () => {
       console.log('2');
@@ -40,5 +41,12 @@ export class RaceControlView extends View {
       console.log('3');
     };
     this.node.append(this.randomCarsButton.node, this.startRaceButton.node, this.resetButton.node);
+  }
+
+  async generateRandomCars() {
+    this.randomCarsButton.button.disabled = true;
+    await triggerEvent('car/random');
+    await triggerEvent('cars/update');
+    this.randomCarsButton.button.disabled = false;
   }
 }

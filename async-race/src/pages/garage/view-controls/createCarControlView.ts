@@ -1,5 +1,6 @@
 import { createCar } from '../../../api';
 import { Button } from '../../../components/button';
+import { triggerEvent } from '../../../components/event-bus/event-bus';
 import { Input } from '../../../components/input';
 import { View } from '../../../components/view';
 
@@ -27,12 +28,13 @@ export class CreateCarControlView extends View {
 
   render() {
     const form = new View({ parentElement: this.node, tagName: 'form', classes: ['control__car-form'] });
-    form.node.onsubmit = (e: Event) => e.preventDefault;
+    form.node.onsubmit = (e: Event) => e.preventDefault();
     this.buttonSubmit.button.onclick = async () => {
       const isValid = this.nameInput.node.checkValidity();
       if (!isValid) return;
       await this.addCar(this.nameInput.node.value, this.colorPicker.node.value);
-      this.nameInput.node.value = '';
+      triggerEvent('cars/update');
+      this.clearControls();
     };
     form.node.append(this.nameInput.node, this.colorPicker.node, this.buttonSubmit.node);
     this.node.append(form.node);
@@ -44,5 +46,10 @@ export class CreateCarControlView extends View {
       color
     };
     await createCar(JSON.stringify(car));
+  }
+
+  clearControls() {
+    this.nameInput.node.value = '';
+    this.colorPicker.node.value = '#000000';
   }
 }
