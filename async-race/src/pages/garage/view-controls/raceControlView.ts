@@ -1,6 +1,7 @@
 import { Button } from '../../../components/button';
-import { triggerEvent } from '../../../components/event-bus/event-bus';
+import { subscribeEvent, triggerEvent } from '../../../components/event-bus/event-bus';
 import { View } from '../../../components/view';
+import { state } from '../../state';
 
 export class RaceControlView extends View {
   randomCarsButton: Button;
@@ -27,6 +28,8 @@ export class RaceControlView extends View {
       content: 'Reset',
       classes: ['control__button', 'ubuntu-medium']
     });
+    this.resetButton.button.disabled = true;
+    subscribeEvent('race/started', this.checkRaceResetState.bind(this));
     this.render();
   }
 
@@ -35,10 +38,10 @@ export class RaceControlView extends View {
       this.generateRandomCars();
     };
     this.startRaceButton.node.onclick = () => {
-      console.log('2');
+      this.startRace();
     };
     this.resetButton.node.onclick = () => {
-      console.log('3');
+      this.resetRace();
     };
     this.node.append(this.randomCarsButton.node, this.startRaceButton.node, this.resetButton.node);
   }
@@ -48,5 +51,29 @@ export class RaceControlView extends View {
     await triggerEvent('car/random');
     await triggerEvent('cars/update');
     this.randomCarsButton.button.disabled = false;
+  }
+
+  startRace() {
+    this.startRaceButton.button.disabled = true;
+    this.resetButton.button.disabled = true;
+    this.randomCarsButton.button.disabled = true;
+    triggerEvent('cars/raceStart');
+  }
+
+  resetRace() {
+    this.resetButton.button.disabled = true;
+    triggerEvent('cars/raceReset');
+  }
+
+  checkRaceResetState() {
+    if (state.isRaceStarted) {
+      this.resetButton.button.disabled = false;
+      this.startRaceButton.button.disabled = true;
+      this.randomCarsButton.button.disabled = true;
+    } else {
+      this.startRaceButton.button.disabled = false;
+      this.randomCarsButton.button.disabled = false;
+      this.resetButton.button.disabled = true;
+    }
   }
 }

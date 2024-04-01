@@ -71,7 +71,6 @@ export class GarageView extends View {
     );
     await this.updateGarage();
     this.createControlPagination();
-    this.checkStatePaginationControls();
   }
 
   async getCars() {
@@ -88,6 +87,7 @@ export class GarageView extends View {
     this.containerPagination.node.remove();
     this.renderRace(this.currentCars || []);
     this.node.append(this.containerPagination.node);
+    this.checkStatePaginationControls();
   }
 
   updatePageTitle() {
@@ -143,6 +143,7 @@ export class GarageView extends View {
     };
 
     this.containerPagination.node.append(this.prevButton.button, this.nextButton.button);
+    this.checkStatePaginationControls();
     this.node.append(this.containerPagination.node);
   }
 

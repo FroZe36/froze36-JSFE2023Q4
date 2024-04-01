@@ -13,13 +13,13 @@ export default class Track extends View {
 
   carItem?: HTMLElement;
 
-  selectBtn = new Button({ parentElement: this.node, content: 'Select' });
+  selectBtn = new Button({ parentElement: this.node, content: 'Select', classes: ['ubuntu-regular'] });
 
-  removeBtn = new Button({ parentElement: this.node, content: 'Remove' });
+  removeBtn = new Button({ parentElement: this.node, content: 'Remove', classes: ['ubuntu-regular'] });
 
-  stopBtn = new Button({ parentElement: this.node, content: 'B' });
+  stopBtn = new Button({ parentElement: this.node, content: 'B', classes: ['ubuntu-regular'] });
 
-  startBtn = new Button({ parentElement: this.node, content: 'A' });
+  startBtn = new Button({ parentElement: this.node, content: 'A', classes: ['ubuntu-regular'] });
 
   isCarDriving = false;
 
@@ -38,7 +38,7 @@ export default class Track extends View {
     this.removeBtn.node.onclick = async () => {
       await this.deleteTrack();
     };
-    const carTitle = new View({ tagName: 'h4', classes: ['car-title'], content: this.car.name });
+    const carTitle = new View({ tagName: 'h4', classes: ['car-title', 'ubuntu-bold'], content: this.car.name });
     trackHeader.node.append(this.selectBtn.node, this.removeBtn.node, carTitle.node);
     return trackHeader;
   }
@@ -136,6 +136,13 @@ export default class Track extends View {
       this.animateCarMovement(car, speed, timestamp, time);
     });
     return time;
+  }
+
+  async raceAllCars(engine: Engine) {
+    this.startCarAnimation(engine);
+    const driving = await this.startDriving();
+    if (!driving.ok) cancelAnimationFrame(this.trackAnimationFrameId);
+    return driving;
   }
 
   animateCarMovement(car: HTMLElement, speed: number, startTime: number, time: number) {
