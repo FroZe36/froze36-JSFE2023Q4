@@ -95,12 +95,11 @@ export class GarageView extends View {
   }
 
   updatePageNumber() {
-    this.counterOnPage.node.textContent = `Page № (${this.currentPage} / ${this.maxPages})`;
+    this.counterOnPage.node.textContent = `Page #(${this.currentPage} / ${this.maxPages})`;
   }
 
   renderRace(data: Car[]) {
     if (this.race !== undefined) {
-      console.log(this.node);
       this.node.removeChild(this.race.node);
     }
     this.race = new Race(this.node, data);

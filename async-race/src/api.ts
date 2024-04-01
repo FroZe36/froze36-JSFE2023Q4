@@ -53,3 +53,25 @@ export const updateCar = async (id: number, data: string) => {
   });
   return res;
 };
+
+export const startEngine = async (id: number) => {
+  const res = await fetch(`${config.baseUrl}${config.engine}?id=${id}&status=${config.startEngine}`, {
+    method: 'PATCH'
+  });
+  const data = await res.json();
+  return data;
+};
+
+export const stopEngine = async (id: number) => {
+  const res = await fetch(`${config.baseUrl}${config.engine}?id=${id}&status=${config.stopEngine}`, {
+    method: 'PATCH'
+  });
+  return res;
+};
+
+export const driveCar = async (id: number) => {
+  const res = await fetch(`${config.baseUrl}${config.engine}?id=${id}&status=${config.driveStatus}`, {
+    method: 'PATCH'
+  });
+  return res;
+};
