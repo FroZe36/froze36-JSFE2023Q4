@@ -8,6 +8,7 @@ import Race from './view-controls/race';
 import { createCar, getCars } from '../../api';
 import { carBrands, carModels, constants } from '../../components/shared';
 import { subscribeEvent } from '../../components/event-bus/event-bus';
+import { Button } from '../../components/button';
 
 export class GarageView extends View {
   updateControlCar: UpdateCarControlView;
@@ -32,6 +33,10 @@ export class GarageView extends View {
 
   containerPagination: View;
 
+  prevButton?: Button;
+
+  nextButton?: Button;
+
   constructor(parentElement: HTMLElement) {
     super({ tagName: 'section', classes: ['garage'], parentElement });
 
@@ -50,7 +55,7 @@ export class GarageView extends View {
       classes: ['garage__counter', 'ubuntu-bold'],
       content: `Page № (${this.currentPage} / ${this.maxPages})`
     });
-    this.containerPagination = new View({ parentElement: this.node });
+    this.containerPagination = new View({ parentElement: this.node, classes: ['pagination-wrapper'] });
     subscribeEvent('cars/update', this.updateGarage.bind(this));
     subscribeEvent('car/random', this.generateRandomCars.bind(this));
     this.render();
@@ -65,6 +70,8 @@ export class GarageView extends View {
       this.counterOnPage.node
     );
     await this.updateGarage();
+    this.createControlPagination();
+    this.checkStatePaginationControls();
   }
 
   async getCars() {
@@ -72,14 +79,15 @@ export class GarageView extends View {
     this.carsCount = res.count;
     this.currentCars = res.data;
     this.maxPages = this.calcMaxPage();
-    console.log(this.maxPages);
   }
 
   async updateGarage() {
     await this.getCars();
     this.updatePageTitle();
     this.updatePageNumber();
+    this.containerPagination.node.remove();
     this.renderRace(this.currentCars || []);
+    this.node.append(this.containerPagination.node);
   }
 
   updatePageTitle() {
@@ -121,5 +129,47 @@ export class GarageView extends View {
   generateRandomColor(): string {
     const randHex = Math.floor(Math.random() * 16777215).toString(16);
     return `#${randHex}`;
+  }
+
+  createControlPagination() {
+    this.prevButton = new Button({ parentElement: this.node, classes: [], content: 'Previous' });
+    this.prevButton.node.onclick = () => {
+      this.currentPage -= 1;
+      this.changePage();
+    };
+    this.nextButton = new Button({ parentElement: this.node, classes: [], content: 'Next' });
+    this.nextButton.node.onclick = () => {
+      this.currentPage += 1;
+      this.changePage();
+    };
+
+    this.containerPagination.node.append(this.prevButton.button, this.nextButton.button);
+    this.node.append(this.containerPagination.node);
+  }
+
+  checkStatePaginationControls() {
+    this.checkPaginationPrevState();
+    this.checkPaginationNextState();
+  }
+
+  checkPaginationPrevState() {
+    const button = this.prevButton?.button;
+    if (button) {
+      if (this.currentPage > 1) button.disabled = false;
+      else button.disabled = true;
+    }
+  }
+
+  checkPaginationNextState() {
+    const button = this.nextButton?.button;
+    if (button) {
+      if (this.currentPage < this.maxPages) button.disabled = false;
+      else button.disabled = true;
+    }
+  }
+
+  changePage() {
+    this.updateGarage();
+    this.checkStatePaginationControls();
   }
 }

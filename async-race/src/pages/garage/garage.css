@@ -104,4 +104,9 @@
       }
     }
   }
+  .pagination-wrapper {
+    display: flex;
+    gap: 25px;
+    margin-top: 25px;
+  }
 }
