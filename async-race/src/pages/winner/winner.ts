@@ -11,7 +11,7 @@ export class WinnerView extends View {
 
   currentPage = 1;
 
-  maxPages = 0;
+  maxPages = 1;
 
   winnersCount = 0;
 
@@ -56,7 +56,7 @@ export class WinnerView extends View {
       parentElement: this.node,
       tagName: 'h3',
       classes: ['winner__counter', 'ubuntu-bold'],
-      content: `Page #(${this.currentPage})`
+      content: `Page #(${this.currentPage} / ${this.maxPages})`
     });
     this.containerPagination = new View({ parentElement: this.node, classes: ['pagination-wrapper'] });
     subscribeEvent('winners/update', this.updateTable.bind(this));
@@ -64,15 +64,15 @@ export class WinnerView extends View {
   }
 
   async render() {
+    this.node.append(this.titlePage.node, this.counterOnPage.node);
     await this.getWinners();
     this.updatePageTitle();
     this.updatePageNumber();
-    this.node.append(this.titlePage.node, this.counterOnPage.node);
     this.buildTable();
     this.createControlPagination();
   }
 
-  async buildTable() {
+  buildTable() {
     this.makeTableHeader();
     this.fillTable();
     this.node.append(this.table.node);
@@ -82,7 +82,7 @@ export class WinnerView extends View {
     await this.getWinners();
     this.updatePageTitle();
     this.updatePageNumber();
-    await this.fillTable();
+    this.fillTable();
     this.checkStatePaginationControls();
   }
 
