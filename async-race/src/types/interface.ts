@@ -12,7 +12,7 @@ export interface InputElement {
   type?: string;
 }
 export interface ButtonElement {
-  parentElement: HTMLElement;
+  parentElement?: HTMLElement;
   content: string;
   classes?: string[];
 }

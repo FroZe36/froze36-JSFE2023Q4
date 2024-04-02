@@ -11,6 +11,7 @@ import {
 } from '../../../api';
 import { Button } from '../../../components/button';
 import { triggerEvent } from '../../../components/event-bus/event-bus';
+import { Modal } from '../../../components/modal/modal';
 import { constants, createSvg } from '../../../components/shared';
 import { View } from '../../../components/view';
 import { Car, Engine, Winner } from '../../../types/types';
@@ -184,6 +185,8 @@ export default class Track extends View {
         } else {
           await this.updateWinner(raceTime / 1000, winner);
         }
+        const modal = new Modal(this.car, raceTime / 1000);
+        modal.render();
       }
     } else cancelAnimationFrame(this.trackAnimationFrameId);
     return driving;

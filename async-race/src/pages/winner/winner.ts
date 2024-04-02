@@ -81,6 +81,7 @@ export class WinnerView extends View {
   async updateTable() {
     await this.getWinners();
     this.updatePageTitle();
+    this.updatePageNumber();
     await this.fillTable();
     this.checkStatePaginationControls();
   }
