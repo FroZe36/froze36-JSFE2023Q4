@@ -28,7 +28,9 @@ export const constants = {
   CARS_PER_PAGE_LIMIT: 7,
   WINNERS_PER_PAGE_LIMIT: 10,
   DEFAULT_ACTIVE_CAR_ID: 0,
-  DEFAULT_WINNER_CAR_ID: 0
+  DEFAULT_WINNER_CAR_ID: 0,
+  SORT_DESC_CLASS: 'desc',
+  SORT_ASC_CLASS: 'asc'
 };
 
 export function createSvg(color: string) {

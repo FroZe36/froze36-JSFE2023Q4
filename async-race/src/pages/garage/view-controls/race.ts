@@ -33,7 +33,7 @@ export default class Race extends View {
 
     this.updateTrackAccess(true);
 
-    const startedEngines: Promise<Response>[] = [];
+    const startedEngines: Promise<Engine>[] = [];
     const races: Promise<Response>[] = [];
     this.tracks.forEach((track) => {
       startedEngines.push(track.startEngine());
@@ -41,7 +41,7 @@ export default class Race extends View {
 
     Promise.all(startedEngines).then((engines) => {
       engines.forEach((engine, index) => {
-        races.push(this.tracks[index].raceAllCars(engine as unknown as Engine));
+        races.push(this.tracks[index].raceAllCars(engine));
         this.tracks[index].isCarDriving = true;
         this.tracks[index].checkCarStatus();
       });

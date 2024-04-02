@@ -69,7 +69,7 @@ fieldset {
 
 .title-page {
   font-size: clamp(2rem, 2vw, 4rem);
-  color: rgb(199, 158, 10)
+  color: rgb(199, 158, 10);
 }
 .main {
   padding: 0px 20px 20px 20px;

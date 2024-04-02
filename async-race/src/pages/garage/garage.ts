@@ -9,6 +9,7 @@ import { createCar, getCars } from '../../api';
 import { carBrands, carModels, constants } from '../../components/shared';
 import { subscribeEvent } from '../../components/event-bus/event-bus';
 import { Button } from '../../components/button';
+import { state } from '../state';
 
 export class GarageView extends View {
   updateControlCar: UpdateCarControlView;
@@ -53,11 +54,12 @@ export class GarageView extends View {
       parentElement: this.node,
       tagName: 'h3',
       classes: ['garage__counter', 'ubuntu-bold'],
-      content: `Page № (${this.currentPage} / ${this.maxPages})`
+      content: `Page #(${this.currentPage} / ${this.maxPages})`
     });
     this.containerPagination = new View({ parentElement: this.node, classes: ['pagination-wrapper'] });
     subscribeEvent('cars/update', this.updateGarage.bind(this));
     subscribeEvent('car/random', this.generateRandomCars.bind(this));
+    subscribeEvent('race/started', this.checkRaseResetState.bind(this));
     this.render();
   }
 
@@ -88,6 +90,25 @@ export class GarageView extends View {
     this.renderRace(this.currentCars || []);
     this.node.append(this.containerPagination.node);
     this.checkStatePaginationControls();
+  }
+
+  changePage() {
+    this.updateGarage();
+  }
+
+  checkRaseResetState() {
+    const nextButton = this.nextButton?.button;
+    const prevButton = this.prevButton?.button;
+    if (state.isRaceStarted) {
+      if (nextButton && prevButton) {
+        if (!nextButton.disabled) {
+          nextButton.disabled = true;
+        }
+        if (!prevButton.disabled) {
+          prevButton.disabled = true;
+        }
+      }
+    } else this.checkStatePaginationControls();
   }
 
   updatePageTitle() {
@@ -131,12 +152,12 @@ export class GarageView extends View {
   }
 
   createControlPagination() {
-    this.prevButton = new Button({ parentElement: this.node, classes: [], content: 'Previous' });
+    this.prevButton = new Button({ parentElement: this.node, classes: ['ubuntu-regular'], content: 'Previous' });
     this.prevButton.node.onclick = () => {
       this.currentPage -= 1;
       this.changePage();
     };
-    this.nextButton = new Button({ parentElement: this.node, classes: [], content: 'Next' });
+    this.nextButton = new Button({ parentElement: this.node, classes: ['ubuntu-regular'], content: 'Next' });
     this.nextButton.node.onclick = () => {
       this.currentPage += 1;
       this.changePage();
@@ -166,10 +187,5 @@ export class GarageView extends View {
       if (this.currentPage < this.maxPages) button.disabled = false;
       else button.disabled = true;
     }
-  }
-
-  changePage() {
-    this.updateGarage();
-    this.checkStatePaginationControls();
   }
 }

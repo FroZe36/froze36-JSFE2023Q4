@@ -9,7 +9,12 @@ export const config = {
   stopEngine: 'stopped',
   driveStatus: 'drive',
   carsLimit: constants.CARS_PER_PAGE_LIMIT,
-  winnersLimit: constants.WINNERS_PER_PAGE_LIMIT
+  winnersLimit: constants.WINNERS_PER_PAGE_LIMIT,
+  winnersIdSortQuery: 'id',
+  winnersWinsSortQuery: 'wins',
+  winnersTimeSortQuery: 'time',
+  winnersAscSortOrder: 'ASC',
+  winnersDescSortOrder: 'DESC'
 };
 
 export const getCars = async (page: number) => {
@@ -73,5 +78,60 @@ export const driveCar = async (id: number) => {
   const res = await fetch(`${config.baseUrl}${config.engine}?id=${id}&status=${config.driveStatus}`, {
     method: 'PATCH'
   });
+  return res;
+};
+
+export const getWinners = async (
+  page: number,
+  sort: string = config.winnersIdSortQuery,
+  order: string = config.winnersAscSortOrder
+) => {
+  const response = await fetch(
+    `${config.baseUrl}${config.winners}?_page=${page}&_limit=${config.winnersLimit}&_sort=${sort}&_order=${order}`
+  );
+  const data = await response.json();
+  const count = Number(response.headers.get('X-Total-Count'));
+  return { data, count };
+};
+
+export const getAllWinners = async () => {
+  const response = await fetch(`${config.baseUrl}${config.winners}`);
+  const data = await response.json();
+  return data;
+};
+
+export const getWinner = async (id: number) => {
+  const response = await fetch(`${config.baseUrl}${config.winners}/${id}`);
+  const data = await response.json();
+  return data;
+};
+
+export const createWinner = async (winner: string) => {
+  const res = await fetch(`${config.baseUrl}${config.winners}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: winner
+  });
+  return res;
+};
+
+export const updateWinner = async (id: number, newData: string) => {
+  const res = await fetch(`${config.baseUrl}${config.winners}/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: newData
+  });
+  return res;
+};
+
+export const deleteWinner = async (id: number) => {
+  const res = fetch(`${config.baseUrl}${config.winners}/${id}`, {
+    method: 'DELETE'
+  });
+
   return res;
 };

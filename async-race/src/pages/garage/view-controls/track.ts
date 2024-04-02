@@ -1,9 +1,19 @@
-import { deleteCar, driveCar, startEngine, stopEngine } from '../../../api';
+import {
+  createWinner,
+  deleteCar,
+  deleteWinner,
+  driveCar,
+  getAllWinners,
+  getWinner,
+  startEngine,
+  stopEngine,
+  updateWinner
+} from '../../../api';
 import { Button } from '../../../components/button';
 import { triggerEvent } from '../../../components/event-bus/event-bus';
-import { createSvg } from '../../../components/shared';
+import { constants, createSvg } from '../../../components/shared';
 import { View } from '../../../components/view';
-import { Car, Engine } from '../../../types/types';
+import { Car, Engine, Winner } from '../../../types/types';
 import { state } from '../../state';
 
 export default class Track extends View {
@@ -83,7 +93,11 @@ export default class Track extends View {
   async deleteTrack() {
     this.removeBtn.button.disabled = true;
     await deleteCar(this.car.id);
+    if ((await getAllWinners()).map((w: Winner) => w.id).includes(this.car.id)) {
+      await deleteWinner(this.car.id);
+    }
     triggerEvent('cars/update');
+    triggerEvent('winners/update');
     triggerEvent('car/remove');
   }
 
@@ -116,8 +130,7 @@ export default class Track extends View {
   }
 
   async stopEngine() {
-    const res = await stopEngine(this.car.id);
-    await res.json();
+    await stopEngine(this.car.id);
     if (this.carItem) {
       cancelAnimationFrame(this.trackAnimationFrameId);
       this.carItem.style.left = '0px';
@@ -138,10 +151,41 @@ export default class Track extends View {
     return time;
   }
 
+  async updateWinner(raceTime: number, winner: Winner) {
+    const fixedtime = +raceTime.toFixed(2);
+    const updatedWinner = {
+      wins: winner.wins + 1,
+      time: fixedtime < winner.time ? fixedtime : winner.time
+    };
+    await updateWinner(winner.id, JSON.stringify(updatedWinner));
+    triggerEvent('winners/update');
+  }
+
+  async addWinner(time: number) {
+    const newWinner: Winner = {
+      id: this.car.id,
+      wins: 1,
+      time: +time.toFixed(2)
+    };
+    await createWinner(JSON.stringify(newWinner));
+    triggerEvent('winners/update');
+  }
+
   async raceAllCars(engine: Engine) {
-    this.startCarAnimation(engine);
+    const raceTime = this.startCarAnimation(engine);
     const driving = await this.startDriving();
-    if (!driving.ok) cancelAnimationFrame(this.trackAnimationFrameId);
+    if (driving.ok) {
+      if (state.winnerCarId === constants.DEFAULT_WINNER_CAR_ID) {
+        const winnerId = this.car.id;
+        state.winnerCarId = winnerId;
+        const winner = await getWinner(winnerId);
+        if (Object.keys(winner).length === 0) {
+          await this.addWinner(raceTime / 1000);
+        } else {
+          await this.updateWinner(raceTime / 1000, winner);
+        }
+      }
+    } else cancelAnimationFrame(this.trackAnimationFrameId);
     return driving;
   }
 
