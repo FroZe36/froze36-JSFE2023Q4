@@ -44,6 +44,12 @@ figure,
 fieldset {
   margin: 0;
 }
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 .container {
   max-width: 1440px;
   padding: 0px 20px;
