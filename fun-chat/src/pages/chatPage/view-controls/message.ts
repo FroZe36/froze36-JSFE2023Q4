@@ -53,7 +53,13 @@ export class Message extends View {
 
   setUser() {
     this.user.node.textContent =
-      this.lsUser?.login === this.data.payload.message.from ? 'You' : this.data.payload.message.to;
+      this.lsUser?.login === this.data.payload.message.from ? 'You' : this.data.payload.message.from;
+
+    if (this.lsUser?.login === this.data.payload.message.from) {
+      this.node.style.alignSelf = 'flex-end';
+    } else {
+      this.node.style.alignSelf = 'flex-start';
+    }
   }
 
   setState() {

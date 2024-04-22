@@ -5,8 +5,9 @@ import { ChatPage } from './chatPage/chatPage';
 import { pages } from './pages';
 import { state } from './state';
 // import { socket } from '../api';
-import { SessionStorageUser, ResponseUserAuth } from '../types/interfaces';
+import { SessionStorageUser, ResponseUserAuth, ResponseError } from '../types/interfaces';
 import { eventEmitter } from '../components/Event-emmiter/Event-emmiter';
+import { Modal } from '../components/modal/modal';
 
 export class App {
   authPage: AuthPage;
@@ -48,6 +49,10 @@ export class App {
     eventEmitter.on('auth/logOut', (data) => {
       const user = data as ResponseUserAuth;
       this.logOut(user);
+    });
+    eventEmitter.on('error', (data) => {
+      const error = data as ResponseError;
+      new Modal(error.payload.error).render();
     });
     pages.push(this.authPage, this.aboutPage, this.chatPage);
     this.setView(0);

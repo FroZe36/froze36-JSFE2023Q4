@@ -15,8 +15,10 @@
     border-radius: 8px;
     padding: 10px 20px;
     .header__user-name {
+      font-size: clamp(1rem, 2vw, 2.2rem);
     }
     .header__title {
+      font-size: clamp(1rem, 2vw, 2.2rem);
     }
     .header__wrapper {
       display: inline-flex;
@@ -24,11 +26,11 @@
     }
     .header__btn {
       padding: 10px 15px;
-      font-size: 20px;
       border-radius: 8px;
       transform: scale(1);
       background-color: rgb(59, 247, 122);
       transition: scale 0.2s;
+      font-size: clamp(1rem, 2vw, 1.4rem);
       &:hover {
         transform: scale(0.95);
       }
@@ -54,7 +56,7 @@
       width: 30%;
       padding: 10px;
       .users__search-input {
-        font-size: 16px;
+        font-size: clamp(0.7rem, 2vw, 1.4rem);
         padding: 5px 10px;
         margin-bottom: 5px;
       }
@@ -64,13 +66,15 @@
         flex-direction: column;
         overflow-y: scroll;
         height: 100%;
+
         li.users__list-element {
           padding: 1% 5%;
           cursor: pointer;
+          font-size: clamp(0.8rem, 2vw, 1.4rem);
           list-style-type: disc;
           list-style-position: inside;
           &::marker {
-            font-size: 20px;
+            font-size: clamp(1rem, 2vw, 1.4rem);
           }
           &:hover {
             background-color: bisque;
@@ -100,13 +104,13 @@
         padding: 5px;
         justify-content: space-around;
         width: 100%;
-        font-size: 24px;
+        font-size: clamp(1rem, 2vw, 1.4rem);
         border-bottom: 1px solid black;
         .dialog-container__recipient-name {
         }
         li.dialog-container__recipient-status {
           &::marker {
-            font-size: 20px;
+            font-size: clamp(1rem, 2vw, 1.4rem);
           }
           &.active::marker {
             color: green;
@@ -124,6 +128,7 @@
         justify-content: center;
         border-bottom: 1px solid black;
         overflow-y: scroll;
+        font-size: clamp(0.8rem, 1vw, 1.4rem);
         .message {
           border-radius: 8px;
           padding: 10px;
@@ -131,7 +136,6 @@
           display: flex;
           flex-direction: column;
           background-color: grey;
-          width: 30%;
           .message-header {
             display: inline-flex;
             justify-content: space-between;
@@ -157,8 +161,8 @@
         gap: 20px;
         .dialog-container__message-input {
           width: 100%;
-          font-size: 20px;
           padding: 5px 10px;
+          font-size: clamp(0.7rem, 2vw, 1.4rem);
           &[disabled] {
             cursor: not-allowed;
             opacity: 0.8;
@@ -166,10 +170,10 @@
         }
         .dialog-container__button-send {
           padding: 10px 15px;
-          font-size: 20px;
           border-radius: 8px;
           transform: scale(1);
           background-color: rgb(59, 247, 122);
+          font-size: clamp(1rem, 1vw, 1.4rem);
           transition: scale 0.2s;
           &:hover {
             transform: scale(0.95);
@@ -187,7 +191,7 @@
   }
   .chat__footer.footer {
     width: 100%;
-    font-size: 24px;
+    font-size: clamp(1rem, 2vw, 1.8rem);
     padding: 10px 20px;
     border-radius: 8px;
     border: 1px solid black;
@@ -200,6 +204,22 @@
     .footer__name {
     }
     .footer__year {
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .chat {
+    .chat__header.header {
+      padding: 10px 5px;
+      .header__btn {
+        padding: 7px;
+      }
+    }
+    .wrapper {
+      .chat__users.users {
+        padding: 5px;
+      }
     }
   }
 }

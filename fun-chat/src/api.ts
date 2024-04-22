@@ -4,7 +4,8 @@ import {
   ResponseUserAuth,
   ResponseThirdPartyUser,
   SocketSendMessage,
-  ResponseMsgSend
+  ResponseMsgSend,
+  ResponseError
 } from './types/interfaces';
 
 const configure = {
@@ -54,7 +55,8 @@ class Socket {
       eventEmitter.emit('send/MessageTo', message);
     }
     if (data.type === 'ERROR') {
-      console.error('error msg:', data.payload.error);
+      const message: ResponseError = data;
+      eventEmitter.emit('error', message);
     }
   }
 

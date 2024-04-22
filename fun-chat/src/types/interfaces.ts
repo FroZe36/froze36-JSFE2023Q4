@@ -80,6 +80,14 @@ export interface ResponseMsgSend {
   };
 }
 
+export interface ResponseError {
+  id: string;
+  type: 'ERROR';
+  payload: {
+    error: string;
+  };
+}
+
 export interface IState {
   prevPage: number | null;
   isLogin: boolean;

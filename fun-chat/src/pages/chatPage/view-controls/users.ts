@@ -50,6 +50,9 @@ export class Users extends View {
       const user = data as ResponseThirdPartyUser;
       this.getResponseUserFromServer(user);
     });
+    eventEmitter.on('auth/logOut', () => {
+      this.users = [];
+    });
     this.render();
   }
 

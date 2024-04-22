@@ -87,7 +87,7 @@ export class Chat extends View {
 
   setValidate(event: Event) {
     if (event.target instanceof HTMLInputElement) {
-      if (event.target.value) {
+      if (event.target.value.trim() !== '') {
         this.buttonSend.button.disabled = false;
       } else {
         this.buttonSend.button.disabled = true;
