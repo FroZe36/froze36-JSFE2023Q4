@@ -1,8 +1,10 @@
 import { Button } from '../../components/button';
 import { Input } from '../../components/input';
+import { generateUniqueId } from '../../components/shared';
 import { View } from '../../components/view';
-import { Socket } from '../../api';
+import { socket } from '../../api';
 import './authPage.css';
+import { SocketSendMessage } from '../../types/interfaces';
 
 export class AuthPage extends View {
   inputName: Input;
@@ -39,8 +41,6 @@ export class AuthPage extends View {
       classes: ['error']
     })
   };
-
-  Auth = new Socket();
 
   isNameValid = false;
 
@@ -149,9 +149,8 @@ export class AuthPage extends View {
 
   onSubmit(e: Event) {
     e.preventDefault();
-    console.log('123');
-    const user = {
-      id: '1',
+    const message: SocketSendMessage<{ user: { login: string; password: string } }> = {
+      id: generateUniqueId(),
       type: 'USER_LOGIN',
       payload: {
         user: {
@@ -160,6 +159,21 @@ export class AuthPage extends View {
         }
       }
     };
-    this.Auth.sendMsg(user);
+    // const storage: object[] = JSON.parse(localStorage.getItem('users')!);
+    // storage.push({ id: user.id, user: user.payload?.user });
+    // localStorage.setItem('users', JSON.stringify(storage));
+    socket.sendMsg(message);
+    sessionStorage.setItem(
+      'user',
+      JSON.stringify({
+        id: message.id,
+        login: message.payload?.user.login,
+        password: message.payload?.user.password,
+        isLogined: false
+      })
+    );
+    this.inputName.node.value = '';
+    this.inputPassword.node.value = '';
+    this.buttonSubmit.button.disabled = true;
   }
 }

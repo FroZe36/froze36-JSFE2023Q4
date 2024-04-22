@@ -1,3 +1,5 @@
+import { SocketSendTypes } from './types';
+
 export interface ViewElement {
   tagName?: string;
   classes?: string[];
@@ -16,14 +18,41 @@ export interface ButtonElement {
   content: string;
   classes?: string[];
 }
-export interface Message {
+export interface SocketSendMessage<T> {
   id?: string;
-  type: string;
-  payload?: object | null;
+  type: SocketSendTypes;
+  payload?: T | null;
+}
+
+export interface SessionStorageUser {
+  id: string;
+  isLogined?: boolean;
+  login: string;
+  password?: string;
+}
+
+export interface ResponseUserAuth {
+  id: string;
+  type: 'USER_LOGIN';
+  payload: {
+    user: {
+      login: string;
+      isLogined: boolean;
+    };
+  };
+}
+
+export interface ResponseAllUsers {
+  id: string;
+  type: 'USER_ACTIVE' | 'USER_INACTIVE';
+  payload: {
+    users: { login: string; isLogined: boolean }[] | [];
+  };
 }
 
 export interface IState {
   prevPage: number | null;
   isLogin: boolean;
+  id: null | string;
   activePage: number;
 }

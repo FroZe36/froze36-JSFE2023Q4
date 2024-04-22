@@ -1,4 +1,48 @@
 .about-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid black;
+  padding: 25px;
+  background-color: rgba(0, 0, 0, 0.98);
+  border-radius: 8px;
+  .about-page__title {
+    color: gold;
+    font-size: clamp(1.1rem, 1.1vw, 2.2rem);
+  }
+  .about-page__text {
+    color: gold;
+    font-size: clamp(0.8rem, 1vw, 1.8rem);
+  }
+  .about-page-wrapper {
+    font-size: 20px;
+    display: inline-flex;
+    text-align: center;
+    gap: 10px;
+    color: chartreuse;
+    .about-page__name {
+      position: relative;
+      padding-bottom: 2px;
+      width: 100%;
+      &::before {
+        position: absolute;
+        content: '';
+        width: 0;
+        right: 0;
+        bottom: 0;
+        height: 3px;
+        background-color: #27ae60;
+        transition: width ease-in-out 1s;
+      }
+      &:hover::before {
+        width: 100%;
+        left: 0;
+        background-color: #27ae60;
+        transition: width ease-in-out 1s;
+      }
+    }
+  }
   .about-page__button {
     padding: 10px 15px;
     font-size: 20px;

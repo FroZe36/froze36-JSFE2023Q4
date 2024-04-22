@@ -14,7 +14,34 @@ export class AboutPage extends View {
   }
 
   render() {
-    this.node.textContent = 'About Page';
-    this.node.append(this.buttonBack.button);
+    const wrapper = new View({ classes: ['about-page-wrapper'], parentElement: this.node });
+    const h1 = new View({
+      classes: ['about-page__title'],
+      parentElement: this.node,
+      tagName: 'h3',
+      content: 'The application was developed for the task of Fun Chat as part of the course RSSchool JS/FE 2023Q3'
+    });
+    const p = new View({
+      tagName: 'p',
+      classes: ['about-page__text'],
+      parentElement: this.node,
+      content: 'If you like the app, I will be glad of feedback!'
+    });
+    const myName = new View({
+      tagName: 'a',
+      classes: ['about-page__name'],
+      content: 'Danila K.',
+      parentElement: this.node
+    });
+    myName.node.setAttribute('href', 'https://github.com/FroZe36');
+    myName.node.setAttribute('target', '_blank');
+    const year = new View({
+      content: '2024',
+      classes: ['about-page__year'],
+      tagName: 'span',
+      parentElement: this.node
+    });
+    wrapper.node.append(myName.node, year.node);
+    this.node.append(h1.node, p.node, wrapper.node, this.buttonBack.button);
   }
 }
