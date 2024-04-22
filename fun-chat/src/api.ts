@@ -1,5 +1,11 @@
 import { eventEmitter } from './components/Event-emmiter/Event-emmiter';
-import { ResponseAllUsers, ResponseUserAuth, SocketSendMessage } from './types/interfaces';
+import {
+  ResponseAllUsers,
+  ResponseUserAuth,
+  ResponseThirdPartyUser,
+  SocketSendMessage,
+  ResponseMsgSend
+} from './types/interfaces';
 
 const configure = {
   socket: 'ws://127.0.0.1:4000'
@@ -34,6 +40,18 @@ class Socket {
     if (data.type === 'USER_INACTIVE') {
       const users: ResponseAllUsers = data;
       eventEmitter.emit('get/UserInActive', users);
+    }
+    if (data.type === 'USER_EXTERNAL_LOGIN') {
+      const user: ResponseThirdPartyUser = data;
+      eventEmitter.emit('server/UserLogIn', user);
+    }
+    if (data.type === 'USER_EXTERNAL_LOGOUT') {
+      const user: ResponseThirdPartyUser = data;
+      eventEmitter.emit('server/UserLogOut', user);
+    }
+    if (data.type === 'MSG_SEND') {
+      const message: ResponseMsgSend = data;
+      eventEmitter.emit('send/MessageTo', message);
     }
     if (data.type === 'ERROR') {
       console.error('error msg:', data.payload.error);

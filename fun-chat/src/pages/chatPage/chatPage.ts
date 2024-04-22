@@ -19,7 +19,7 @@ export class ChatPage extends View {
   constructor(setViewCallback: (pageNum: number) => void) {
     super({ classes: ['chat'], tagName: 'main' });
     this.header = new Header(this.node, setViewCallback);
-    this.users = new Users(this.node);
+    this.users = new Users(this.node, this.handleClickFromUsersList.bind(this));
     this.chat = new Chat(this.node);
     this.footer = new Footer(this.node);
     this.render();
@@ -28,5 +28,9 @@ export class ChatPage extends View {
   render() {
     this.wrapperSection.node.append(this.users.node, this.chat.node);
     this.node.append(this.header.node, this.wrapperSection.node, this.footer.node);
+  }
+
+  handleClickFromUsersList(target: { login: string; isLogined: boolean }) {
+    this.chat.setUserFromUserList(target);
   }
 }

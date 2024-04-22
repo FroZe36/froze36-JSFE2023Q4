@@ -22,7 +22,6 @@ export class App {
   enableRouteChange() {
     window.addEventListener('hashchange', () => {
       const { hash } = window.location;
-      console.log(hash);
       if (hash === this.hashPages[1]) {
         this.setView(1);
       } else if (hash === this.hashPages[0] && !state.isLogin) {
@@ -71,7 +70,6 @@ export class App {
     }
     state.activePage = newPageNum;
     window.location.hash = this.hashPages[newPageNum];
-    console.log(state.activePage, state.prevPage);
     this.currentPage = pages[newPageNum].node;
     this.root.node.append(this.currentPage);
   }
@@ -89,6 +87,7 @@ export class App {
     const userFromStorage: SessionStorageUser = JSON.parse(sessionStorage.getItem('user') || '{}');
     userFromStorage.isLogined = user.isLogined;
     sessionStorage.setItem('user', JSON.stringify(userFromStorage));
+    this.chatPage.chat.lsUser = userFromStorage;
     state.isLogin = user.isLogined;
     state.id = user.id;
     this.changeLocation(2);

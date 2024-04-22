@@ -50,6 +50,36 @@ export interface ResponseAllUsers {
   };
 }
 
+export interface ResponseThirdPartyUser {
+  id: null;
+  type: 'USER_EXTERNAL_LOGIN' | 'USER_EXTERNAL_LOGOUT';
+  payload: {
+    user: {
+      login: string;
+      isLogined: boolean;
+    };
+  };
+}
+
+export interface ResponseMsgSend {
+  id: string;
+  type: 'MSG_SEND';
+  payload: {
+    message: {
+      id: string;
+      from: string;
+      to: string;
+      text: string;
+      datetime: number;
+      status: {
+        isDelivered: boolean;
+        isReaded: boolean;
+        isEdited: boolean;
+      };
+    };
+  };
+}
+
 export interface IState {
   prevPage: number | null;
   isLogin: boolean;

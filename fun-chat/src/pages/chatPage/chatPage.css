@@ -70,17 +70,16 @@
           list-style-type: disc;
           list-style-position: inside;
           &::marker {
-            font-size: 20px
+            font-size: 20px;
           }
           &:hover {
-            background-color:bisque;
+            background-color: bisque;
           }
           &.users__list-element_inactive::marker {
             color: red;
           }
           &.users__list-element_active::marker {
             color: green;
-
           }
         }
       }
@@ -95,6 +94,7 @@
       border: 1px solid black;
       .dialog-container__header {
         align-self: center;
+        height: 39px;
         display: inline-flex;
         margin: 0px 20px;
         padding: 5px;
@@ -104,12 +104,53 @@
         border-bottom: 1px solid black;
         .dialog-container__recipient-name {
         }
-        .dialog-container__recipient-status {
+        li.dialog-container__recipient-status {
+          &::marker {
+            font-size: 20px;
+          }
+          &.active::marker {
+            color: green;
+          }
+          &.inactive::marker {
+            color: red;
+          }
         }
       }
       .dialog-container__content {
         flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         border-bottom: 1px solid black;
+        overflow-y: scroll;
+        .message {
+          border-radius: 8px;
+          padding: 10px;
+          gap: 3px;
+          display: flex;
+          flex-direction: column;
+          background-color: grey;
+          width: 30%;
+          .message-header {
+            display: inline-flex;
+            justify-content: space-between;
+            margin: 0px 5px;
+            .message-header__user {
+            }
+            .message-header__date {
+            }
+          }
+          .message__text {
+            background-color: gold;
+            padding: 5px;
+            border-radius: 8px;
+          }
+          .message__state {
+            align-self: flex-end;
+            margin: 0px 5px;
+          }
+        }
       }
       .dialog-container__form {
         display: inline-flex;
@@ -118,6 +159,10 @@
           width: 100%;
           font-size: 20px;
           padding: 5px 10px;
+          &[disabled] {
+            cursor: not-allowed;
+            opacity: 0.8;
+          }
         }
         .dialog-container__button-send {
           padding: 10px 15px;
