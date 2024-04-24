@@ -51,6 +51,7 @@ export class AuthPage extends View {
     this.inputName = new Input({ parentElement: this.node, classes: [] });
     this.inputName.node.id = 'nameInput';
     this.inputName.node.required = true;
+    this.inputName.node.maxLength = 10;
     this.inputPassword = new Input({ parentElement: this.node, classes: [], type: 'password' });
     this.inputPassword.node.required = true;
     this.inputPassword.node.id = 'passwordInput';
@@ -135,6 +136,22 @@ export class AuthPage extends View {
     const { value } = input;
     const { parentElement } = input;
     const isValid = value.length > 6;
+    if (parentElement) {
+      if (!isValid) {
+        if (!parentElement.contains(error.node)) {
+          parentElement.appendChild(error.node);
+        }
+      } else if (parentElement.contains(error.node)) {
+        parentElement.removeChild(error.node);
+      }
+    }
+    return isValid;
+  }
+
+  checkTooLong(input: HTMLInputElement, error: View): boolean {
+    const { value } = input;
+    const { parentElement } = input;
+    const isValid = value.length >= 11;
     if (parentElement) {
       if (!isValid) {
         if (!parentElement.contains(error.node)) {

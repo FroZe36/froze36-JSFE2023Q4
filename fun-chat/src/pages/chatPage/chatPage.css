@@ -19,6 +19,7 @@
     }
     .header__title {
       font-size: clamp(1rem, 2vw, 2.2rem);
+      color: orange;
     }
     .header__wrapper {
       display: inline-flex;
@@ -66,13 +67,17 @@
         flex-direction: column;
         overflow-y: scroll;
         height: 100%;
+        list-style-type: disc;
+        list-style-position: inside;
 
         li.users__list-element {
+          align-items: center;
           padding: 1% 5%;
           cursor: pointer;
           font-size: clamp(0.8rem, 2vw, 1.4rem);
-          list-style-type: disc;
-          list-style-position: inside;
+          margin-right: 5px;
+          width: 100%;
+          white-space: nowrap;
           &::marker {
             font-size: clamp(1rem, 2vw, 1.4rem);
           }
@@ -130,9 +135,11 @@
         overflow-y: scroll;
         font-size: clamp(0.8rem, 1vw, 1.4rem);
         .message {
+          width: 45%;
           border-radius: 8px;
-          padding: 10px;
+          padding: 1%;
           gap: 3px;
+          margin-bottom: 8px;
           display: flex;
           flex-direction: column;
           background-color: grey;
@@ -205,6 +212,13 @@
     }
     .footer__year {
     }
+  }
+}
+
+@media (max-width: 800px) {
+  .message-header {
+    flex-direction: column;
+    gap: 3px;
   }
 }
 

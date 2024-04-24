@@ -20,6 +20,24 @@ export class App {
 
   hashPages = ['#auth', '#about', '#chat'];
 
+  // checkSessionStorage() {
+  //   if (sessionStorage.getItem('user')) {
+  //     const user: SessionStorageUser = JSON.parse(sessionStorage.getItem('user') || '{}');
+  //     const message: SocketSendMessage<{ user: { login: string; password: string } }> = {
+  //       id: user.id,
+  //       type: 'USER_LOGIN',
+  //       payload: {
+  //         user: {
+  //           login: user.login,
+  //           password: user.password || ''
+  //         }
+  //       }
+  //     };
+  //     console.log(user, message);
+  //     socket.sendMsg(message);
+  //   }
+  // }
+
   enableRouteChange() {
     window.addEventListener('hashchange', () => {
       const { hash } = window.location;

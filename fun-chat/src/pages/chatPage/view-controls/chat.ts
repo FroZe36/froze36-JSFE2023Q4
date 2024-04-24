@@ -3,8 +3,13 @@ import { eventEmitter } from '../../../components/Event-emmiter/Event-emmiter';
 import { Button } from '../../../components/button';
 import { Input } from '../../../components/input';
 import { View } from '../../../components/view';
-import { ResponseMsgSend, SessionStorageUser, SocketSendMessage } from '../../../types/interfaces';
-import { state } from '../../state';
+import {
+  FetchingMessagesWithUser,
+  ResponseMsgSend,
+  SessionStorageUser,
+  SocketSendMessage,
+  DataMsgType
+} from '../../../types/interfaces';
 import { Message } from './message';
 
 export class Chat extends View {
@@ -21,6 +26,8 @@ export class Chat extends View {
   emptyTextMessageDialog: View;
 
   lsUser: null | SessionStorageUser;
+
+  dialogIsOpen = false;
 
   constructor(parentElement: HTMLElement) {
     super({ parentElement, classes: ['chat__dialog-container', 'dialog-container'] });
@@ -47,7 +54,11 @@ export class Chat extends View {
     this.lsUser = null;
     eventEmitter.on('send/MessageTo', (data) => {
       const message = data as ResponseMsgSend;
-      this.createMessage(message);
+      if (this.dialogIsOpen) this.createMessage(message.payload.message);
+    });
+    eventEmitter.on('history/UserMessages', (data) => {
+      const message = data as FetchingMessagesWithUser;
+      this.getHistoryMessages(message.payload.messages);
     });
     this.render();
   }
@@ -68,6 +79,11 @@ export class Chat extends View {
 
   setUserFromUserList(data: { login: string; isLogined: boolean }) {
     this.header.node.innerHTML = '';
+    if (this.emptyTextMessageDialog.node.style.display === 'none') {
+      while (this.dialog.node.querySelector('.message')) {
+        this.dialog.node.querySelector('.message')?.remove();
+      }
+    }
     const recipientName = new View({
       tagName: 'span',
       classes: ['dialog-container__recipient-name']
@@ -81,8 +97,19 @@ export class Chat extends View {
     recipientStatus.node.classList.add(data.isLogined ? 'active' : 'inactive');
     this.header.node.append(recipientName.node, recipientStatus.node);
     this.user = data;
+    const message: SocketSendMessage<{ user: { login: string } }> = {
+      id: this.lsUser?.id,
+      type: 'MSG_FROM_USER',
+      payload: {
+        user: {
+          login: data.login
+        }
+      }
+    };
+    socket.sendMsg(message);
     this.messageInput.node.disabled = false;
-    this.emptyTextMessageDialog.node.textContent = 'Write your first message...';
+    if (!this.dialogIsOpen) this.dialogIsOpen = true;
+    else this.dialogIsOpen = false;
   }
 
   setValidate(event: Event) {
@@ -95,10 +122,22 @@ export class Chat extends View {
     }
   }
 
+  getHistoryMessages(responseMessages: DataMsgType[]) {
+    if (!responseMessages.length) {
+      this.dialog.node.style.justifyContent = 'center';
+      this.emptyTextMessageDialog.node.style.display = 'inline';
+      this.emptyTextMessageDialog.node.textContent = 'Write your first message...';
+    } else {
+      this.emptyTextMessageDialog.node.style.display = 'none';
+      this.dialog.node.style.justifyContent = 'flex-start';
+      responseMessages.forEach((msg: DataMsgType) => this.createMessage(msg));
+    }
+  }
+
   sendMsgToUser(e: Event) {
     e.preventDefault();
     const message: SocketSendMessage<{ message: { to: string; text: string } }> = {
-      id: state.id || '',
+      id: this.lsUser?.id,
       type: 'MSG_SEND',
       payload: {
         message: {
@@ -114,45 +153,12 @@ export class Chat extends View {
     }
   }
 
-  createMessage(data: ResponseMsgSend) {
-    if (this.emptyTextMessageDialog.node) {
-      this.emptyTextMessageDialog.node.remove();
+  createMessage(data: DataMsgType) {
+    if (this.emptyTextMessageDialog.node.style.display === 'inline') {
+      this.emptyTextMessageDialog.node.style.display = 'none';
+      this.dialog.node.style.justifyContent = 'flex-start';
     }
     const message = new Message(this.node, data, { user: this.user, lsUser: this.lsUser });
     this.dialog.node.append(message.node);
-    // const container = new View({ classes: [] });
-    // const { to, from, text, datetime, status } = data.payload.message;
-    // const { day, month, year, hours, minutes, seconds } = this.transformDate(datetime);
-    // const header = new View({ classes: [] });
-    // const who = new View({ tagName: 'span', classes: [], content: this.lsUser?.login === from ? 'You' : to });
-    // const dateElement = new View({
-    //   tagName: 'span',
-    //   classes: [],
-    //   content: `${day}.${month}.${year}, ${hours}:${minutes}:${seconds}`
-    // });
-    // const msg = new View({ classes: [], content: text });
-    // const stateOfMsg = new View({ classes: [], content: status.isDelivered ? 'delivered' : 'sent' });
   }
-
-  // transformDate(timestap: number): {
-  //   year: number;
-  //   month: number;
-  //   day: number;
-  //   hours: number;
-  //   minutes: number;
-  //   seconds: number;
-  // } {
-  //   const date = new Date(timestap);
-  //   const year = date.getFullYear();
-  //   const month = date.getMonth() + 1;
-  //   const day = date.getDate();
-  //   const hours = date.getHours();
-  //   const minutes = date.getMinutes();
-  //   const seconds = date.getSeconds();
-  //   return { year, month, day, hours, minutes, seconds };
-  // }
-
-  // getMessageResponse(responseMsg: ResponseMsgSend) {
-  //   console.log(responseMsg);
-  // }
 }

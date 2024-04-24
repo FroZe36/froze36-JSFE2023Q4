@@ -5,7 +5,8 @@ import {
   ResponseThirdPartyUser,
   SocketSendMessage,
   ResponseMsgSend,
-  ResponseError
+  ResponseError,
+  FetchingMessagesWithUser
 } from './types/interfaces';
 
 const configure = {
@@ -53,6 +54,10 @@ class Socket {
     if (data.type === 'MSG_SEND') {
       const message: ResponseMsgSend = data;
       eventEmitter.emit('send/MessageTo', message);
+    }
+    if (data.type === 'MSG_FROM_USER') {
+      const message: FetchingMessagesWithUser = data;
+      eventEmitter.emit('history/UserMessages', message);
     }
     if (data.type === 'ERROR') {
       const message: ResponseError = data;

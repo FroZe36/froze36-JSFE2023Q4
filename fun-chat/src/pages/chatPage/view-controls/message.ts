@@ -1,5 +1,5 @@
 import { View } from '../../../components/view';
-import { ResponseMsgSend, SessionStorageUser } from '../../../types/interfaces';
+import { DataMsgType, SessionStorageUser } from '../../../types/interfaces';
 
 export class Message extends View {
   header = new View({ classes: ['message-header'] });
@@ -16,11 +16,11 @@ export class Message extends View {
 
   lsUser: SessionStorageUser | null;
 
-  data: ResponseMsgSend;
+  data: DataMsgType;
 
   constructor(
     parentElement: HTMLElement,
-    data: ResponseMsgSend,
+    data: DataMsgType,
     dataObj: { user: { login: string; isLogined: boolean } | null; lsUser: SessionStorageUser | null }
   ) {
     super({ parentElement, classes: ['message'] });
@@ -52,10 +52,9 @@ export class Message extends View {
   }
 
   setUser() {
-    this.user.node.textContent =
-      this.lsUser?.login === this.data.payload.message.from ? 'You' : this.data.payload.message.from;
+    this.user.node.textContent = this.lsUser?.login === this.data.from ? 'You' : this.data.from;
 
-    if (this.lsUser?.login === this.data.payload.message.from) {
+    if (this.lsUser?.login === this.data.from) {
       this.node.style.alignSelf = 'flex-end';
     } else {
       this.node.style.alignSelf = 'flex-start';
@@ -63,7 +62,7 @@ export class Message extends View {
   }
 
   setState() {
-    const { isDelivered, isEdited, isReaded } = this.data.payload.message.status;
+    const { isDelivered, isEdited, isReaded } = this.data.status;
     if (isDelivered) {
       this.stateMsg.node.textContent = 'delivered';
     } else if (isReaded) {
@@ -76,11 +75,11 @@ export class Message extends View {
   }
 
   setText() {
-    this.textMsg.node.textContent = this.data.payload.message.text;
+    this.textMsg.node.textContent = this.data.text;
   }
 
   setDate() {
-    const { year, month, day, seconds, minutes, hours } = this.transformDate(this.data.payload.message.datetime);
+    const { year, month, day, seconds, minutes, hours } = this.transformDate(this.data.datetime);
     this.dateElement.node.textContent = `${day}.${month}.${year}, ${hours}:${minutes}:${seconds}`;
   }
 
@@ -96,8 +95,6 @@ export class Message extends View {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-
-    // Получение компонентов времени
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
