@@ -8,7 +8,8 @@ import {
   ResponseMsgSend,
   SessionStorageUser,
   SocketSendMessage,
-  DataMsgType
+  DataMsgType,
+  NotificationDeliveryStatusChanged
 } from '../../../types/interfaces';
 import { Message } from './message';
 
@@ -29,28 +30,27 @@ export class Chat extends View {
 
   dialogIsOpen = false;
 
+  isHistoryCompleted = false;
+
+  requestSent = false;
+
   constructor(parentElement: HTMLElement) {
     super({ parentElement, classes: ['chat__dialog-container', 'dialog-container'] });
     this.dialog = new View({ classes: ['dialog-container__content'], parentElement: this.node });
     this.dialog.node.style.scrollBehavior = 'smooth';
     this.header = new View({ classes: ['dialog-container__header'], parentElement: this.node });
     this.messageInput = new Input({ classes: ['dialog-container__message-input'], parentElement: this.node });
-    this.messageInput.node.placeholder = 'Write a message...';
-    this.messageInput.node.disabled = true;
     this.buttonSend = new Button({
       classes: ['dialog-container__button-send'],
       parentElement: this.node,
       content: 'Send'
     });
-    this.buttonSend.button.disabled = true;
-    this.buttonSend.button.type = 'submit';
     this.emptyTextMessageDialog = new View({
       tagName: 'span',
       classes: ['dialog-container__content_text'],
       content: 'Select the user to send the message...',
       parentElement: this.node
     });
-    /** МОжет быть понадобится */
     this.user = null;
     this.lsUser = null;
     eventEmitter.on('send/MessageTo', (data) => {
@@ -61,6 +61,10 @@ export class Chat extends View {
       const message = data as FetchingMessagesWithUser;
       this.getHistoryMessages(message.payload.messages);
     });
+    eventEmitter.on('statusMsg/Delivered', (data) => {
+      const message = data as NotificationDeliveryStatusChanged;
+      this.changeStateDelivired(message);
+    });
     this.render();
   }
 
@@ -68,11 +72,15 @@ export class Chat extends View {
     this.dialog.node.append(this.emptyTextMessageDialog.node);
     this.node.append(this.header.node, this.dialog.node);
     this.createFormSendMessage();
+    this.buttonSend.button.disabled = true;
+    this.buttonSend.button.type = 'submit';
+    this.messageInput.node.placeholder = 'Write a message...';
+    this.messageInput.node.disabled = true;
   }
 
   createFormSendMessage() {
     const form = new View({ tagName: 'form', classes: ['dialog-container__form'], parentElement: this.node });
-    form.node.addEventListener('submit', this.sendMsgToUser.bind(this));
+    form.node.addEventListener('submit', this.sendMsgToSocket.bind(this));
     form.node.oninput = (e) => this.setValidate(e);
     form.node.append(this.messageInput.node, this.buttonSend.button);
     this.node.append(form.node);
@@ -87,14 +95,8 @@ export class Chat extends View {
     }
     if (this.dialog.node.querySelector('.new-message-separator'))
       this.dialog.node.querySelector('.new-message-separator')?.remove();
-    const recipientName = new View({
-      tagName: 'span',
-      classes: ['dialog-container__recipient-name']
-    });
-    const recipientStatus = new View({
-      tagName: 'li',
-      classes: ['dialog-container__recipient-status']
-    });
+    const recipientName = new View({ tagName: 'span', classes: ['dialog-container__recipient-name'] });
+    const recipientStatus = new View({ tagName: 'li', classes: ['dialog-container__recipient-status'] });
     recipientName.node.textContent = data.login;
     recipientStatus.node.textContent = data.isLogined ? 'Online' : 'Offline';
     recipientStatus.node.classList.add(data.isLogined ? 'active' : 'inactive');
@@ -112,7 +114,9 @@ export class Chat extends View {
     socket.sendMsg(message);
     this.messageInput.node.disabled = false;
     this.messageInput.node.value = '';
+    this.isHistoryCompleted = false;
     if (!this.dialogIsOpen) this.dialogIsOpen = true;
+    // this.handlerReadedStatus();
   }
 
   setValidate(event: Event) {
@@ -141,12 +145,13 @@ export class Chat extends View {
         div.node.innerHTML = '<span>New Messages</span>';
         const firstNotReadedMessage = this.dialog.node.querySelectorAll('.message')[index];
         this.dialog.node.insertBefore(div.node, firstNotReadedMessage);
-        div.node.scrollIntoView(true);
       }
+      this.scrollMessages();
+      this.isHistoryCompleted = true;
     }
   }
 
-  sendMsgToUser(e: Event) {
+  sendMsgToSocket(e: Event) {
     e.preventDefault();
     const message: SocketSendMessage<{ message: { to: string; text: string } }> = {
       id: this.lsUser?.id,
@@ -158,7 +163,6 @@ export class Chat extends View {
         }
       }
     };
-    console.log('abs');
     if (message.id && message.payload?.message.to) {
       socket.sendMsg(message);
       this.messageInput.node.value = '';
@@ -173,9 +177,68 @@ export class Chat extends View {
         this.dialog.node.style.justifyContent = 'flex-start';
       }
       const message = new Message(this.node, data, { user: this.user, lsUser: this.lsUser });
-      console.log(message);
+      message.node.setAttribute('data-id', data.id);
       this.dialog.node.append(message.node);
-      this.dialog.node.scrollTop = this.dialog.node.scrollHeight;
+      if (this.isHistoryCompleted) {
+        this.scrollMessages();
+      }
     }
+  }
+
+  changeStateDelivired(state: NotificationDeliveryStatusChanged) {
+    this.dialog.node.querySelectorAll('.message').forEach((msg) => {
+      const atrId = msg.getAttribute('data-id');
+      if (atrId === state.payload.message.id) {
+        const message = msg.querySelector('.message__state');
+        if (message) message.textContent = 'delivered';
+      }
+    });
+  }
+
+  // handlerReadedStatus() {
+  //   if (this.dialogIsOpen) {
+  //     const form = this.node.querySelector('.dialog-container__form') as HTMLFormElement;
+  //     this.dialog.node.onwheel = () => {
+  //       if (!this.requestSent) {
+  //         this.sendReadedStatus();
+  //         this.requestSent = true;
+  //       }
+  //     };
+  //     this.dialog.node.onclick = () => {
+  //       if (!this.requestSent) {
+  //         this.sendReadedStatus();
+  //         this.requestSent = true;
+  //       }
+  //     };
+  //     form.onsubmit = () => {
+  //       if (!this.requestSent) {
+  //         this.sendReadedStatus();
+  //         this.requestSent = true;
+  //       }
+  //     };
+  //   }
+  // }
+
+  // sendReadedStatus() {
+  //   this.dialog.node.querySelectorAll('.message').forEach((msg) => {
+  //     const atrId = msg.getAttribute('data-id');
+  //     const message: SocketSendMessage<{ message: { id: string } }> = {
+  //       id: this.lsUser?.id,
+  //       type: 'MSG_READ',
+  //       payload: {
+  //         message: {
+  //           id: atrId || ''
+  //         }
+  //       }
+  //     };
+  //     socket.sendMsg(message);
+  //   });
+  // }
+
+  scrollMessages() {
+    const seperator = this.dialog.node.querySelector('.new-message-separator');
+    if (seperator) {
+      seperator.scrollIntoView(true);
+    } else this.dialog.node.scrollTop = this.dialog.node.scrollHeight;
   }
 }

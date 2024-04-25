@@ -5,9 +5,10 @@ import { ChatPage } from './chatPage/chatPage';
 import { pages } from './pages';
 import { state } from './state';
 // import { socket } from '../api';
-import { SessionStorageUser, ResponseUserAuth, ResponseError } from '../types/interfaces';
+import { SessionStorageUser, ResponseUserAuth, ResponseError, SocketSendMessage } from '../types/interfaces';
 import { eventEmitter } from '../components/Event-emmiter/Event-emmiter';
 import { Modal } from '../components/modal/modal';
+import { socket } from '../api';
 
 export class App {
   authPage: AuthPage;
@@ -20,23 +21,26 @@ export class App {
 
   hashPages = ['#auth', '#about', '#chat'];
 
-  // checkSessionStorage() {
-  //   if (sessionStorage.getItem('user')) {
-  //     const user: SessionStorageUser = JSON.parse(sessionStorage.getItem('user') || '{}');
-  //     const message: SocketSendMessage<{ user: { login: string; password: string } }> = {
-  //       id: user.id,
-  //       type: 'USER_LOGIN',
-  //       payload: {
-  //         user: {
-  //           login: user.login,
-  //           password: user.password || ''
-  //         }
-  //       }
-  //     };
-  //     console.log(user, message);
-  //     socket.sendMsg(message);
-  //   }
-  // }
+  checkSessionStorage() {
+    if (sessionStorage.getItem('user')) {
+      new Modal('Reconnect...').renderWithOutButton();
+      const user: SessionStorageUser = JSON.parse(sessionStorage.getItem('user') || '{}');
+      const message: SocketSendMessage<{ user: { login: string; password: string } }> = {
+        id: user.id,
+        type: 'USER_LOGIN',
+        payload: {
+          user: {
+            login: user.login,
+            password: user.password || ''
+          }
+        }
+      };
+      setTimeout(() => {
+        document.body.querySelector('.modal')?.remove();
+        socket.sendMsg(message);
+      }, 300);
+    }
+  }
 
   enableRouteChange() {
     window.addEventListener('hashchange', () => {
@@ -79,6 +83,9 @@ export class App {
   render() {
     document.body.append(this.root.node);
     this.enableRouteChange();
+    eventEmitter.on('socket/connected', () => {
+      this.checkSessionStorage();
+    });
   }
 
   setView(newPageNum: number) {

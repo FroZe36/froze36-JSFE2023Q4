@@ -96,6 +96,45 @@ export interface FetchingMessagesWithUser {
   };
 }
 
+export interface NotificationDeliveryStatusChanged {
+  id: null;
+  type: 'MSG_DELIVER';
+  payload: {
+    message: {
+      id: string;
+      status: {
+        isDelivered: boolean;
+      };
+    };
+  };
+}
+
+export interface ResponseMsgReadStatus {
+  id: string;
+  type: 'MSG_READ';
+  payload: {
+    message: {
+      id: string;
+      status: {
+        isReaded: boolean;
+      };
+    };
+  };
+}
+
+export interface NotificationOfMessageReadStatusChange {
+  id: null;
+  type: 'MSG_READ';
+  payload: {
+    message: {
+      id: string;
+      status: {
+        isReaded: boolean;
+      };
+    };
+  };
+}
+
 export interface IState {
   prevPage: number | null;
   isLogin: boolean;

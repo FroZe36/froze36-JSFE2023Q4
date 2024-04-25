@@ -6,4 +6,5 @@ export type SocketSendTypes =
   | 'USER_ACTIVE'
   | 'USER_INACTIVE'
   | 'MSG_SEND'
-  | 'MSG_FROM_USER';
+  | 'MSG_FROM_USER'
+  | 'MSG_READ';

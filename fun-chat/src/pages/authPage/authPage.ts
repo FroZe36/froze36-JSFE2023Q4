@@ -148,22 +148,6 @@ export class AuthPage extends View {
     return isValid;
   }
 
-  checkTooLong(input: HTMLInputElement, error: View): boolean {
-    const { value } = input;
-    const { parentElement } = input;
-    const isValid = value.length >= 11;
-    if (parentElement) {
-      if (!isValid) {
-        if (!parentElement.contains(error.node)) {
-          parentElement.appendChild(error.node);
-        }
-      } else if (parentElement.contains(error.node)) {
-        parentElement.removeChild(error.node);
-      }
-    }
-    return isValid;
-  }
-
   onSubmit(e: Event) {
     e.preventDefault();
     const message: SocketSendMessage<{ user: { login: string; password: string } }> = {

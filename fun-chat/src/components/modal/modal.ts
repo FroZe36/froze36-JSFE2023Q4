@@ -19,13 +19,18 @@ export class Modal extends View {
       classes: ['modal__button-close'],
       content: 'OK!'
     });
-    this.wrapper.node.append(this.message.node, this.buttonCloseModal.button);
+    this.wrapper.node.append(this.message.node);
     this.node.append(this.wrapper.node);
   }
 
   render() {
+    this.wrapper.node.append(this.buttonCloseModal.button);
     document.body.append(this.node);
     this.buttonCloseModal.button.onclick = () => this.closeModal();
+  }
+
+  renderWithOutButton() {
+    document.body.append(this.node);
   }
 
   closeModal() {

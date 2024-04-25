@@ -6,7 +6,8 @@ import {
   SocketSendMessage,
   ResponseMsgSend,
   ResponseError,
-  FetchingMessagesWithUser
+  FetchingMessagesWithUser,
+  NotificationDeliveryStatusChanged
 } from './types/interfaces';
 
 const configure = {
@@ -20,6 +21,7 @@ class Socket {
     this.socket = new WebSocket(configure.socket);
     this.socket.onopen = () => {
       console.log('WebSocket connection established.');
+      eventEmitter.emit('socket/connected', null);
     };
     this.socket.addEventListener('error', this.onError.bind(this));
     this.socket.addEventListener('message', this.onMessage.bind(this));
@@ -58,6 +60,10 @@ class Socket {
     if (data.type === 'MSG_FROM_USER') {
       const message: FetchingMessagesWithUser = data;
       eventEmitter.emit('history/UserMessages', message);
+    }
+    if (data.type === 'MSG_DELIVER') {
+      const message: NotificationDeliveryStatusChanged = data;
+      eventEmitter.emit('statusMsg/Delivered', message);
     }
     if (data.type === 'ERROR') {
       const message: ResponseError = data;

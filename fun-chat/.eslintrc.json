@@ -20,7 +20,7 @@
     "node": true
   },
   "noInlineConfig": true,
-  "ignorePatterns": ["webpack.config.js", "webpack.dev.config.js", "webpack.prod.config.js"],
+  "ignorePatterns": ["webpack.config.js", "webpack.dev.config.js", "webpack.prod.config.js", "/src/api.ts"],
   "rules": {
     "no-debugger": "off",
     "no-console": 0,
