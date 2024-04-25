@@ -32,6 +32,7 @@ export class Chat extends View {
   constructor(parentElement: HTMLElement) {
     super({ parentElement, classes: ['chat__dialog-container', 'dialog-container'] });
     this.dialog = new View({ classes: ['dialog-container__content'], parentElement: this.node });
+    this.dialog.node.style.scrollBehavior = 'smooth';
     this.header = new View({ classes: ['dialog-container__header'], parentElement: this.node });
     this.messageInput = new Input({ classes: ['dialog-container__message-input'], parentElement: this.node });
     this.messageInput.node.placeholder = 'Write a message...';
@@ -160,5 +161,6 @@ export class Chat extends View {
     }
     const message = new Message(this.node, data, { user: this.user, lsUser: this.lsUser });
     this.dialog.node.append(message.node);
+    this.dialog.node.scrollTop = this.dialog.node.scrollHeight;
   }
 }

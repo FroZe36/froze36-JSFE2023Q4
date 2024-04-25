@@ -63,14 +63,16 @@ export class Message extends View {
 
   setState() {
     const { isDelivered, isEdited, isReaded } = this.data.status;
-    if (isDelivered) {
-      this.stateMsg.node.textContent = 'delivered';
-    } else if (isReaded) {
-      this.stateMsg.node.textContent = 'read';
-    } else if (isEdited) {
+    if (isEdited) {
       this.stateMsg.node.textContent = 'changed';
-    } else {
+    } else if (isReaded && this.lsUser?.login === this.data.from) {
+      this.stateMsg.node.textContent = 'read';
+    } else if (isDelivered && this.lsUser?.login === this.data.from) {
+      this.stateMsg.node.textContent = 'delivered';
+    } else if (!isReaded && !isDelivered && this.lsUser?.login === this.data.from) {
       this.stateMsg.node.textContent = 'sent';
+    } else {
+      this.stateMsg.node.textContent = '';
     }
   }
 
