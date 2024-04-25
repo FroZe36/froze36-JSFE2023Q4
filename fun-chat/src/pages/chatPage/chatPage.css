@@ -134,6 +134,25 @@
         border-bottom: 1px solid black;
         overflow-y: scroll;
         font-size: clamp(0.8rem, 1vw, 1.4rem);
+        .new-message-separator {
+          margin: 0px 0px 8px 0px;
+          position: relative;
+          width: 100%;
+          text-align: center;
+          span {
+            background: #fff;
+            padding: 0 5%;
+            position: relative;
+          }
+          &::before {
+            border-bottom: 1px solid black;
+            content: '';
+            left: 0px;
+            position: absolute;
+            top: 8px;
+            width: 100%;
+          }
+        }
         .message {
           width: 45%;
           border-radius: 8px;

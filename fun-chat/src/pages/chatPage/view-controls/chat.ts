@@ -55,7 +55,7 @@ export class Chat extends View {
     this.lsUser = null;
     eventEmitter.on('send/MessageTo', (data) => {
       const message = data as ResponseMsgSend;
-      if (this.dialogIsOpen) this.createMessage(message.payload.message);
+      this.createMessage(message.payload.message);
     });
     eventEmitter.on('history/UserMessages', (data) => {
       const message = data as FetchingMessagesWithUser;
@@ -85,6 +85,8 @@ export class Chat extends View {
         this.dialog.node.querySelector('.message')?.remove();
       }
     }
+    if (this.dialog.node.querySelector('.new-message-separator'))
+      this.dialog.node.querySelector('.new-message-separator')?.remove();
     const recipientName = new View({
       tagName: 'span',
       classes: ['dialog-container__recipient-name']
@@ -109,8 +111,8 @@ export class Chat extends View {
     };
     socket.sendMsg(message);
     this.messageInput.node.disabled = false;
+    this.messageInput.node.value = '';
     if (!this.dialogIsOpen) this.dialogIsOpen = true;
-    else this.dialogIsOpen = false;
   }
 
   setValidate(event: Event) {
@@ -132,6 +134,15 @@ export class Chat extends View {
       this.emptyTextMessageDialog.node.style.display = 'none';
       this.dialog.node.style.justifyContent = 'flex-start';
       responseMessages.forEach((msg: DataMsgType) => this.createMessage(msg));
+      const index = responseMessages.findIndex((msg: DataMsgType) => !msg.status.isReaded);
+      const findedMessage = responseMessages.find((msg: DataMsgType) => !msg.status.isReaded);
+      if (findedMessage?.from !== this.lsUser?.login) {
+        const div = new View({ classes: ['new-message-separator'], parentElement: this.node });
+        div.node.innerHTML = '<span>New Messages</span>';
+        const firstNotReadedMessage = this.dialog.node.querySelectorAll('.message')[index];
+        this.dialog.node.insertBefore(div.node, firstNotReadedMessage);
+        div.node.scrollIntoView(true);
+      }
     }
   }
 
@@ -147,6 +158,7 @@ export class Chat extends View {
         }
       }
     };
+    console.log('abs');
     if (message.id && message.payload?.message.to) {
       socket.sendMsg(message);
       this.messageInput.node.value = '';
@@ -155,12 +167,15 @@ export class Chat extends View {
   }
 
   createMessage(data: DataMsgType) {
-    if (this.emptyTextMessageDialog.node.style.display === 'inline') {
-      this.emptyTextMessageDialog.node.style.display = 'none';
-      this.dialog.node.style.justifyContent = 'flex-start';
+    if (this.dialogIsOpen) {
+      if (this.emptyTextMessageDialog.node.style.display === 'inline') {
+        this.emptyTextMessageDialog.node.style.display = 'none';
+        this.dialog.node.style.justifyContent = 'flex-start';
+      }
+      const message = new Message(this.node, data, { user: this.user, lsUser: this.lsUser });
+      console.log(message);
+      this.dialog.node.append(message.node);
+      this.dialog.node.scrollTop = this.dialog.node.scrollHeight;
     }
-    const message = new Message(this.node, data, { user: this.user, lsUser: this.lsUser });
-    this.dialog.node.append(message.node);
-    this.dialog.node.scrollTop = this.dialog.node.scrollHeight;
   }
 }
