@@ -9,7 +9,8 @@ import {
   SessionStorageUser,
   SocketSendMessage,
   DataMsgType,
-  NotificationDeliveryStatusChanged
+  NotificationDeliveryStatusChanged,
+  NotificationOfMessageReadStatusChange
 } from '../../../types/interfaces';
 import { Message } from './message';
 
@@ -33,6 +34,8 @@ export class Chat extends View {
   isHistoryCompleted = false;
 
   requestSent = false;
+
+  messagesTo: DataMsgType[] = [];
 
   constructor(parentElement: HTMLElement) {
     super({ parentElement, classes: ['chat__dialog-container', 'dialog-container'] });
@@ -64,6 +67,12 @@ export class Chat extends View {
     eventEmitter.on('statusMsg/Delivered', (data) => {
       const message = data as NotificationDeliveryStatusChanged;
       this.changeStateDelivired(message);
+    });
+    eventEmitter.on('statusMsg/Readed', (data) => {
+      const message = data as NotificationOfMessageReadStatusChange;
+      const msg = { ...message };
+      // this.changeStateReaded(msg);
+      console.log(msg);
     });
     this.render();
   }
@@ -114,9 +123,10 @@ export class Chat extends View {
     socket.sendMsg(message);
     this.messageInput.node.disabled = false;
     this.messageInput.node.value = '';
+    this.requestSent = false;
     this.isHistoryCompleted = false;
     if (!this.dialogIsOpen) this.dialogIsOpen = true;
-    // this.handlerReadedStatus();
+    this.handlerReadedStatus();
   }
 
   setValidate(event: Event) {
@@ -138,14 +148,7 @@ export class Chat extends View {
       this.emptyTextMessageDialog.node.style.display = 'none';
       this.dialog.node.style.justifyContent = 'flex-start';
       responseMessages.forEach((msg: DataMsgType) => this.createMessage(msg));
-      const index = responseMessages.findIndex((msg: DataMsgType) => !msg.status.isReaded);
-      const findedMessage = responseMessages.find((msg: DataMsgType) => !msg.status.isReaded);
-      if (findedMessage?.from !== this.lsUser?.login) {
-        const div = new View({ classes: ['new-message-separator'], parentElement: this.node });
-        div.node.innerHTML = '<span>New Messages</span>';
-        const firstNotReadedMessage = this.dialog.node.querySelectorAll('.message')[index];
-        this.dialog.node.insertBefore(div.node, firstNotReadedMessage);
-      }
+      this.findedMessageIsNotReaded(responseMessages);
       this.scrollMessages();
       this.isHistoryCompleted = true;
     }
@@ -170,6 +173,20 @@ export class Chat extends View {
     }
   }
 
+  findedMessageIsNotReaded(arr: DataMsgType[]) {
+    if (this.dialog.node.querySelector('.new-message-separator')) {
+      this.dialog.node.querySelector('.new-message-separator')?.remove();
+    }
+    const index = arr.findIndex((msg: DataMsgType) => !msg.status.isReaded);
+    const findedMessage = arr.find((msg: DataMsgType) => !msg.status.isReaded);
+    if (findedMessage?.from !== this.lsUser?.login) {
+      const div = new View({ classes: ['new-message-separator'], parentElement: this.node });
+      div.node.innerHTML = '<span>New Messages</span>';
+      const firstNotReadedMessage = this.dialog.node.querySelectorAll('.message')[index];
+      this.dialog.node.insertBefore(div.node, firstNotReadedMessage);
+    }
+  }
+
   createMessage(data: DataMsgType) {
     if (this.dialogIsOpen) {
       if (this.emptyTextMessageDialog.node.style.display === 'inline') {
@@ -177,9 +194,13 @@ export class Chat extends View {
         this.dialog.node.style.justifyContent = 'flex-start';
       }
       const message = new Message(this.node, data, { user: this.user, lsUser: this.lsUser });
+      this.messagesTo.push(data);
       message.node.setAttribute('data-id', data.id);
       this.dialog.node.append(message.node);
       if (this.isHistoryCompleted) {
+        this.findedMessageIsNotReaded(this.messagesTo);
+        this.requestSent = false;
+        this.handlerReadedStatus();
         this.scrollMessages();
       }
     }
@@ -195,44 +216,73 @@ export class Chat extends View {
     });
   }
 
-  // handlerReadedStatus() {
-  //   if (this.dialogIsOpen) {
-  //     const form = this.node.querySelector('.dialog-container__form') as HTMLFormElement;
-  //     this.dialog.node.onwheel = () => {
-  //       if (!this.requestSent) {
-  //         this.sendReadedStatus();
-  //         this.requestSent = true;
-  //       }
-  //     };
-  //     this.dialog.node.onclick = () => {
-  //       if (!this.requestSent) {
-  //         this.sendReadedStatus();
-  //         this.requestSent = true;
-  //       }
-  //     };
-  //     form.onsubmit = () => {
-  //       if (!this.requestSent) {
-  //         this.sendReadedStatus();
-  //         this.requestSent = true;
-  //       }
-  //     };
-  //   }
-  // }
+  handlerReadedStatus() {
+    if (this.dialogIsOpen) {
+      const form = this.node.querySelector('.dialog-container__form') as HTMLFormElement;
+      this.dialog.node.onwheel = () => {
+        if (!this.requestSent) {
+          this.sendReadedStatus();
+          this.requestSent = true;
+        }
+      };
+      this.dialog.node.onclick = () => {
+        if (!this.requestSent) {
+          this.sendReadedStatus();
+          this.requestSent = true;
+        }
+      };
+      form.onsubmit = () => {
+        if (!this.requestSent) {
+          this.sendReadedStatus();
+          this.requestSent = true;
+        }
+      };
+    }
+  }
 
-  // sendReadedStatus() {
-  //   this.dialog.node.querySelectorAll('.message').forEach((msg) => {
-  //     const atrId = msg.getAttribute('data-id');
-  //     const message: SocketSendMessage<{ message: { id: string } }> = {
-  //       id: this.lsUser?.id,
-  //       type: 'MSG_READ',
-  //       payload: {
-  //         message: {
-  //           id: atrId || ''
-  //         }
-  //       }
+  sendReadedStatus() {
+    const arr = this.messagesTo.filter((msg) => msg.from === this.lsUser?.login).filter((msg) => !msg.status.isReaded);
+    arr.forEach((msg) => {
+      const message: SocketSendMessage<{ message: { id: string } }> = {
+        id: this.lsUser?.id,
+        type: 'MSG_READ',
+        payload: {
+          message: {
+            id: msg.id
+          }
+        }
+      };
+      socket.sendMsg(message);
+    });
+  }
+
+  // changeStateReaded(state: {
+  //   id: string;
+  //   type: 'MSG_READ';
+  //   payload: {
+  //     message: {
+  //       id: string;
+  //       status: {
+  //         isReaded: boolean;
+  //       };
   //     };
-  //     socket.sendMsg(message);
-  //   });
+  //   };
+  // }) {
+  // const arr = this.messagesTo.filter((msg) => msg.to === this.lsUser?.login);
+  // // Array.from(this.dialog.node.querySelectorAll('.message')).filter((msg) => msg.hasAttribute('sender'));
+  // this.dialog.node.querySelectorAll('.message').forEach((msg) => {
+  //   if (arr.id === state.payload.message.id) {
+  //     const message = msg.querySelector('.message__state');
+  //     if (message) message.textContent = 'read';
+  //   }
+  // });
+  // arr.forEach((msg) => {
+  //   // const atrId = msg.getAttribute('sender');
+  //   if (msg.id === state.payload.message.id) {
+  //     const message = msg.querySelector('.message__state');
+  //     if (message) message.textContent = 'read';
+  //   }
+  // });
   // }
 
   scrollMessages() {

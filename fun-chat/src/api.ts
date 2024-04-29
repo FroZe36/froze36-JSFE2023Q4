@@ -7,7 +7,8 @@ import {
   ResponseMsgSend,
   ResponseError,
   FetchingMessagesWithUser,
-  NotificationDeliveryStatusChanged
+  NotificationDeliveryStatusChanged,
+  NotificationOfMessageReadStatusChange
 } from './types/interfaces';
 
 const configure = {
@@ -64,6 +65,10 @@ class Socket {
     if (data.type === 'MSG_DELIVER') {
       const message: NotificationDeliveryStatusChanged = data;
       eventEmitter.emit('statusMsg/Delivered', message);
+    }
+    if (data.type === 'MSG_READ') {
+      const message: NotificationOfMessageReadStatusChange = data;
+      eventEmitter.emit('statusMsg/Readed', message);
     }
     if (data.type === 'ERROR') {
       const message: ResponseError = data;

@@ -108,22 +108,8 @@ export interface NotificationDeliveryStatusChanged {
     };
   };
 }
-
-export interface ResponseMsgReadStatus {
-  id: string;
-  type: 'MSG_READ';
-  payload: {
-    message: {
-      id: string;
-      status: {
-        isReaded: boolean;
-      };
-    };
-  };
-}
-
 export interface NotificationOfMessageReadStatusChange {
-  id: null;
+  id: string;
   type: 'MSG_READ';
   payload: {
     message: {
