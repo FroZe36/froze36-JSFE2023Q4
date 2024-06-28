@@ -1,0 +1,10 @@
+export type SocketSendTypes =
+  | 'USER_LOGIN'
+  | 'USER_LOGOUT'
+  | 'USER_EXTERNAL_LOGIN'
+  | 'USER_EXTERNAL_LOGOUT'
+  | 'USER_ACTIVE'
+  | 'USER_INACTIVE'
+  | 'MSG_SEND'
+  | 'MSG_FROM_USER'
+  | 'MSG_READ';

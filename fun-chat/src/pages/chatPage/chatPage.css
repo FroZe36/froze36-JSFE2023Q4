@@ -1,0 +1,258 @@
+.chat {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100svh;
+  gap: 10px;
+  .chat__header.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 10px 20px;
+    .header__user-name {
+      font-size: clamp(1rem, 2vw, 2.2rem);
+    }
+    .header__title {
+      font-size: clamp(1rem, 2vw, 2.2rem);
+      color: orange;
+    }
+    .header__wrapper {
+      display: inline-flex;
+      gap: 10px;
+    }
+    .header__btn {
+      padding: 10px 15px;
+      border-radius: 8px;
+      transform: scale(1);
+      background-color: rgb(59, 247, 122);
+      transition: scale 0.2s;
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      &:hover {
+        transform: scale(0.95);
+      }
+      &[disabled] {
+        cursor: not-allowed;
+        opacity: 0.8;
+        &:hover {
+          transform: none;
+        }
+      }
+    }
+  }
+  .wrapper {
+    display: flex;
+    width: 100%;
+    height: 70%;
+    gap: 10px;
+    .chat__users.users {
+      display: flex;
+      flex-direction: column;
+      border-radius: 8px;
+      border: 1px solid black;
+      width: 30%;
+      padding: 10px;
+      .users__search-input {
+        font-size: clamp(0.7rem, 2vw, 1.4rem);
+        padding: 5px 10px;
+        margin-bottom: 5px;
+      }
+
+      .users__list {
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+        height: 100%;
+        list-style-type: disc;
+        list-style-position: inside;
+
+        li.users__list-element {
+          align-items: center;
+          padding: 1% 5%;
+          cursor: pointer;
+          font-size: clamp(0.8rem, 2vw, 1.4rem);
+          margin-right: 5px;
+          width: 100%;
+          white-space: nowrap;
+          &::marker {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+          }
+          &:hover {
+            background-color: bisque;
+          }
+          &.users__list-element_inactive::marker {
+            color: red;
+          }
+          &.users__list-element_active::marker {
+            color: green;
+          }
+        }
+      }
+    }
+    .chat__dialog-container.dialog-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 70%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid black;
+      .dialog-container__header {
+        align-self: center;
+        height: 39px;
+        display: inline-flex;
+        margin: 0px 20px;
+        padding: 5px;
+        justify-content: space-around;
+        width: 100%;
+        font-size: clamp(1rem, 2vw, 1.4rem);
+        border-bottom: 1px solid black;
+        .dialog-container__recipient-name {
+        }
+        li.dialog-container__recipient-status {
+          &::marker {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+          }
+          &.active::marker {
+            color: green;
+          }
+          &.inactive::marker {
+            color: red;
+          }
+        }
+      }
+      .dialog-container__content {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid black;
+        overflow-y: scroll;
+        font-size: clamp(0.8rem, 1vw, 1.4rem);
+        .new-message-separator {
+          margin: 0px 0px 8px 0px;
+          position: relative;
+          width: 100%;
+          text-align: center;
+          span {
+            background: #fff;
+            padding: 0 5%;
+            position: relative;
+          }
+          &::before {
+            border-bottom: 1px solid black;
+            content: '';
+            left: 0px;
+            position: absolute;
+            top: 8px;
+            width: 100%;
+          }
+        }
+        .message {
+          width: 45%;
+          border-radius: 8px;
+          padding: 1%;
+          gap: 3px;
+          margin-bottom: 8px;
+          display: flex;
+          flex-direction: column;
+          background-color: grey;
+          .message-header {
+            display: inline-flex;
+            justify-content: space-between;
+            margin: 0px 5px;
+            .message-header__user {
+            }
+            .message-header__date {
+            }
+          }
+          .message__text {
+            background-color: gold;
+            padding: 5px;
+            border-radius: 8px;
+          }
+          .message__state {
+            align-self: flex-end;
+            margin: 0px 5px;
+          }
+        }
+      }
+      .dialog-container__form {
+        display: inline-flex;
+        gap: 20px;
+        .dialog-container__message-input {
+          width: 100%;
+          padding: 5px 10px;
+          font-size: clamp(0.7rem, 2vw, 1.4rem);
+          &[disabled] {
+            cursor: not-allowed;
+            opacity: 0.8;
+          }
+        }
+        .dialog-container__button-send {
+          padding: 10px 15px;
+          border-radius: 8px;
+          transform: scale(1);
+          background-color: rgb(59, 247, 122);
+          font-size: clamp(1rem, 1vw, 1.4rem);
+          transition: scale 0.2s;
+          &:hover {
+            transform: scale(0.95);
+          }
+          &[disabled] {
+            cursor: not-allowed;
+            opacity: 0.8;
+            &:hover {
+              transform: none;
+            }
+          }
+        }
+      }
+    }
+  }
+  .chat__footer.footer {
+    width: 100%;
+    font-size: clamp(1rem, 2vw, 1.8rem);
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid black;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    .footer__logo {
+      display: flex;
+    }
+    .footer__name {
+    }
+    .footer__year {
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  .message-header {
+    flex-direction: column;
+    gap: 3px;
+  }
+}
+
+@media (max-width: 500px) {
+  .chat {
+    .chat__header.header {
+      padding: 10px 5px;
+      .header__btn {
+        padding: 7px;
+      }
+    }
+    .wrapper {
+      .chat__users.users {
+        padding: 5px;
+      }
+    }
+  }
+}
