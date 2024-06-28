@@ -1,0 +1,40 @@
+.start {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 40px;
+  padding: 0px 30px;
+}
+.start__button {
+  border: none;
+  font-size: 32px;
+  background-color: purple;
+  color: rgb(255, 208, 0);
+  border: none;
+  padding: 12px 50px;
+  border-radius: 8px;
+}
+
+.start__content-title {
+  font-size: 42px;
+  color: rgb(25, 97, 250);
+  letter-spacing: 7px;
+}
+
+.start__content {
+  font-size: 30px;
+  color: rgb(96, 144, 247);
+  line-height: 1.8;
+  text-align: center;
+}
+.start__content.start__content_greeting {
+  font-size: 20px;
+  line-height: 1.5;
+  .span-text {
+    font-size: 24px;
+    color: purple;
+  }
+}

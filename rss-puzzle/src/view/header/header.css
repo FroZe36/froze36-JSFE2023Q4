@@ -1,0 +1,18 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: inherit;
+  flex: 0 1 auto;
+
+  .button-logout {
+    margin-top: 25px;
+    margin-right: 25px;
+    font-size: clamp(0.6rem, 2vw, 2rem);
+    background-color: purple;
+    color: rgb(255, 208, 0);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+  }
+}
