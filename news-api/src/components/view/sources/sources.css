@@ -1,0 +1,110 @@
+@media (max-width: 1880px) {
+  .sources {
+    max-width: 1200px
+  }
+}
+@media (max-width: 1250px) {
+  .sources {
+    max-width: 950px
+  }
+}
+@media (max-width: 920px) {
+  .letter-container {
+    width: 500px;
+  }
+  .sources {
+    max-width: 700px
+  }
+}
+@media (max-width: 700px) {
+  .sources {
+    max-width: 520px
+  }
+}
+@media (max-width: 550px) {
+  .letter-container {
+    width: 300px;
+  }
+  .sources {
+    max-width: 291px;
+  }
+}
+.sources {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    align-items: center;
+    justify-content: center;
+    font:
+        300 1em 'Fira Sans',
+        sans-serif;
+}
+.wrapper-buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+.letter-container {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.letter {
+    font:
+        300 1em 'Fira Sans',
+        sans-serif;
+    width: 35px;
+    height: 35px;
+    border: 2px solid #5ad67d;
+    color: #5ad67d;
+    background-color: inherit;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.source__item {
+    background: none;
+    border: 2px solid #30c5ff;
+    font: inherit;
+    line-height: 1;
+    margin: 0.5em;
+    padding: 1em 2em;
+    color: #70d6ff;
+    transition: 0.25s;
+    cursor: pointer;
+}
+
+.source__item:is(:hover, :focus) {
+    border-color: #3fcc59;
+    color: #69db7e;
+    box-shadow: 0 0.5em 0.5em -0.4em #3fcc59;
+    transform: translateY(-0.25em);
+}
+.source__item_active {
+    border-color: #3fcc59;
+    color: #69db7e;
+    box-shadow: 0 0.5em 0.5em -0.4em #3fcc59;
+    transform: translateY(-0.25em);
+}
+.letter_active {
+    border-color: #30c5ff;
+    color: #30c5ff;
+    box-shadow: 0 0.5em 0.5em -0.4em #30c5ff;
+    transform: translateY(-0.25em);
+}
+.letter:is(:hover, :focus) {
+    border-color: #30c5ff;
+    color: #30c5ff;
+    box-shadow: 0 0.5em 0.5em -0.4em #30c5ff;
+    transform: translateY(-0.25em);
+}
+
+.source__item-name {
+    font-weight: 400;
+    white-space: nowrap;
+}
