@@ -1,4 +1,4 @@
-# RSSchool project:
+# RSSchool projects:
 ### Stage 1:
 - Coffee House [Task](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/coffee-house/coffee-house.md#coffee-house)
   > [Code](https://github.com/FroZe36/froze36-JSFE2023Q4/tree/main/coffee-house)
